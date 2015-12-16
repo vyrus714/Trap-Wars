@@ -1,0 +1,9 @@
+
+"CustomEvents"
+{
+	"trapwars_score_update"
+	{
+    	"team"      	  "short"
+    	"delta_score"     "short"
+	}
+}
