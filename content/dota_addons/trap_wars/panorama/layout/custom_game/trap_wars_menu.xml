@@ -1,0 +1,33 @@
+<root>
+    <styles>
+        <include src="s2r://panorama/styles/dotastyles.vcss_c" />
+        <include src="file://{resources}/styles/custom_game/trap_wars_menu.css" />
+    </styles>
+    <scripts>
+       <include src="file://{resources}/scripts/custom_game/trap_wars_generic.js" />
+    </scripts>
+
+
+    <Panel class="menu-base">
+        <Image class="background-image" src="file://{images}/custom_game/menu_002.png" />
+
+        <Panel class="header" id="header" style="vertical-align:top;margin-top:32px;" >
+            <Image src="file://{images}/custom_game/menu_002.png" />
+            <Label class="label" text="Some Header Text Here" />
+        </Panel>
+
+        <Panel class="main-box" id="mainbox" >
+            <Image src="file://{images}/custom_game/menu_002.png" />
+
+            <Button class="button" onactivate="PrintMessage()" style="horizontal-align:center;margin-top:40px;">
+                <Label class="label" text="Test Button" />
+            </Button>
+        </Panel>
+
+        <Panel class="select-box" id="selectorbox" >
+            <Image src="file://{images}/custom_game/menu_003.png" />
+        </Panel>
+    </Panel>
+
+
+</root>

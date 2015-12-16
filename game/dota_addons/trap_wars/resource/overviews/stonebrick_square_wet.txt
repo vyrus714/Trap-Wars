@@ -1,0 +1,8 @@
+stonebrick_square_wet
+{
+	material materials/overviews/stonebrick_square_wet.vmat
+	pos_x -5888
+	pos_y 5888
+	scale 11.500
+}
+
