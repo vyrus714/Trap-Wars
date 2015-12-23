@@ -1,3 +1,7 @@
 "AddonInfo"
 {
+	"stonebrick_square_wet"
+	{
+		"MaxPlayers"		"6"
+	}
 }

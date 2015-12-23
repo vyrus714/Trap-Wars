@@ -15,22 +15,13 @@ function GameMode:OnInitGameMode()
     end
     ]]
 
-    local temp = Entities:FindAllByName("Spawn_Good")
-    for k,v in pairs(temp) do  table.insert(TW_SPAWNERS[DOTA_TEAM_GOODGUYS], v:GetAbsOrigin())  end
-
-    temp = Entities:FindAllByName("Spawn_Bad")
-    for k,v in pairs(temp) do  table.insert(TW_SPAWNERS[DOTA_TEAM_BADGUYS], v:GetAbsOrigin())  end
-
-    TW_PORTALS = {
-        [DOTA_TEAM_GOODGUYS] = Entities:FindByName(nil, "Portal_Good"):GetAbsOrigin(),
-        [DOTA_TEAM_BADGUYS]  = Entities:FindByName(nil, "Portal_Bad"):GetAbsOrigin()
-    }
-    TW_CREEPS = {
-        {name="npc_dota_creep_goodguys_melee", team=DOTA_TEAM_GOODGUYS, count=2, rate=8},
+    --[[
+    TW_CREEPS = {  -- fixme
+        {name="npc_dota_creep_goodguys_melee",  team=DOTA_TEAM_GOODGUYS, count=2, rate=8},
         {name="npc_dota_creep_goodguys_ranged", team=DOTA_TEAM_GOODGUYS, count=1, rate=8, items={"item_ring_of_basilius"}},
-        {name="npc_dota_creep_badguys_melee", team=DOTA_TEAM_BADGUYS, count=2, rate=8},
+        {name="npc_dota_creep_badguys_melee",  team=DOTA_TEAM_BADGUYS, count=2, rate=8},
         {name="npc_dota_creep_badguys_ranged", team=DOTA_TEAM_BADGUYS, count=1, rate=8, items={"item_ring_of_basilius"}}
-    }
+    } ]]
 
     -- send the table information to our table: "trap_wars_info"
     --CustomNetTables:SetTableValue("trap_wars_info", "spawners", spawners)
@@ -39,9 +30,14 @@ end
 
 function GameMode:OnGameInProgress()
     --Spawners:SpawnCreepsOnInterval(CreepSpawners, 0, 10)
-    CreepSpawnThinker(TW_CREEPS)
-    
+    --CreepSpawnThinker(TW_CREEPS)
+    for team, info in pairs(TW_TEAMS) do
+        AddCreep(info.creeps, "npc_dota_creep_goodguys_melee", 0, 10, 1)
+        AddCreep(info.creeps, "npc_dota_creep_goodguys_ranged", 0, 10, 1, {"item_ring_of_basilius"})
+        CreepSpawnThinker(info.creeps, info.creep_spawns, team)
+    end
 
+    FireGameEvent( "show_center_message", {message="Begin!", duration=3} )
 end
 
 function GameMode:OnNPCSpawned(keys)
@@ -79,28 +75,29 @@ function GameMode:OnHeroInGame(hero)
     hero:AddItemByName("item_ultimate_scepter")
 end
 
+-- this updates the score and determines win/loss
 function GameMode:OnTrapWarsScoreUpdated(keys)
     -- keys.team           team id #
     -- keys.delta_score    desired change in score
     if not keys.team or not keys.delta_score then return end
+    if not TW_TEAMS[keys.team] then return end
 
-    if keys.team == DOTA_TEAM_GOODGUYS then
-        TEAM_LIVES_GOOD = TEAM_LIVES_GOOD + keys.delta_score
-        if TEAM_LIVES_GOOD < 1 then
-            TEAM_LIVES_GOOD = 0
-            GameRules:SetSafeToLeave(true)
+    -- change the score
+    TW_TEAMS[keys.team].lives = TW_TEAMS[keys.team].lives + keys.delta_score
+
+    -- check game conditions   <- FIXME, won't work for more than 2 teams
+    if TW_TEAMS[keys.team].lives < 1 then
+        TW_TEAMS[keys.team].lives = 0
+        GameRules:SetSafeToLeave(true)
+        if keys.team == DOTA_TEAM_GOODGUYS then          -- FIXME, see above, need to implement per-team loss that won't end game
             GameRules:SetGameWinner(DOTA_TEAM_BADGUYS)
+        else 
+            GameRules:SetGameWinner(DOTA_TEAM_GOODGUYS)
         end
-        GameRules:GetGameModeEntity():SetTopBarTeamValue(keys.team, TEAM_LIVES_GOOD)
-    elseif keys.team == DOTA_TEAM_BADGUYS then
-        TEAM_LIVES_BAD = TEAM_LIVES_BAD + keys.delta_score
-        if TEAM_LIVES_BAD < 1 then
-            TEAM_LIVES_BAD = 0
-            GameRules:SetSafeToLeave( true )
-            GameRules:SetGameWinner( DOTA_TEAM_GOODGUYS )
-        end
-        GameRules:GetGameModeEntity():SetTopBarTeamValue(keys.team, TEAM_LIVES_BAD)
     end
+
+    -- update the scoreboard  <- FIXME, still only works for 2 teams (radient/dire), need to write custom scoreboard
+    GameRules:GetGameModeEntity():SetTopBarTeamValue(keys.team, TW_TEAMS[keys.team].lives)
 end
 
 -- modify some player's dummy unit

@@ -1,15 +1,15 @@
--- creep format: { name="creepname", team=TEAM_ID_NUMBER, count=1, rate=4, owner=OWNER_PLAYER_ID, random=false, items={"itemname", "itemname"} }
+-- creep format: { name="creepname", count=1, rate=4, owner=OWNER_PLAYER_ID, random=false, items={"itemname", "itemname"} }
 
 -- *** Global Variable Dependant Spawning Functions ***
-function CreepSpawnThinker( creeptable )
-    for k,creep in pairs(creeptable) do
+function CreepSpawnThinker( creep_table, creep_spawns, team )
+    for k,creep in pairs(creep_table) do
         creep._incr = 0
     end
 
     Timers:CreateTimer(function()
-        for k,creep in pairs(creeptable) do
+        for k,creep in pairs(creep_table) do
             if creep.rate <= creep._incr then
-                SpawnMultipleCreeps(creep)
+                SpawnMultipleCreeps(creep, creep_spawns, team)
                 creep._incr = 0
             end
             creep._incr = creep._incr + 1/10
@@ -19,33 +19,24 @@ function CreepSpawnThinker( creeptable )
     end)
 end
 
-function SpawnMultipleCreeps( creep )  -- creep = table with creep information, not an actual unit handle
+function SpawnMultipleCreeps( creep, creep_spawns, team )  -- creep = table with creep information, not an actual unit handle
     for i=1,creep.count do
-        for k,spawn in pairs(TW_SPAWNERS[creep.team]) do
-            local c = SpawnCreep(creep.name, spawn, creep.team)
+        for k,spawn in pairs(creep_spawns) do
+            local c = CreateUnitByName(creep.name, spawn:GetAbsOrigin(), true, nil, nil, team)
             if c then
-                GiveItems(c, creep.items)
-                if creep.team == DOTA_TEAM_GOODGUYS then SetWaypoint(c, TW_PORTALS[DOTA_TEAM_BADGUYS])
-                elseif creep.team == DOTA_TEAM_BADGUYS then SetWaypoint(c, TW_PORTALS[DOTA_TEAM_GOODGUYS]) end
+                -- give items
+                if type(creep.items) == "table" then
+                    if not c:HasInventory() then c:SetHasInventory(true) end
+                    for _, item in pairs(creep.items) do c:AddItemByName(item) end
+                end
+                -- set initial waypoint                        AddItemByName
+                c:SetInitialGoalEntity(spawn)
             end
         end
     end
 end
 
--- *** Generic Spawning Functions ***
-function SpawnCreep( name, point, team )
-    local creep = CreateUnitByName(name, point, true, nil, nil, team)
-    return creep
-end
-
-function GiveItems( creep, items )
-    if not creep or not items then return end
-    if not creep:HasInventory() then creep:SetHasInventory(true) end
-    for i,item in ipairs(items) do
-        creep:AddItemByName(item)
-    end
-end
-
+-- depricated, but not quite sure yet
 function SetWaypoint( creep, point )
     if not creep then return end
     ExecuteOrderFromTable{

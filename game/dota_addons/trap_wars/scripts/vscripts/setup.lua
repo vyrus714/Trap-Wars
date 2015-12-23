@@ -1,16 +1,9 @@
--- Global Variables
-TEAM_LIVES_GOOD = 50
-TEAM_LIVES_BAD  = 50
+-- Global Variables - either set to a static value, or initialized to be set in InitGameMode()
+TW_TEAMS  = {}
+TW_CREEPS = {}
 
-TW_CREEPS   = {}
-TW_SPAWNERS = {
-    [DOTA_TEAM_GOODGUYS] = {},
-    [DOTA_TEAM_BADGUYS]  = {}
-}
-TW_PORTALS  = {
-    [DOTA_TEAM_GOODGUYS] = {},
-    [DOTA_TEAM_BADGUYS]  = {}
-}
+TW_DEFAULT_LIVES = 50  -- BALANCE
+
 
 -- global function wrapper
 if GameMode == nil then
@@ -19,20 +12,25 @@ end
 
 function GameMode:InitGameMode()
     print('[Trap Wars] Setting up Game Mode')
-    -- game rules
-    GameRules:SetHeroSelectionTime(0)  -- FIXME
+
+    -- set up teams
+    SetupTeams(TW_TEAMS, TW_DEFAULT_LIVES)
+    local max_players  = math.floor(GetTotalPlayers() / TableCount(TW_TEAMS))
+    for team, _ in pairs(TW_TEAMS) do 
+        GameRules:SetCustomGameTeamMaxPlayers(team, max_players)
+    end
+
+    -- other game rules
+    GameRules:SetHeroSelectionTime(20)
     GameRules:SetPreGameTime(10)       -- FIXME
     GameRules:SetPostGameTime(60)
     GameRules:SetTreeRegrowTime(60)
-    GameRules:SetGoldPerTick(3)        -- FIXME
-    GameRules:SetGoldTickTime(5)       -- FIXME
+    GameRules:SetGoldPerTick(3)        -- BALANCE
+    GameRules:SetGoldTickTime(5)       -- BALANCE
     GameRules:SetUseUniversalShopMode(true)
     GameRules:SetHeroMinimapIconScale(1)
     GameRules:SetCreepMinimapIconScale(1)
     GameRules:SetStartingGold(10000)   -- FIXME
-
-    GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_GOODGUYS, 3)  -- FIXME FIXME FIXME
-    GameRules:SetCustomGameTeamMaxPlayers(DOTA_TEAM_BADGUYS,  3)  -- FIXME FIXME FIXME
 
     -- setup file listener functions
     ListenToGameEvent('player_connect_full', Dynamic_Wrap(GameMode, 'OnPlayerConnectFull'), self)
@@ -47,21 +45,24 @@ function GameMode:InitGameMode()
     GameMode:OnInitGameMode()
 end
 
+---------------------------------------------------------------------------
+-- Listener Functions
+---------------------------------------------------------------------------
 
 function GameMode:OnPlayerConnectFull()
     local GameModeEntity = GameRules:GetGameModeEntity()
 
     GameModeEntity:SetFogOfWarDisabled(true)
-    GameModeEntity:SetCameraDistanceOverride(1134)
+    GameModeEntity:SetCameraDistanceOverride(1337)
 
     --GameModeEntity:SetCustomBuybackCostEnabled(true)
     --GameModeEntity:SetCustomBuybackCooldownEnabled(true)
-    GameModeEntity:SetFixedRespawnTime(20.0) 
+    GameModeEntity:SetFixedRespawnTime(20.0)  -- BALANCE
     
     --GameModeEntity:SetTopBarTeamValuesVisible(true)
-    GameModeEntity:SetTopBarTeamValuesOverride(true)
-    GameModeEntity:SetTopBarTeamValue(DOTA_TEAM_GOODGUYS, TEAM_LIVES_GOOD)
-    GameModeEntity:SetTopBarTeamValue(DOTA_TEAM_BADGUYS, TEAM_LIVES_BAD)
+    GameModeEntity:SetTopBarTeamValuesOverride(true)  -- FIXME
+    GameModeEntity:SetTopBarTeamValue(DOTA_TEAM_GOODGUYS, TW_DEFAULT_LIVES)  -- FIXME
+    GameModeEntity:SetTopBarTeamValue(DOTA_TEAM_BADGUYS, TW_DEFAULT_LIVES)  -- FIXME
 end
 
 function GameMode:OnGameRulesStateChange(keys)
