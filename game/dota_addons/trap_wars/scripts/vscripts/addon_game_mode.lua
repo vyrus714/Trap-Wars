@@ -15,6 +15,8 @@ function Precache( context )
   	PrecacheModel( "models/props_structures/radiant_statue002.vmdl", context)
 
   	--PrecacheResource("soundfile", "soundevents/voscripts/game_sounds_vo_announcer.vsndevts", context)
+
+  	PrecacheResource("particle", "particles/outline.vpcf", context)
 end
 
 -- Create the game mode when we activate

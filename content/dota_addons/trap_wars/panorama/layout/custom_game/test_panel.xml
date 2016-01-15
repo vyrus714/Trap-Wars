@@ -1,0 +1,27 @@
+<root>
+    <styles>
+    </styles>
+    <scripts>
+       <include src="file://{resources}/scripts/custom_game/trap_wars_generic.js" />
+    </scripts>
+
+    <Panel style="vertical-align:bottom; horizontal-align:center; margin-bottom:184px; margin-left:104px; width:700px; height:40px; flow-children:right;" >
+        <Button onactivate="TestButton(1)" style="width:23%; height:100%; margin:1%; background-color:#333333; border:2px solid #222222; opacity:0.9;" >
+            <Label text="Test Button 1" style="vertical-align:center; horizontal-align:center; text-align:center; text-shadow:-2px 2px 2px 1.0 #000000; font-size:18; color:#ffffff;" />
+        </Button>
+
+        <Button onactivate="TestButton(2)" style="width:23%; height:100%; margin:1%; background-color:#333333; border:2px solid #222222; opacity:0.9;" >
+            <Label text="Test Button 2" style="vertical-align:center; horizontal-align:center; text-align:center; text-shadow:-2px 2px 2px 1.0 #000000; font-size:18; color:#ffffff;" />
+        </Button>
+
+        <Button onactivate="TestButton(3)" style="width:23%; height:100%; margin:1%; background-color:#333333; border:2px solid #222222; opacity:0.9;" >
+            <Label text="Test Button 3" style="vertical-align:center; horizontal-align:center; text-align:center; text-shadow:-2px 2px 2px 1.0 #000000; font-size:18; color:#ffffff;" />
+        </Button>
+
+        <Button onactivate="TestButton(4)" style="width:23%; height:100%; margin:1%; background-color:#333333; border:2px solid #222222; opacity:0.9;" >
+            <Label text="Test Button 4" style="vertical-align:center; horizontal-align:center; text-align:center; text-shadow:-2px 2px 2px 1.0 #000000; font-size:18; color:#ffffff;" />
+        </Button>
+    </Panel>
+
+
+</root>

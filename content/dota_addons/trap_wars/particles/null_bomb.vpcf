@@ -1,0 +1,87 @@
+<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+{
+	_class = "CParticleSystemDefinition"
+	m_flConstantRadius = 2.000000
+	m_flConstantLifespan = 4.000000
+	m_Operators =
+	[
+		{
+			_class = "C_OP_Decay"
+			m_bDisableOperator = true
+		},
+		{
+			_class = "C_OP_BasicMovement"
+		},
+		{
+			_class = "C_OP_InterpolateRadius"
+			m_flEndTime = 2.500000
+			m_flEndScale = 5.000000
+			m_bDisableOperator = true
+		},
+		{
+			_class = "C_OP_MovementRotateParticleAroundAxis"
+			m_flRotRate = -180.000000
+			m_bDisableOperator = true
+		},
+	]
+	m_Renderers =
+	[
+		{
+			_class = "C_OP_RenderSprites"
+		},
+		{
+			_class = "C_OP_RenderTrails"
+			m_flLengthScale = 2.000000
+		},
+	]
+	m_Initializers =
+	[
+		{
+			_class = "C_INIT_RingWave"
+			m_flParticlesPerOrbit = 18.000000
+			m_flInitialRadius = 1.000000
+			m_bEvenDistribution = true
+		},
+		{
+			_class = "C_INIT_VelocityRadialRandom"
+			m_fSpeedMin = 100.000000
+			m_fSpeedMax = 100.000000
+		},
+	]
+	m_Emitters =
+	[
+		{
+			_class = "C_OP_InstantaneousEmitter"
+			m_nParticlesToEmit = 18
+		},
+	]
+	m_ForceGenerators =
+	[
+		{
+			_class = "C_OP_AttractToControlPoint"
+			m_vecComponentScale =
+			[
+				1.000000,
+				1.000000,
+				3.000000,
+			]
+			m_fForceAmount = 1.000000
+			m_fFalloffPower = -1.000000
+		},
+		{
+			_class = "C_OP_LocalAccelerationForce"
+			m_vecAccel =
+			[
+				0.000000,
+				0.000000,
+				10.000000,
+			]
+			m_bDisableOperator = true
+		},
+		{
+			_class = "C_OP_TwistAroundAxis"
+			m_fForceAmount = 10.000000
+			m_bDisableOperator = true
+		},
+	]
+}

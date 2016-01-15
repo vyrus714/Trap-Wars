@@ -29,20 +29,14 @@ function SpawnMultipleCreeps( creep, creep_spawns, team )  -- creep = table with
                     if not c:HasInventory() then c:SetHasInventory(true) end
                     for _, item in pairs(creep.items) do c:AddItemByName(item) end
                 end
-                -- set initial waypoint                        AddItemByName
-                c:SetInitialGoalEntity(spawn)
+                -- set initial waypoint
+                --c:SetInitialGoalEntity(spawn)
+                ExecuteOrderFromTable{
+                    UnitIndex = c:entindex(),
+                    OrderType = DOTA_UNIT_ORDER_ATTACK_MOVE,
+                    Position  = spawn:GetRootMoveParent():GetAbsOrigin(),
+                    Queue     = true }
             end
         end
     end
-end
-
--- depricated, but not quite sure yet
-function SetWaypoint( creep, point )
-    if not creep then return end
-    ExecuteOrderFromTable{
-        UnitIndex = creep:entindex(),
-        OrderType = DOTA_UNIT_ORDER_ATTACK_MOVE,
-        Position  = point,
-        Queue     = true
-    }
 end

@@ -23,3 +23,9 @@ function OnPortal(trigger)  --  trigger.activator, trigger.caller
     -- kill the creep
     trigger.activator:Kill(nil, trigger.caller)
 end
+
+function OnEnteredGrid(trigger)
+end
+
+function OnExitedGrid(trigger)
+end

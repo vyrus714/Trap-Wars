@@ -1,5 +1,10 @@
 "use strict";
 
+function TestButton( button_number ) {
+  //$.Msg("JS: "+button_number)
+  GameEvents.SendCustomGameEventToServer("test_button", { id: button_number });
+}
+
 function PrintObject( object, space ) {
 	if( typeof space === 'undefined' ) {
 		var space = "   ";

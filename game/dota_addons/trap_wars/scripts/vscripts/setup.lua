@@ -1,7 +1,5 @@
 -- Global Variables - either set to a static value, or initialized to be set in InitGameMode()
-TW_TEAMS  = {}
-TW_CREEPS = {}
-
+TW_TEAMS = {}
 TW_DEFAULT_LIVES = 50  -- BALANCE
 
 
@@ -13,12 +11,16 @@ end
 function GameMode:InitGameMode()
     print('[Trap Wars] Setting up Game Mode')
 
-    -- set up teams
-    SetupTeams(TW_TEAMS, TW_DEFAULT_LIVES)
-    local max_players  = math.floor(GetTotalPlayers() / TableCount(TW_TEAMS))
+    -- team info
+    TW_TEAMS = Info:SetupTeams(TW_DEFAULT_LIVES)
+    Timers:CreateTimer(1, function() Info:DrawGridLines(TW_TEAMS) end)  -- FIXME ? a better place\function maybe?
+
+    -- set the max players for each team (rounds down)
+    local max_players = math.floor(Info:GetTotalPlayers() / Util:TableCount(TW_TEAMS))
     for team, _ in pairs(TW_TEAMS) do 
         GameRules:SetCustomGameTeamMaxPlayers(team, max_players)
     end
+
 
     -- other game rules
     GameRules:SetHeroSelectionTime(20)
@@ -31,6 +33,7 @@ function GameMode:InitGameMode()
     GameRules:SetHeroMinimapIconScale(1)
     GameRules:SetCreepMinimapIconScale(1)
     GameRules:SetStartingGold(10000)   -- FIXME
+    
 
     -- setup file listener functions
     ListenToGameEvent('player_connect_full', Dynamic_Wrap(GameMode, 'OnPlayerConnectFull'), self)
@@ -40,6 +43,9 @@ function GameMode:InitGameMode()
     ListenToGameEvent('npc_spawned', Dynamic_Wrap(GameMode, 'OnNPCSpawned'), self)
     ListenToGameEvent("trapwars_score_update", Dynamic_Wrap(GameMode, 'OnTrapWarsScoreUpdated'), self)
     CustomGameEventManager:RegisterListener("trapwars_modify_dummy", Dynamic_Wrap(GameMode, 'OnTrapWarsModifyDummy'))
+
+    CustomGameEventManager:RegisterListener("test_button", Dynamic_Wrap(GameMode, 'OnTestButton'))  -- FIXME TESTING
+
 
     -- continue in the gamemode file
     GameMode:OnInitGameMode()

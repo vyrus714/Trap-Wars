@@ -1,46 +1,26 @@
 function GameMode:OnInitGameMode()
-    -- Get all the required information on each creep spawner and put it in a global table
-    --CreepSpawners = Spawners:CreateSpawners()
-
     -- grid stuff
     --TileGrid = Grid:GetGridLocations()  -- get grid from the map
-    --Grid:SendToJS( TileGrid, "all" )    -- send the grid to the UI
-
-    --[[
-    for k,grid in pairs(TileGrid) do
-        DebugDrawLine_vCol(grid.start, grid.start+Vector(0,grid.stop.y-grid.start.y,0), Vector(0,255,0), true, -1)
-        DebugDrawLine_vCol(grid.start, grid.start+Vector(grid.stop.x-grid.start.x,0,0), Vector(0,255,0), true, -1)
-        DebugDrawLine_vCol(grid.stop, grid.stop+Vector(0,grid.start.y-grid.stop.y,0), Vector(0,255,0), true, -1)
-        DebugDrawLine_vCol(grid.stop, grid.stop+Vector(grid.start.x-grid.stop.x,0,0), Vector(0,255,0), true, -1)
-    end
-    ]]
-
-    --[[
-    TW_CREEPS = {  -- fixme
-        {name="npc_dota_creep_goodguys_melee",  team=DOTA_TEAM_GOODGUYS, count=2, rate=8},
-        {name="npc_dota_creep_goodguys_ranged", team=DOTA_TEAM_GOODGUYS, count=1, rate=8, items={"item_ring_of_basilius"}},
-        {name="npc_dota_creep_badguys_melee",  team=DOTA_TEAM_BADGUYS, count=2, rate=8},
-        {name="npc_dota_creep_badguys_ranged", team=DOTA_TEAM_BADGUYS, count=1, rate=8, items={"item_ring_of_basilius"}}
-    } ]]
 
     -- send the table information to our table: "trap_wars_info"
     --CustomNetTables:SetTableValue("trap_wars_info", "spawners", spawners)
     --CustomNetTables:SetTableValue("trap_wars_info", "portals", portals)
+
 end
 
 function GameMode:OnGameInProgress()
     --Spawners:SpawnCreepsOnInterval(CreepSpawners, 0, 10)
     --CreepSpawnThinker(TW_CREEPS)
     for team, info in pairs(TW_TEAMS) do
-        AddCreep(info.creeps, "npc_dota_creep_goodguys_melee", 0, 10, 1)
-        AddCreep(info.creeps, "npc_dota_creep_goodguys_ranged", 0, 10, 1, {"item_ring_of_basilius"})
+        Info:AddCreep(info.creeps, "npc_dota_creep_goodguys_melee", 0, 10, 1)
+        Info:AddCreep(info.creeps, "npc_dota_creep_goodguys_ranged", 0, 10, 1, {"item_ring_of_basilius"})
         CreepSpawnThinker(info.creeps, info.creep_spawns, team)
     end
 
     FireGameEvent( "show_center_message", {message="Begin!", duration=3} )
 end
 
-function GameMode:OnNPCSpawned(keys)
+function GameMode:OnNPCSpawned( keys )
     local npc = EntIndexToHScript(keys.entindex)
 
     if npc:IsRealHero() and npc.bFirstSpawned == nil then
@@ -49,7 +29,7 @@ function GameMode:OnNPCSpawned(keys)
     end
 end
 
-function GameMode:OnHeroInGame(hero)
+function GameMode:OnHeroInGame( hero )
     --[[ grid stuff
     local ent = SpawnEntityFromTableSynchronous("prop_dynamic", {
         origin = Vector(0, 0, 0),
@@ -76,7 +56,8 @@ function GameMode:OnHeroInGame(hero)
 end
 
 -- this updates the score and determines win/loss
-function GameMode:OnTrapWarsScoreUpdated(keys)
+function GameMode:OnTrapWarsScoreUpdated( keys )
+    if true then return end  -- FIXME
     -- keys.team           team id #
     -- keys.delta_score    desired change in score
     if not keys.team or not keys.delta_score then return end
@@ -101,7 +82,7 @@ function GameMode:OnTrapWarsScoreUpdated(keys)
 end
 
 -- modify some player's dummy unit
-function GameMode:OnTrapWarsModifyDummy(keys)
+function GameMode:OnTrapWarsModifyDummy( keys )
     if not keys.entid then return end             -- no entity id, no deal
     
     local entity = EntIndexToHScript(keys.entid)  -- no entity BY that id? also no deal!
@@ -114,5 +95,28 @@ function GameMode:OnTrapWarsModifyDummy(keys)
     if keys.angle then                            -- changing angle (pitch)
         local a = entity:GetAngles()
         entity:SetAngles( a.x, a.y+keys.angle, a.z )
+    end
+end
+
+-- FIXME test function when test panel buttons are pressed
+function GameMode:OnTestButton( keys )
+    if keys.id == 1 then
+        print("LUA: "..keys.id)
+        print("switching to radiant")
+        PlayerResource:GetPlayer(0):SetTeam(DOTA_TEAM_GOODGUYS)
+    end
+    --------------------
+    if keys.id == 2 then
+        print("LUA: "..keys.id)
+        print("switching to dire")
+        PlayerResource:GetPlayer(0):SetTeam(DOTA_TEAM_BADGUYS)
+    end
+    --------------------
+    if keys.id == 3 then
+        print("LUA: "..keys.id)
+    end
+    --------------------
+    if keys.id == 4 then
+        print("LUA: "..keys.id)
     end
 end
