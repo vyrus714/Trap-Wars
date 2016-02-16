@@ -25,7 +25,17 @@ function OnPortal(trigger)  --  trigger.activator, trigger.caller
 end
 
 function OnEnteredGrid(trigger)
+    if not trigger.activator:IsRealHero() then return end
+    print(trigger.activator:GetName().." entered "..trigger.caller:GetName())
 end
 
 function OnExitedGrid(trigger)
+    if not trigger.activator:IsRealHero() then return end
+    print(trigger.activator:GetName().." exited  "..trigger.caller:GetName())
+end
+
+function OnTouchingGrid(trigger)
+    print("touching"..GameRules:GetGameTime())
+    --if not trigger.activator:IsRealHero() then return end
+    --print(trigger.activator:GetName().." is touching "..trigger.caller:GetName())
 end

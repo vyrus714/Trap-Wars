@@ -27,12 +27,12 @@ function Info:SetupTeams( default_lives )
             claimed   = {},
             shared    = Entities:FindAllByName("Grid_"..team)
         }
-        Info:GetGridOutline(found_grids.shared)
+        found_grids.shared.lines = Info:GetGridOutline(found_grids.shared)
         for i=1, DOTA_MAX_TEAM do
             local temp = Entities:FindAllByName("Grid_"..team.."_"..i)
             if type(temp) ~= nil and 0 < Util:TableCount(temp) then
                 found_grids.unclaimed[i] = temp
-                Info:GetGridOutline(found_grids.unclaimed[i])
+                found_grids.unclaimed[i].lines = Info:GetGridOutline(found_grids.unclaimed[i])
             end
         end
 
@@ -73,39 +73,11 @@ function Info:GetTotalPlayers()
 end
 
 ---------------------------------------------------------------------------
--- grid table functions
+-- Per-Player Grid Functions -- if i ever get around to it i'll rename this, since it's slightly(majorly) confusing FIXME
 ---------------------------------------------------------------------------
-function Info:ClaimGrid( team_grids, grid_key, player_id )
-    -- make sure the info given is good
-    if  type(team_grids.claimed)   ~= "table" or type(grid_key)  ~= "number" or
-        type(team_grids.unclaimed) ~= "table" or type(player_id) ~= "number" then return end
-
-    -- create the player's table if it doesn't exist
-    if not team_grids.claimed[player_id] then team_grids.claimed[player_id]={} end
-
-    -- add the grid to the player's table
-    table.insert(team_grids.claimed[player_id], team_grids.unclaimed[grid_key])
-
-    -- remove the grid from the unclaimed table
-    table.remove(team_grids.unclaimed, grid_key)
-end
-
-function Info:UnClaimGrid( team_grids, grid_key, player_id )
-    -- make sure the info given is good
-    if  type(team_grids.claimed)   ~= "table" or type(grid_key)  ~= "number" or
-        type(team_grids.unclaimed) ~= "table" or type(player_id) ~= "number" then return end
-
-    -- add the grid to the unclaimed table
-    table.insert(team_grids.unclaimed, team_grids.claimed[player_id][grid_key])
-
-    -- remove the grid from the player's table
-    table.remove(team_grids.claimed[player_id], grid_key)
-end
-
---local function IsInEntity(point, entity) end
-function Info:IsInGrid(point, grid)
-    local min = grid:GetBoundingMins() + grid:GetAbsOrigin()
-    local max = grid:GetBoundingMaxs() + grid:GetAbsOrigin()
+function Info:IsInEntity(point, entity)
+    local min = entity:GetBoundingMins() + entity:GetAbsOrigin()
+    local max = entity:GetBoundingMaxs() + entity:GetAbsOrigin()
     max.z = min.z
 
     if  min.x <= point.x and point.x <= max.x and
@@ -113,12 +85,20 @@ function Info:IsInGrid(point, grid)
     return false
 end
 
+function Info:IsInGrid(point, grid)
+    for i=1, #grid do
+        if Info:IsInEntity(point, grid[i]) then return true end
+    end
+    return false
+end
+
 function Info:GetGridOutline( grid )
+    local grid_lines = {}
+
     for _, ent in pairs(grid) do
         local center, max, min = ent:GetAbsOrigin(), ent:GetBoundingMaxs(), ent:GetBoundingMins()
         max.z = min.z
 
-        ent.lines = {}
         local lines = {
             {start=center+max*Vector(-1,1,1), stop=center+max},
             {start=center+max*Vector(1,-1,1), stop=center+max},
@@ -156,7 +136,7 @@ function Info:GetGridOutline( grid )
                 local in_ent = false
                 for _, g in pairs(grid) do
                     if not in_ent and g ~= ent then
-                        if Info:IsInGrid(point, g) then in_ent = true end
+                        if Info:IsInEntity(point, g) then in_ent = true end
                     end
                 end
 
@@ -164,7 +144,7 @@ function Info:GetGridOutline( grid )
                 if drawing then
                     if in_ent or j == iter-1 then
                         drawing = false
-                        table.insert(ent.lines, {start=lstart, stop=point})
+                        table.insert(grid_lines, {start=lstart, stop=point})
                     end
                 else
                     if not in_ent then
@@ -175,39 +155,27 @@ function Info:GetGridOutline( grid )
             end
         end
     end
+
+    return grid_lines
 end
 
-function Info:DrawGridLines( team_table )
-    for _, team in pairs(team_table) do
-        -- shared grids
-        Info:DrawGridLine(team.grids.shared, Vector(0, 0, 0))
-        -- unclaimed grids
-        for _, grid in pairs(team.grids.unclaimed) do
-            Info:DrawGridLine(grid, Vector(255, 255, 255))
-        end
-        -- claimed grids
-        for player_id, grid in pairs(team.grids.claimed) do
-            Info:DrawGridLine(grid, PlayerResource:GetPlayer(player_id):GetCustomPlayerColor())  -- FIXME valve declined to give us this function
-        end
-    end
+---------------------------------------------------------------------------
+-- Universal Grid Functions -- universal grid will be 128x128 per tile centered at (0, 0, 0)
+---------------------------------------------------------------------------
+local tile = 128
+
+-- the absolute center of the nearest grid tile to _position_
+function Info:GetGridCenter( position )
+    return Vector(   math.floor((position.x+tile/2)/tile)*tile,
+                     math.floor((position.y+tile/2)/tile)*tile,
+                    (math.floor(position.z/tile)+0.5)    *tile  )
 end
 
-function Info:DrawGridLine( grid, color )
-    if type(grid.particles) ~= "table" then grid.particles={} end
-
-    for _, ent in pairs(grid) do
-        if type(ent.lines) == "table" then
-            for _, line in pairs(ent.lines) do
-                local part = ParticleManager:CreateParticle("particles/line.vpcf", PATTACH_WORLDORIGIN, nil)
-                ParticleManager:SetParticleControl(part, 0, line.start)
-                ParticleManager:SetParticleControl(part, 1, line.stop)
-                ParticleManager:SetParticleControl(part, 2, color)
-                table.insert(grid.particles, part)
-
-                --DebugDrawLine(line.start+Vector(0,0,8), line.stop+Vector(0,0,8), color.x, color.y, color.z, false, -1)
-            end
-        end
-    end
+-- x and y are centered, z is floored for practicality
+function Info:Get2DGridCenter( position )
+    return Vector(  math.floor((position.x+tile/2)/tile)*tile,
+                    math.floor((position.y+tile/2)/tile)*tile,
+                    math.floor(position.z/tile)         *tile  )
 end
 
 ---------------------------------------------------------------------------

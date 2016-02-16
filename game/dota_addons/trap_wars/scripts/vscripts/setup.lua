@@ -1,5 +1,6 @@
 -- Global Variables - either set to a static value, or initialized to be set in InitGameMode()
 TW_TEAMS = {}
+TW_PLAYER_COLORS = {}
 TW_DEFAULT_LIVES = 50  -- BALANCE
 
 
@@ -13,7 +14,6 @@ function GameMode:InitGameMode()
 
     -- team info
     TW_TEAMS = Info:SetupTeams(TW_DEFAULT_LIVES)
-    Timers:CreateTimer(1, function() Info:DrawGridLines(TW_TEAMS) end)  -- FIXME ? a better place\function maybe?
 
     -- set the max players for each team (rounds down)
     local max_players = math.floor(Info:GetTotalPlayers() / Util:TableCount(TW_TEAMS))
@@ -37,6 +37,7 @@ function GameMode:InitGameMode()
 
     -- setup file listener functions
     ListenToGameEvent('player_connect_full', Dynamic_Wrap(GameMode, 'OnPlayerConnectFull'), self)
+    ListenToGameEvent('player_team', Dynamic_Wrap(GameMode, 'OnPlayerTeam'), self)
     ListenToGameEvent('game_rules_state_change', Dynamic_Wrap(GameMode, 'OnGameRulesStateChange'), self)
 
     -- gamemode file listener functions
@@ -69,6 +70,44 @@ function GameMode:OnPlayerConnectFull()
     GameModeEntity:SetTopBarTeamValuesOverride(true)  -- FIXME
     GameModeEntity:SetTopBarTeamValue(DOTA_TEAM_GOODGUYS, TW_DEFAULT_LIVES)  -- FIXME
     GameModeEntity:SetTopBarTeamValue(DOTA_TEAM_BADGUYS, TW_DEFAULT_LIVES)  -- FIXME
+end
+
+-- called when a player joins\changes teams - bots result with a pid of -1, very annoying
+function GameMode:OnPlayerTeam(keys)
+    -- the player in question
+    local player = PlayerInstanceFromIndex(keys.userid)
+    -- if (for some reason) it's not actually a player, gtfo
+    if not player:IsPlayer() then return end
+    -- get the player id
+    local pid = player:GetPlayerID()
+
+
+    -- only execute this the first time they join a team
+    if not player._hasJoined then
+        player._hasJoined = true
+
+        -- for each player that connects, give them a random color and store it in TW_PLAYER_COLORS
+        local red, green, blue = 255, 255, 255
+        -- attempt to find a suitable color 100 times before giving up and returning white
+        for i=1, 100 do
+            local r, g, b = RandomInt(0, 255), RandomInt(0, 255), RandomInt(0, 255)
+
+            local valid = true
+            for _, color in pairs(TW_PLAYER_COLORS) do
+                if 102 < math.abs(color.x-r) and 102 < math.abs(color.y-g) and 102 < math.abs(color.z-b) then valid=false end
+            end
+
+            if valid then
+                red, green, blue = r, g, b
+                break
+            end
+        end
+        --print("setting player "..pid.."'s color to: ("..red.." "..green.." "..blue..")")
+        -- set the player's color
+        PlayerResource:SetCustomPlayerColor(pid, red, green, blue)
+        -- add color to TW_PLAYER_COLORS
+        TW_PLAYER_COLORS[pid] = Vector(red, green, blue)
+    end
 end
 
 function GameMode:OnGameRulesStateChange(keys)

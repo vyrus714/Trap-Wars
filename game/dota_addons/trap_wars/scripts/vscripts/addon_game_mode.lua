@@ -16,7 +16,9 @@ function Precache( context )
 
   	--PrecacheResource("soundfile", "soundevents/voscripts/game_sounds_vo_announcer.vsndevts", context)
 
-  	PrecacheResource("particle", "particles/outline.vpcf", context)
+  	PrecacheResource("particle", "particles/line_stars.vpcf", context)
+  	PrecacheResource("particle", "particles/line_star_burst.vpcf", context)
+  	PrecacheResource("particle", "particles/claim_indicator_outline.vpcf", context)
 end
 
 -- Create the game mode when we activate

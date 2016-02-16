@@ -16,7 +16,7 @@ function Util:PrintTable(t, indent, done)
         table.insert(l, k)
     end
 
-    table.sort(l)
+    --table.sort(l)
     for k, v in ipairs(l) do
         -- Ignore FDesc
         if v ~= 'FDesc' then
@@ -115,4 +115,14 @@ function Util:ShallowTableCompareLoose( t1, t2 )
     end
 
     return true
+end
+
+-- distance between two points in 2d or 3d, wants a Vector() -or- table with x,y,z values
+function Util:Distance( point1, point2 )
+    local inside = (point2.x-point1.x)^2 + (point2.y-point1.y)^2
+    if type(point1.z) == "number" and type(point2.z) == "number" then
+        inside = inside + (point2.z-point1.z)^2
+    end
+
+    return math.sqrt(inside)
 end
