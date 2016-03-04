@@ -8,14 +8,14 @@ function SpawnTrap( position, trap_name, player_id )
 	-- make sure there isn't a trap in this tile already
 	if Info:IsBuildingInTile(position) then print("3") return false end
 	-- check if trap name is valid
-	if NPC_UNITS_CUSTOM[trap_name] == nil then return false end
+	if GameRules.npc_units_custom[trap_name] == nil then return false end
 
 
 	-- plonk trap
 	local trap = CreateUnitByName(trap_name, Info:Get2DGridCenter(position), false, nil, hero, team)
 	-- add modifiers to the trap (if it has them)
-	if NPC_UNITS_CUSTOM[trap_name].modifiers ~= nil then
-		for _, modifier in pairs(NPC_UNITS_CUSTOM[trap_name].modifiers) do
+	if GameRules.npc_units_custom[trap_name].modifiers ~= nil then
+		for _, modifier in pairs(GameRules.npc_units_custom[trap_name].modifiers) do
 			trap:AddNewModifier(nil, nil, modifier, {}) 
 		end
 	end

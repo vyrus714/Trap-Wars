@@ -11,7 +11,7 @@ function GameMode:OnInitGameMode()
     -------------------------------------------------------------------
     local tick, ticks_to_claim = 0.5, 8
     Timers:CreateTimer(function()
-        for team, info in pairs(TW_TEAMS) do
+        for team, info in pairs(GameRules.teams) do
             -- get players on this team
             local players = {}
             for i=1, PlayerResource:GetPlayerCountForTeam(team) do
@@ -46,7 +46,7 @@ function GameMode:OnInitGameMode()
                 for pid, hero in pairs(players) do
                     -- particle information
                     local theta = 2*math.pi/ticks_to_claim
-                    local color = TW_PLAYER_COLORS[pid] or Vector(255, 255, 255)
+                    local color = GameRules.player_colors[pid] or Vector(255, 255, 255)
 
                     -- are we touching this grid?
                     local touching = false
@@ -188,7 +188,7 @@ function GameMode:OnInitGameMode()
 end
 
 function GameMode:OnGameInProgress()
-    local grids = TW_TEAMS[2].grids.claimed
+    local grids = GameRules.teams[2].grids.claimed
     Timers:CreateTimer(function()
         local player, hero, position = nil, nil, nil
         player = PlayerResource:GetPlayer(0)
@@ -197,8 +197,8 @@ function GameMode:OnGameInProgress()
         if position ~= nil then
             DebugDrawBox(Info:Get2DGridCenter(position), Vector(-64, -64, 0), Vector(64, 64, 0), 0, 128, 0, 0.75, 1/10)
             DebugDrawSphere(Info:GetGridCenter(position), Vector(0, 0, 128), 0.75, 20, true, 1/10)
-            if TW_TEAMS[2].grids.claimed[0] ~= nil then
-                for _, grid in pairs(TW_TEAMS[2].grids.claimed[0]) do
+            if GameRules.teams[2].grids.claimed[0] ~= nil then
+                for _, grid in pairs(GameRules.teams[2].grids.claimed[0]) do
                     if Info:IsInGrid(position, grid) then
                         DebugDrawSphere(Info:GetGridCenter(position), Vector(128, 0, 0), 0.75, 24, true, 1/10)
                     end
@@ -210,7 +210,7 @@ function GameMode:OnGameInProgress()
 
     --Spawners:SpawnCreepsOnInterval(CreepSpawners, 0, 10)
     --CreepSpawnThinker(TW_CREEPS)
-    for team, info in pairs(TW_TEAMS) do
+    for team, info in pairs(GameRules.teams) do
         Info:AddCreep(info.creeps, "npc_trapwars_creep_kobol_basic", 0, 10, 3)
         Info:AddCreep(info.creeps, "npc_trapwars_creep_kobol_spear", 0, 10, 1, {"item_ring_of_basilius"})
         CreepSpawnThinker(info.creeps, info.creep_spawns, team)
@@ -259,14 +259,14 @@ function GameMode:OnTrapWarsScoreUpdated( keys )
     -- keys.team           team id #
     -- keys.delta_score    desired change in score
     if not keys.team or not keys.delta_score then return end
-    if not TW_TEAMS[keys.team] then return end
+    if not GameRules.teams[keys.team] then return end
 
     -- change the score
-    TW_TEAMS[keys.team].lives = TW_TEAMS[keys.team].lives + keys.delta_score
+    GameRules.teams[keys.team].lives = GameRules.teams[keys.team].lives + keys.delta_score
 
     -- check game conditions   <- FIXME, won't work for more than 2 teams
-    if TW_TEAMS[keys.team].lives < 1 then
-        TW_TEAMS[keys.team].lives = 0
+    if GameRules.teams[keys.team].lives < 1 then
+        GameRules.teams[keys.team].lives = 0
         GameRules:SetSafeToLeave(true)
         if keys.team == DOTA_TEAM_GOODGUYS then          -- FIXME, see above, need to implement per-team loss that won't end game
             GameRules:SetGameWinner(DOTA_TEAM_BADGUYS)
@@ -276,7 +276,7 @@ function GameMode:OnTrapWarsScoreUpdated( keys )
     end
 
     -- update the scoreboard  <- FIXME, still only works for 2 teams (radient/dire), need to write custom scoreboard
-    GameRules:GetGameModeEntity():SetTopBarTeamValue(keys.team, TW_TEAMS[keys.team].lives)
+    GameRules:GetGameModeEntity():SetTopBarTeamValue(keys.team, GameRules.teams[keys.team].lives)
 end
 
 -- modify some player's dummy unit

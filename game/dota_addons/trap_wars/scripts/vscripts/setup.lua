@@ -1,15 +1,16 @@
 -- global variables, referred to in functions from the game folder
-NPC_UNITS_CUSTOM     = {}
-NPC_ABILITIES_CUSTOM = {}
+GameRules.npc_units_custom = {}
+GameRules.npc_abilities_custom = {}
 
-TW_TEAMS         = {}
-TW_PLAYER_COLORS = {}
-TW_DEFAULT_LIVES = 50  -- BALANCE
+GameRules.teams = {}
+GameRules.player_colors = {}
+GameRules.default_lives = 50
 
 
--- function wrapper
+-- function state object
 if GameMode == nil then
     GameMode = class({})
+    GameRules.GameMode = GameMode
 end
 
 -- libraries
@@ -27,15 +28,15 @@ function GameMode:InitGameMode()
     print('[Trap Wars] Setting up Game Mode')
 
     -- get the KV data from the npc_*_custom files
-    NPC_UNITS_CUSTOM     = LoadKeyValues("scripts/npc/npc_units_custom.txt")
-    NPC_ABILITIES_CUSTOM = LoadKeyValues("scripts/npc/npc_abilities_custom.txt")
+    GameRules.npc_units_custom = LoadKeyValues("scripts/npc/npc_units_custom.txt")
+    GameRules.npc_abilities_custom = LoadKeyValues("scripts/npc/npc_abilities_custom.txt")
 
     -- team info
-    TW_TEAMS = Info:SetupTeams(TW_DEFAULT_LIVES)
+    GameRules.teams = Info:SetupTeams(GameRules.default_lives)
 
     -- set the max players for each team (rounds down)
-    local max_players = math.floor(Info:GetTotalPlayers() / Util:TableCount(TW_TEAMS))
-    for team, _ in pairs(TW_TEAMS) do 
+    local max_players = math.floor(Info:GetTotalPlayers() / Util:TableCount(GameRules.teams))
+    for team, _ in pairs(GameRules.teams) do 
         GameRules:SetCustomGameTeamMaxPlayers(team, max_players)
     end
 
@@ -86,8 +87,8 @@ function GameMode:OnPlayerConnectFull()
     
     --GameModeEntity:SetTopBarTeamValuesVisible(true)
     GameModeEntity:SetTopBarTeamValuesOverride(true)  -- FIXME
-    GameModeEntity:SetTopBarTeamValue(DOTA_TEAM_GOODGUYS, TW_DEFAULT_LIVES)  -- FIXME
-    GameModeEntity:SetTopBarTeamValue(DOTA_TEAM_BADGUYS, TW_DEFAULT_LIVES)  -- FIXME
+    GameModeEntity:SetTopBarTeamValue(DOTA_TEAM_GOODGUYS, GameRules.default_lives)  -- FIXME
+    GameModeEntity:SetTopBarTeamValue(DOTA_TEAM_BADGUYS, GameRules.default_lives)  -- FIXME
 end
 
 -- called when a player joins\changes teams - bots result with a pid of -1, very annoying
@@ -104,14 +105,14 @@ function GameMode:OnPlayerTeam(keys)
     if not player._hasJoined then
         player._hasJoined = true
 
-        -- for each player that connects, give them a random color and store it in TW_PLAYER_COLORS
+        -- for each player that connects, give them a random color and store it in GameRules.player_colors
         local red, green, blue = 255, 255, 255
         -- attempt to find a suitable color 100 times before giving up and returning white
         for i=1, 100 do
             local r, g, b = RandomInt(0, 255), RandomInt(0, 255), RandomInt(0, 255)
 
             local valid = true
-            for _, color in pairs(TW_PLAYER_COLORS) do
+            for _, color in pairs(GameRules.player_colors) do
                 if 102 < math.abs(color.x-r) and 102 < math.abs(color.y-g) and 102 < math.abs(color.z-b) then valid=false end
             end
 
@@ -123,8 +124,8 @@ function GameMode:OnPlayerTeam(keys)
         --print("setting player "..pid.."'s color to: ("..red.." "..green.." "..blue..")")
         -- set the player's color
         PlayerResource:SetCustomPlayerColor(pid, red, green, blue)
-        -- add color to TW_PLAYER_COLORS
-        TW_PLAYER_COLORS[pid] = Vector(red, green, blue)
+        -- add color to GameRules.player_colors
+        GameRules.player_colors[pid] = Vector(red, green, blue)
     end
 end
 

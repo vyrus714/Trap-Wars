@@ -92,13 +92,13 @@ function Info:IsInGrid( point, grid )
     return false
 end
 
--- this one relies on the global info in TW_TEAMS
+-- this one relies on the global info in GameRules.teams
 function Info:IsInPlayersGrid( point, player_id )
     local team = PlayerResource:GetTeam(player_id)
-    if  TW_TEAMS[team] == nil or TW_TEAMS[team].grids == nil or TW_TEAMS[team].grids.claimed == nil or
-        TW_TEAMS[team].grids.claimed[player_id] == nil then return false end
+    if  GameRules.teams[team] == nil or GameRules.teams[team].grids == nil or GameRules.teams[team].grids.claimed == nil or
+        GameRules.teams[team].grids.claimed[player_id] == nil then return false end
 
-    for _, grid in pairs(TW_TEAMS[team].grids.claimed[player_id]) do
+    for _, grid in pairs(GameRules.teams[team].grids.claimed[player_id]) do
         if Info:IsInGrid(point, grid) then return true end
     end
 
@@ -107,8 +107,8 @@ end
 
 -- as does this one
 function Info:IsInSharedGrid( point, team )
-    if TW_TEAMS[team] == nil or TW_TEAMS[team].grids == nil or TW_TEAMS[team].grids.shared == nil then return false end
-    if Info:IsInGrid(point, TW_TEAMS[team].grids.shared) then return true end
+    if GameRules.teams[team] == nil or GameRules.teams[team].grids == nil or GameRules.teams[team].grids.shared == nil then return false end
+    if Info:IsInGrid(point, GameRules.teams[team].grids.shared) then return true end
     return false
 end
 

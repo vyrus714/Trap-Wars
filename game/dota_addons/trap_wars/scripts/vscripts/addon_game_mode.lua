@@ -49,6 +49,5 @@ end
 
 -- Create the game mode when we activate
 function Activate()
-  	GameRules.GameMode = GameMode()
   	GameRules.GameMode:InitGameMode()
 end
