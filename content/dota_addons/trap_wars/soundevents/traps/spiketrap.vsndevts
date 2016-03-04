@@ -1,0 +1,68 @@
+"trap.spiketrap.depressed"
+{
+    "operator_stacks"
+    {
+        "update_stack"
+        {
+            "reference_operator"
+            {
+                "operator"              "sos_reference_stack"
+                "reference_stack"       "dota_src1_3d"
+                "operator_variables"
+                {
+                    "vsnd_files"
+                    {
+                        "value"
+                        {
+                            "00"        "sounds/physics/footsteps/hero/rattletrap/foley01.vsnd"
+                            "01"        "sounds/physics/footsteps/hero/rattletrap/foley01.vsnd"
+                            "02"        "sounds/physics/footsteps/hero/rattletrap/foley01.vsnd"
+                            "03"        "sounds/physics/footsteps/hero/rattletrap/foley01.vsnd"
+                            "04"        "sounds/physics/footsteps/hero/rattletrap/foley01.vsnd"
+                        }
+                    }
+                    "volume"            {   "value"     "0.90000"  }
+                    "pitch_rand_min"    {   "value"     "-0.05000"  }
+                    "pitch_rand_max"    {   "value"     "0.050000"  }
+                    "pitch"             {   "value"     "1.000000"  }
+                    "soundlevel"        {   "value"     "100.00000" }
+                    "distance_max"      {   "value"     "1200.000"  }
+                    "event_type"        {   "value"     "1.000000"  }
+                }
+            }
+        }
+    }
+}
+
+"trap.spiketrap.spikes"
+{
+    "operator_stacks"
+    {
+        "update_stack"
+        {
+            "reference_operator"
+            {
+                "operator"              "sos_reference_stack"
+                "reference_stack"       "dota_src1_3d"
+                "operator_variables"
+                {
+                    "vsnd_files"
+                    {
+                        "value"
+                        {
+                            "00"        "sounds/weapons/hero/magnataur/attack01.vsnd"
+                            "01"        "sounds/weapons/hero/magnataur/attack02.vsnd"
+                        }
+                    }
+                    "volume"            {   "value"     "0.80000"  }
+                    "pitch_rand_min"    {   "value"     "-0.05000"  }
+                    "pitch_rand_max"    {   "value"     "0.050000"  }
+                    "pitch"             {   "value"     "1.000000"  }
+                    "soundlevel"        {   "value"     "100.00000" }
+                    "distance_max"      {   "value"     "1200.000"  }
+                    "event_type"        {   "value"     "1.000000"  }
+                }
+            }
+        }
+    }
+}

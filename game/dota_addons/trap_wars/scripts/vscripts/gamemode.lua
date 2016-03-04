@@ -188,16 +188,20 @@ function GameMode:OnInitGameMode()
 end
 
 function GameMode:OnGameInProgress()
-    local hero = PlayerResource:GetPlayer(0):GetAssignedHero()
     local grids = TW_TEAMS[2].grids.claimed
     Timers:CreateTimer(function()
-        local position = hero:GetAbsOrigin()
-        DebugDrawBox(Info:Get2DGridCenter(position), Vector(-64, -64, 0), Vector(64, 64, 0), 0, 128, 0, 0.75, 1/10)
-        DebugDrawSphere(Info:GetGridCenter(position), Vector(0, 0, 128), 0.75, 20, true, 1/10)
-        if TW_TEAMS[2].grids.claimed[0] ~= nil then
-            for _, grid in pairs(TW_TEAMS[2].grids.claimed[0]) do
-                if Info:IsInGrid(position, grid) then
-                    DebugDrawSphere(Info:GetGridCenter(position), Vector(128, 0, 0), 0.75, 24, true, 1/10)
+        local player, hero, position = nil, nil, nil
+        player = PlayerResource:GetPlayer(0)
+        if player ~= nil then hero=player:GetAssignedHero() end
+        if hero   ~= nil then position=hero:GetAbsOrigin() end
+        if position ~= nil then
+            DebugDrawBox(Info:Get2DGridCenter(position), Vector(-64, -64, 0), Vector(64, 64, 0), 0, 128, 0, 0.75, 1/10)
+            DebugDrawSphere(Info:GetGridCenter(position), Vector(0, 0, 128), 0.75, 20, true, 1/10)
+            if TW_TEAMS[2].grids.claimed[0] ~= nil then
+                for _, grid in pairs(TW_TEAMS[2].grids.claimed[0]) do
+                    if Info:IsInGrid(position, grid) then
+                        DebugDrawSphere(Info:GetGridCenter(position), Vector(128, 0, 0), 0.75, 24, true, 1/10)
+                    end
                 end
             end
         end
@@ -207,8 +211,8 @@ function GameMode:OnGameInProgress()
     --Spawners:SpawnCreepsOnInterval(CreepSpawners, 0, 10)
     --CreepSpawnThinker(TW_CREEPS)
     for team, info in pairs(TW_TEAMS) do
-        Info:AddCreep(info.creeps, "npc_dota_creep_goodguys_melee", 0, 10, 1)
-        Info:AddCreep(info.creeps, "npc_dota_creep_goodguys_ranged", 0, 10, 1, {"item_ring_of_basilius"})
+        Info:AddCreep(info.creeps, "npc_trapwars_creep_kobol_basic", 0, 10, 3)
+        Info:AddCreep(info.creeps, "npc_trapwars_creep_kobol_spear", 0, 10, 1, {"item_ring_of_basilius"})
         CreepSpawnThinker(info.creeps, info.creep_spawns, team)
     end
 
@@ -295,26 +299,24 @@ end
 -- FIXME test function when test panel buttons are pressed
 function GameMode:OnTestButton( keys )
     if keys.id == 1 then
-        print("LUA: "..keys.id)
-        print("TW_TEAMS[2].grids: ")
-        Util:PrintTable(TW_TEAMS[2].grids)
+        --print("LUA: "..keys.id)
+        local hero = PlayerResource:GetPlayer(0):GetAssignedHero()
+        local yesno = SpawnTrap(hero:GetAbsOrigin(), "npc_trapwars_trap_firevent", 0)
+        if yesno then print("trap spawned") else print("trap NOT spawned") end
     end
     --------------------
     if keys.id == 2 then
-        print("LUA: "..keys.id)
-        print(GetSystemTime())
-        print(GetSystemDate())
+        --print("LUA: "..keys.id)
+        local hero = PlayerResource:GetPlayer(0):GetAssignedHero()
+        local yesno = SpawnTrap(hero:GetAbsOrigin(), "npc_trapwars_trap_spike", 0)
+        if yesno then print("trap spawned") else print("trap NOT spawned") end
     end
     --------------------
     if keys.id == 3 then
         print("LUA: "..keys.id)
-        print("TW_PLAYER_COLORS: ")
-        Util:PrintTable(TW_PLAYER_COLORS)
     end
     --------------------
     if keys.id == 4 then
         print("LUA: "..keys.id)
-        print("TW_TEAMS: ")
-        Util:PrintTable(TW_TEAMS)
     end
 end

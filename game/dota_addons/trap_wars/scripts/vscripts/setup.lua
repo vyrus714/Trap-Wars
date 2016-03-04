@@ -1,16 +1,34 @@
--- Global Variables - either set to a static value, or initialized to be set in InitGameMode()
-TW_TEAMS = {}
+-- global variables, referred to in functions from the game folder
+NPC_UNITS_CUSTOM     = {}
+NPC_ABILITIES_CUSTOM = {}
+
+TW_TEAMS         = {}
 TW_PLAYER_COLORS = {}
 TW_DEFAULT_LIVES = 50  -- BALANCE
 
 
--- global function wrapper
+-- function wrapper
 if GameMode == nil then
     GameMode = class({})
 end
 
+-- libraries
+require('libraries/util')
+require('libraries/timers')
+-- game functions
+require('game/mapinfo')
+require('game/spawning')
+require('game/traps')
+-- main game logic
+require('gamemode')
+
+
 function GameMode:InitGameMode()
     print('[Trap Wars] Setting up Game Mode')
+
+    -- get the KV data from the npc_*_custom files
+    NPC_UNITS_CUSTOM     = LoadKeyValues("scripts/npc/npc_units_custom.txt")
+    NPC_ABILITIES_CUSTOM = LoadKeyValues("scripts/npc/npc_abilities_custom.txt")
 
     -- team info
     TW_TEAMS = Info:SetupTeams(TW_DEFAULT_LIVES)

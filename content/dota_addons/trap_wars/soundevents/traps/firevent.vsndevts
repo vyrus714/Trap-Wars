@@ -1,0 +1,33 @@
+"trap.firevent.fireburst"
+{
+    "operator_stacks"
+    {
+        "update_stack"
+        {
+            "reference_operator"
+            {
+                "operator"              "sos_reference_stack"
+                "reference_stack"       "dota_src1_3d"
+                "operator_variables"
+                {
+                    "vsnd_files"
+                    {
+                        "value"
+                        {
+                            "00"        "sounds/weapons/hero/dragon_knight/dragonknight_elderdragon_shoot1.vsnd"
+                            "01"        "sounds/weapons/hero/dragon_knight/dragonknight_elderdragon_shoot2.vsnd"
+                            "02"        "sounds/weapons/hero/dragon_knight/dragonknight_elderdragon_shoot3.vsnd"
+                        }
+                    }
+                    "volume"            {   "value"     "1.00000"  }
+                    "pitch_rand_min"    {   "value"     "-0.05000"  }
+                    "pitch_rand_max"    {   "value"     "0.050000"  }
+                    "pitch"             {   "value"     "1.000000"  }
+                    "soundlevel"        {   "value"     "100.00000" }
+                    "distance_max"      {   "value"     "1200.000"  }
+                    "event_type"        {   "value"     "1.000000"  }
+                }
+            }
+        }
+    }
+}

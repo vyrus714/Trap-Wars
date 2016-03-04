@@ -1,6 +1,6 @@
 -- creep format: { name="creepname", count=1, rate=4, owner=OWNER_PLAYER_ID, random=false, items={"itemname", "itemname"} }
 
--- *** Global Variable Dependant Spawning Functions ***
+---- Global Variable Dependant Spawning Functions ----
 function CreepSpawnThinker( creep_table, creep_spawns, team )
     for k,creep in pairs(creep_table) do
         creep._incr = 0

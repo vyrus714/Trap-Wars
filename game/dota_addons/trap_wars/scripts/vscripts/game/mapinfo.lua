@@ -1,10 +1,10 @@
--- wrap utility functions in a class to avoid name issues
+-- wrap utility functions in a class to avoid naming issues
 if Info == nil then
     Info = class({})
 end
 
 ---------------------------------------------------------------------------
--- Setup for team information
+-- Setup for team information   FIXME: this should be moved to the setup file
 ---------------------------------------------------------------------------
 function Info:SetupTeams( default_lives )
 	-- list of teams specific to this map
@@ -75,7 +75,7 @@ end
 ---------------------------------------------------------------------------
 -- Per-Player Grid Functions -- if i ever get around to it i'll rename this, since it's slightly(majorly) confusing FIXME
 ---------------------------------------------------------------------------
-function Info:IsInEntity(point, entity)
+function Info:IsInEntity( point, entity )
     local min = entity:GetBoundingMins() + entity:GetAbsOrigin()
     local max = entity:GetBoundingMaxs() + entity:GetAbsOrigin()
     max.z = min.z
@@ -85,10 +85,30 @@ function Info:IsInEntity(point, entity)
     return false
 end
 
-function Info:IsInGrid(point, grid)
+function Info:IsInGrid( point, grid )
     for i=1, #grid do
         if Info:IsInEntity(point, grid[i]) then return true end
     end
+    return false
+end
+
+-- this one relies on the global info in TW_TEAMS
+function Info:IsInPlayersGrid( point, player_id )
+    local team = PlayerResource:GetTeam(player_id)
+    if  TW_TEAMS[team] == nil or TW_TEAMS[team].grids == nil or TW_TEAMS[team].grids.claimed == nil or
+        TW_TEAMS[team].grids.claimed[player_id] == nil then return false end
+
+    for _, grid in pairs(TW_TEAMS[team].grids.claimed[player_id]) do
+        if Info:IsInGrid(point, grid) then return true end
+    end
+
+    return false
+end
+
+-- as does this one
+function Info:IsInSharedGrid( point, team )
+    if TW_TEAMS[team] == nil or TW_TEAMS[team].grids == nil or TW_TEAMS[team].grids.shared == nil then return false end
+    if Info:IsInGrid(point, TW_TEAMS[team].grids.shared) then return true end
     return false
 end
 
@@ -160,9 +180,10 @@ function Info:GetGridOutline( grid )
 end
 
 ---------------------------------------------------------------------------
--- Universal Grid Functions -- universal grid will be 128x128 per tile centered at (0, 0, 0)
+-- Universal Grid Functions -- tile size: 128^2 -- offset so one tile is centered on (0, 0, 0) to match hammer
 ---------------------------------------------------------------------------
 local tile = 128
+local diagonal = math.sqrt(tile*tile*2)  -- corner to corner distance
 
 -- the absolute center of the nearest grid tile to _position_
 function Info:GetGridCenter( position )
@@ -176,6 +197,51 @@ function Info:Get2DGridCenter( position )
     return Vector(  math.floor((position.x+tile/2)/tile)*tile,
                     math.floor((position.y+tile/2)/tile)*tile,
                     math.floor(position.z/tile)         *tile  )
+end
+
+-- find all units whithin a tile
+function Info:FindUnitsInTile( position )
+    local position = Info:Get2DGridCenter(position)
+
+    -- filter out non-npc entities, or entities not in the actual tile square
+    local ents = Entities:FindAllInSphere(position, diagonal/2)
+    for k, ent in pairs(ents) do
+        local pos = ent:GetAbsOrigin()
+        if ent.IsDeniable == nil or pos.x < position.x-tile/2 or pos.x > position.x+tile/2 or
+                                    pos.y < position.y-tile/2 or pos.y > position.y+tile/2 then
+            ent[k] = nil
+        end
+    end
+
+    return ents
+end
+
+-- find all units not on _team_ within a tile
+function Info:FindEnemyUnitsInTile( position, team )
+    local units = Info:FindUnitsInTile(position)
+
+    -- filter out units not in said team
+    for k, unit in pairs(units) do
+        if unit:GetTeam() ~= team then units[k]=nil end
+    end
+
+    return units
+end
+
+-- find clear space for units in a tile -- a bit around the tile, since it's cheaper
+function Info:UnstuckUnitsInTile( position )
+    local position = Info:Get2DGridCenter(position)
+
+    local ents = Entities:FindAllInSphere(position, diagonal/2)
+    for _, ent in pairs(ents) do
+        if ent.IsDeniable ~= nil then FindClearSpaceForUnit(ent, ent:GetAbsOrigin(), true) end
+    end
+end
+
+-- is there an "npc_dota_building" in this tile?
+function Info:IsBuildingInTile( position )
+    if Entities:FindByClassnameWithin(nil, "npc_dota_building", Info:Get2DGridCenter(position), tile/2) == nil then return false end
+    return true
 end
 
 ---------------------------------------------------------------------------

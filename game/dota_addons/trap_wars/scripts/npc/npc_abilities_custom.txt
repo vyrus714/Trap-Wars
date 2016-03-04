@@ -3,47 +3,201 @@
 {
 	"Version"		"1"
 
-	//=================================================================================================================
-	// Templar Assassin: Refraction Holdout
-	//=================================================================================================================
-	"templar_assassin_refraction_holdout"
-	{
-		// General
-		//-------------------------------------------------------------------------------------------------------------
-		"AbilityBehavior"				"DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IMMEDIATE"
-		"AbilityUnitDamageType"			"DAMAGE_TYPE_PHYSICAL"	
+    "spiketrap_spikes"
+    {
+        // General  
+        // ----------------------------------------------------------------------------------------
+        "BaseClass"              "ability_datadriven"
+        "AbilityTextureName"     "spiketrap_spikes"
+        "AbilityProcsMagicStick"  "0"
 
-		// Casting
-		//-------------------------------------------------------------------------------------------------------------
-		"AbilityCastPoint"				"0.0 0.0 0.0 0.0"
+        // Leveling  
+        // ----------------------------------------------------------------------------------------
+        "AbilityType"            "DOTA_ABILITY_TYPE_BASIC"
+        "MaxLevel"               "4"
+        "RequiredLevel"          "1"
+        "LevelsBetweenUpgrades"  "3"
 
-		// Time		
-		//-------------------------------------------------------------------------------------------------------------
-		"AbilityCooldown"				"17.0 17.0 17.0 17.0"
+        // Target  
+        // ----------------------------------------------------------------------------------------
+        "AbilityBehavior"        "DOTA_ABILITY_BEHAVIOR_NO_TARGET"
+        "AbilityUnitTargetTeam"  "DOTA_UNIT_TARGET_TEAM_ENEMY"
+        "AbilityUnitTargetType"  "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+        "AbilityUnitTargetFlags" "DOTA_UNIT_TARGET_FLAG_NOT_ATTACK_IMMUNE | DOTA_UNIT_TARGET_FLAG_NOT_ILLUSIONS | DOTA_UNIT_TARGET_FLAG_INVULNERABLE | DOTA_UNIT_TARGET_FLAG_MAGIC_IMMUNE_ENEMIES"
 
-		// Cost
-		//-------------------------------------------------------------------------------------------------------------
-		"AbilityManaCost"				"100"
-		
-		// Special
-		//-------------------------------------------------------------------------------------------------------------
-		"AbilitySpecial"
-		{
-			"01"
-			{
-				"var_type"					"FIELD_INTEGER"
-				"damage_absorb"				"200 300 400 500"
-			}
-			"02"
-			{
-				"var_type"					"FIELD_INTEGER"
-				"bonus_damage"				"20 40 60 80"
-			}
-			"04"
-			{
-				"var_type"					"FIELD_FLOAT"
-				"duration"					"17.0 17.0 17.0 17.0"
-			}
-		}
-	}
+        // Damage  
+        // ----------------------------------------------------------------------------------------
+        "AbilityUnitDamageType"    "DAMAGE_TYPE_PHYSICAL"
+        //"AbilityDamage"          "125 215 310"    // in Stats
+
+        // Animation  
+        // ----------------------------------------------------------------------------------------
+        "AbilityCastPoint"          "0.2"
+        "AbilityCastAnimation"      "ACT_DOTA_CAST_ABILITY_1"
+        "AnimationPlaybackRate"     "0.8"
+        "AnimationIgnoresModelScale" "1"
+
+        // Stats
+        //----------------------------------------------------------------------------------------
+        "AbilityDamage"             "125 215 310 420"
+        "AbilityCooldown"           "5 4 3 2"
+        "AbilityCastRange"          "0"
+        //"AbilityDuration"         "0"
+        //"AoERadius"               "0"
+
+        // Precache
+        //----------------------------------------------------------------------------------------
+        "precache"
+        {
+            //"soundfile"             "soundevents/soundevents_conquest.vsndevts"
+            //"soundfile"             "soundevents/game_sounds_heroes/game_sounds_rattletrap.vsndevts"
+            "soundfile"             "soundevents/traps/spiketrap.vsndevts"
+        }
+
+        // Other Values
+        //----------------------------------------------------------------------------------------
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"          "FIELD_INTEGER"
+                "radius"            "90"
+            }
+        }
+
+        // Ability Events
+        //----------------------------------------------------------------------------------------
+        "OnAbilityPhaseStart"
+        {
+            "RunScript"
+            {
+                "ScriptFile"        "ability_scripts/spiketrap_spikes.lua"
+                "Function"          "OnAbilityPhaseStart"
+            }
+        }
+
+        "OnSpellStart"
+        {
+            "RunScript"
+            {
+                "ScriptFile"        "ability_scripts/spiketrap_spikes.lua"
+                "Function"          "OnSpellStart"
+            }
+
+            "Damage"
+            {
+                "Target"
+                {
+                    "Center"        "CASTER"
+                    "Radius"        "%radius"
+                    "Teams"         "DOTA_UNIT_TARGET_TEAM_ENEMY"
+                    "Types"         "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+                }
+                "Type"              "DAMAGE_TYPE_PHYSICAL"
+                "Damage"            "%AbilityDamage"
+            }            
+        }
+
+    }
+
+    "firevent_fireball"
+    {
+        // General  
+        // ----------------------------------------------------------------------------------------
+        "BaseClass"              "ability_datadriven"
+        "AbilityTextureName"     "dragon_knight_breathe_fire"
+        "AbilityProcsMagicStick"  "0"
+
+        // Leveling  
+        // ----------------------------------------------------------------------------------------
+        "AbilityType"            "DOTA_ABILITY_TYPE_BASIC"
+        "MaxLevel"               "4"
+        "RequiredLevel"          "1"
+        "LevelsBetweenUpgrades"  "3"
+
+        // Target  
+        // ----------------------------------------------------------------------------------------
+        "AbilityBehavior"        "DOTA_ABILITY_BEHAVIOR_NO_TARGET"
+        "AbilityUnitTargetTeam"  "DOTA_UNIT_TARGET_TEAM_ENEMY"
+        "AbilityUnitTargetType"  "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+        "AbilityUnitTargetFlags" "DOTA_UNIT_TARGET_FLAG_NOT_ATTACK_IMMUNE | DOTA_UNIT_TARGET_FLAG_NOT_ILLUSIONS | DOTA_UNIT_TARGET_FLAG_INVULNERABLE | DOTA_UNIT_TARGET_FLAG_MAGIC_IMMUNE_ENEMIES"
+
+        // Damage  
+        // ----------------------------------------------------------------------------------------
+        "AbilityUnitDamageType"  "DAMAGE_TYPE_PHYSICAL"
+        //"AbilityDamage"          "125 215 310"    // in Stats
+
+        // Animation  
+        // ----------------------------------------------------------------------------------------
+        "AbilityCastPoint"       "0.1"
+        "AbilityCastAnimation"   "ACT_DOTA_CAST_ABILITY_1"
+        "AnimationPlaybackRate"  "1"
+        "AnimationIgnoresModelScale" "1"
+
+        // Stats
+        //----------------------------------------------------------------------------------------
+        "AbilityDamage"          "216 310 420 540"
+        "AbilityCooldown"         "8 6 4 2"
+        "AbilityCastRange"        "0"
+        //"AbilityCastRangeBuffer"  "250"
+        //"AbilityChannelTime"      "0.0 0.0 0.0"
+        //"AbilityChannelledManaCostPerSecond" "0 0 0"
+        //"AbilityDuration"         "0"
+        //"AoERadius"               "0"
+
+        // Precache
+        //----------------------------------------------------------------------------------------
+        "precache"
+        {
+            "particle"              "particles/econ/items/shadow_fiend/sf_fire_arcana/sf_fire_arcana_shadowraze.vpcf"
+            "soundfile"             "soundevents/traps/firevent.vsndevts"
+        }
+
+        // Other Values
+        //----------------------------------------------------------------------------------------
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"          "FIELD_INTEGER"
+                "radius"            "125"
+            }
+            "01"
+            {
+                "var_type"          "FIELD_INTEGER"
+                "cast_radius"       "90"
+            }
+        }
+
+        // Ability Events
+        //----------------------------------------------------------------------------------------
+        "OnSpellStart"
+        {
+            "FireEffect"
+            {
+                "EffectName"        "particles/econ/items/shadow_fiend/sf_fire_arcana/sf_fire_arcana_shadowraze.vpcf"
+                "EffectAttachType"  "follow_origin"
+            }
+
+            "RunScript"
+            {
+                "ScriptFile"        "ability_scripts/firevent_fireball.lua"
+                "Function"          "OnSpellStart"
+            }
+
+            "Damage"
+            {
+                "Target"
+                {
+                    "Center"        "CASTER"
+                    "Radius"        "%radius"
+                    "Teams"         "DOTA_UNIT_TARGET_TEAM_ENEMY"
+                    "Types"         "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+                }
+                "Type"              "DAMAGE_TYPE_PHYSICAL"
+                "Damage"            "%AbilityDamage"
+            }            
+        }
+
+    }
 }
