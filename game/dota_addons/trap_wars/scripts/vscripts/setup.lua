@@ -5,6 +5,7 @@ GameRules.npc_abilities_custom = {}
 GameRules.teams = {}
 GameRules.player_colors = {}
 GameRules.default_lives = 50
+GameRules.max_player_grids = 1 -- FIXME: perhaps add some map\player variability to this
 
 
 -- function state object
@@ -31,8 +32,43 @@ function GameMode:InitGameMode()
     GameRules.npc_units_custom = LoadKeyValues("scripts/npc/npc_units_custom.txt")
     GameRules.npc_abilities_custom = LoadKeyValues("scripts/npc/npc_abilities_custom.txt")
 
-    -- team info
-    GameRules.teams = Info:SetupTeams(GameRules.default_lives)
+    -- list of teams specific to this map
+    local valid_teams = {}
+    for _, pStart in pairs(Entities:FindAllByClassname("info_player_start_dota")) do
+        if Info:IsPlayerTeam(pStart:GetTeam()) then valid_teams[pStart:GetTeam()]=true end
+    end
+
+    -- if valid_teams is out of bounds, use default radiant/dire
+    if Util:TableCount(valid_teams) < 1 or 10 < Util:TableCount(valid_teams) then
+        valid_teams = { DOTA_TEAM_GOODGUYS=true, DOTA_TEAM_BADGUYS=true }
+    end
+
+    -- populate GameRules.teams with useful information
+    for team, _ in pairs(valid_teams) do
+        -- find grids for each team
+        local found_grids = {
+            unclaimed = {},
+            claimed   = {},
+            shared    = Entities:FindAllByName("Grid_"..team)
+        }
+        found_grids.shared.lines = Info:GetGridOutline(found_grids.shared)
+        for i=1, DOTA_MAX_TEAM do
+            local temp = Entities:FindAllByName("Grid_"..team.."_"..i)
+            if type(temp) ~= nil and 0 < Util:TableCount(temp) then
+                found_grids.unclaimed[i] = temp
+                found_grids.unclaimed[i].lines = Info:GetGridOutline(found_grids.unclaimed[i])
+            end
+        end
+
+        -- team info
+        GameRules.teams[team] = { 
+            lives            = GameRules.default_lives,
+            portals          = Entities:FindAllByName("Portal_"..team),
+            creep_spawns     = Entities:FindAllByName("Spawn_"..team),
+            grids            = found_grids,
+            creeps           = {}
+        }
+    end
 
     -- set the max players for each team (rounds down)
     local max_players = math.floor(Info:GetTotalPlayers() / Util:TableCount(GameRules.teams))
