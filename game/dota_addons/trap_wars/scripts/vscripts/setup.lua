@@ -1,13 +1,3 @@
--- global variables, referred to in functions from the game folder
-GameRules.npc_units_custom = {}
-GameRules.npc_abilities_custom = {}
-
-GameRules.teams = {}
-GameRules.player_colors = {}
-GameRules.default_lives = 50
-GameRules.max_player_grids = 1 -- FIXME: perhaps add some map\player variability to this
-
-
 -- function state object
 if GameMode == nil then
     GameMode = class({})
@@ -18,7 +8,7 @@ end
 require('libraries/util')
 require('libraries/timers')
 -- game functions
-require('game/mapinfo')
+require('game/info')
 require('game/spawning')
 require('game/traps')
 -- main game logic
@@ -26,58 +16,51 @@ require('gamemode')
 
 
 function GameMode:InitGameMode()
-    print('[Trap Wars] Setting up Game Mode')
+    print('[Trap Wars] Setting up Game Mode ...')
 
-    -- get the KV data from the npc_*_custom files
-    GameRules.npc_units_custom = LoadKeyValues("scripts/npc/npc_units_custom.txt")
+    ---------------------------
+    -- Unit and Ability Data --
+    ---------------------------
     GameRules.npc_abilities_custom = LoadKeyValues("scripts/npc/npc_abilities_custom.txt")
+    GameRules.npc_units_custom     = LoadKeyValues("scripts/npc/npc_units_custom.txt")
 
-    -- list of teams specific to this map
-    local valid_teams = {}
-    for _, pStart in pairs(Entities:FindAllByClassname("info_player_start_dota")) do
-        if Info:IsPlayerTeam(pStart:GetTeam()) then valid_teams[pStart:GetTeam()]=true end
+    -----------------------
+    -- Generic Variables --
+    -----------------------
+    GameRules.max_player_grids = 1 -- FIXME: perhaps add some map\player variability to this
+    GameRules.default_lives    = 50
+    GameRules.valid_teams      = Info:GetValidTeams()
+    --GameRules.valid_players  FIXME, do this? yes no?
+
+    ---------------------------------------------
+    -- Player Specific Values | key = playerid --
+    ---------------------------------------------
+    GameRules.player_colors = {}  -- filled when the player gets their playerid, detected in GameMode:OnPlayerTeam() below
+    GameRules.player_grids  = {}  -- store grids per-player ala vvvv  FIXME
+    GameRules.player_creeps = {}  -- store creeps per-player, rather than a jumbled mess per team  FIXME
+
+    ----------------------------------------------
+    -- Team Specific Values | key = team number --
+    ----------------------------------------------
+    GameRules.team_creeps      = {}  -- set semi-randomly based on time during gameplay
+    GameRules.team_lives       = {}
+    GameRules.team_portals     = {}
+    GameRules.team_spawners    = {}
+    GameRules.team_shared_grid = {}
+    GameRules.team_open_grids  = {}
+
+    -- fill up those tables with info
+    for team, _ in pairs(GameRules.valid_teams) do
+        GameRules.team_lives       [team] = GameRules.default_lives
+        GameRules.team_portals     [team] = Entities:FindAllByName("Portal_"..team)
+        GameRules.team_spawners    [team] = Entities:FindAllByName("Spawn_"..team)
+        GameRules.team_shared_grid [team] = Info:GetSharedGrid(team)
+        GameRules.team_open_grids  [team] = Info:GetUnclaimedGrids(team)
     end
-
-    -- if valid_teams is out of bounds, use default radiant/dire
-    if Util:TableCount(valid_teams) < 1 or 10 < Util:TableCount(valid_teams) then
-        valid_teams = { DOTA_TEAM_GOODGUYS=true, DOTA_TEAM_BADGUYS=true }
-    end
-
-    -- populate GameRules.teams with useful information
-    for team, _ in pairs(valid_teams) do
-        -- find grids for each team
-        local found_grids = {
-            unclaimed = {},
-            claimed   = {},
-            shared    = Entities:FindAllByName("Grid_"..team)
-        }
-        found_grids.shared.lines = Info:GetGridOutline(found_grids.shared)
-        for i=1, DOTA_MAX_TEAM do
-            local temp = Entities:FindAllByName("Grid_"..team.."_"..i)
-            if type(temp) ~= nil and 0 < Util:TableCount(temp) then
-                found_grids.unclaimed[i] = temp
-                found_grids.unclaimed[i].lines = Info:GetGridOutline(found_grids.unclaimed[i])
-            end
-        end
-
-        -- team info
-        GameRules.teams[team] = { 
-            lives            = GameRules.default_lives,
-            portals          = Entities:FindAllByName("Portal_"..team),
-            creep_spawns     = Entities:FindAllByName("Spawn_"..team),
-            grids            = found_grids,
-            creeps           = {}
-        }
-    end
-
-    -- set the max players for each team (rounds down)
-    local max_players = math.floor(Info:GetTotalPlayers() / Util:TableCount(GameRules.teams))
-    for team, _ in pairs(GameRules.teams) do 
-        GameRules:SetCustomGameTeamMaxPlayers(team, max_players)
-    end
-
-
-    -- other game rules
+    
+    ----------------
+    -- Game Rules --
+    ----------------
     GameRules:SetHeroSelectionTime(20)
     GameRules:SetPreGameTime(10)       -- FIXME
     GameRules:SetPostGameTime(60)
@@ -88,14 +71,23 @@ function GameMode:InitGameMode()
     GameRules:SetHeroMinimapIconScale(1)
     GameRules:SetCreepMinimapIconScale(1)
     GameRules:SetStartingGold(10000)   -- FIXME
-    
 
-    -- setup file listener functions
+    -- set the max players for each team (rounds down if given an odd # of players for the map)
+    local max_players = math.floor(Info:GetTotalPlayers() / Util:TableCount(GameRules.valid_teams))
+    for team, _ in pairs(GameRules.valid_teams) do 
+        GameRules:SetCustomGameTeamMaxPlayers(team, max_players)
+    end
+
+    ------------------------------
+    -- Setup specific Listeners --
+    ------------------------------
     ListenToGameEvent('player_connect_full', Dynamic_Wrap(GameMode, 'OnPlayerConnectFull'), self)
     ListenToGameEvent('player_team', Dynamic_Wrap(GameMode, 'OnPlayerTeam'), self)
     ListenToGameEvent('game_rules_state_change', Dynamic_Wrap(GameMode, 'OnGameRulesStateChange'), self)
 
-    -- gamemode file listener functions
+    ------------------------
+    -- GameMode Listeners --
+    ------------------------
     ListenToGameEvent('npc_spawned', Dynamic_Wrap(GameMode, 'OnNPCSpawned'), self)
     ListenToGameEvent("trapwars_score_update", Dynamic_Wrap(GameMode, 'OnTrapWarsScoreUpdated'), self)
     CustomGameEventManager:RegisterListener("trapwars_modify_dummy", Dynamic_Wrap(GameMode, 'OnTrapWarsModifyDummy'))
@@ -103,7 +95,8 @@ function GameMode:InitGameMode()
     CustomGameEventManager:RegisterListener("test_button", Dynamic_Wrap(GameMode, 'OnTestButton'))  -- FIXME TESTING
 
 
-    -- continue in the gamemode file
+    -- setup complete, continue in the gamemode file
+    print('[Trap Wars] Setup Complete.')
     GameMode:OnInitGameMode()
 end
 
@@ -137,9 +130,9 @@ function GameMode:OnPlayerTeam(keys)
     local pid = player:GetPlayerID()
 
 
-    -- only execute this the first time they join a team
-    if not player._hasJoined then
-        player._hasJoined = true
+    -- only execute this the first time they join a team: basically on connect, when they get their PID
+    if not player._firstJoin then
+        player._firstJoin = true
 
         -- for each player that connects, give them a random color and store it in GameRules.player_colors
         local red, green, blue = 255, 255, 255

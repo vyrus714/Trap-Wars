@@ -24,10 +24,49 @@ function Info:GetTotalPlayers()
     return totalPlayers
 end
 
+-- list of teams specific to this map
+function Info:GetValidTeams()
+    -- find teams based on the player start points in the map
+    local valid_teams = {}
+    for _, pstart in pairs(Entities:FindAllByClassname("info_player_start_dota")) do
+        if Info:IsPlayerTeam(pstart:GetTeam()) then valid_teams[pstart:GetTeam()]=true end
+    end
+
+    -- if valid_teams is out of bounds, use default radiant/dire
+    if Util:TableCount(valid_teams) < 1 or 10 < Util:TableCount(valid_teams) then
+        valid_teams = { DOTA_TEAM_GOODGUYS=true, DOTA_TEAM_BADGUYS=true }
+    end
+
+    return valid_teams
+end
+
+function Info:GetSharedGrid( team )
+    local grid = Entities:FindAllByName("Grid_"..team)
+    grid.lines = Info:GetGridOutline(grid)
+
+    return grid
+end
+
+function Info:GetUnclaimedGrids( team )
+    local grids = {}
+
+    for i=1, DOTA_MAX_TEAM do  -- max # of players per team            -- FIXME: ok, why is this assuming 1 grid max per player total?
+        local grid = Entities:FindAllByName("Grid_"..team.."_"..i)    -- FIXME: ... ok, i rly need a better way of doing this
+        if type(grid) == "table" and 0 < Util:TableCount(grid) then
+            grid.lines = Info:GetGridOutline(grid)
+            table.insert(grids, grid)
+        end
+    end
+
+    return grids
+end
+
 ---------------------------------------------------------------------------
 -- Per-Player Grid Functions -- if i ever get around to it i'll rename this, since it's slightly(majorly) confusing FIXME
 ---------------------------------------------------------------------------
 function Info:IsInEntity( point, entity )
+    if entity == nil then return false end
+
     local min = entity:GetBoundingMins() + entity:GetAbsOrigin()
     local max = entity:GetBoundingMaxs() + entity:GetAbsOrigin()
     max.z = min.z
@@ -44,23 +83,20 @@ function Info:IsInGrid( point, grid )
     return false
 end
 
--- this one relies on the global info in GameRules.teams
+-- this one relies on GameRules.player_grids
 function Info:IsInPlayersGrid( point, player_id )
-    local team = PlayerResource:GetTeam(player_id)
-    if  GameRules.teams[team] == nil or GameRules.teams[team].grids == nil or GameRules.teams[team].grids.claimed == nil or
-        GameRules.teams[team].grids.claimed[player_id] == nil then return false end
+    if GameRules.player_grids[player_id] == nil then return false end
 
-    for _, grid in pairs(GameRules.teams[team].grids.claimed[player_id]) do
+    for _, grid in pairs(GameRules.player_grids[player_id]) do
         if Info:IsInGrid(point, grid) then return true end
     end
 
     return false
 end
 
--- as does this one
-function Info:IsInSharedGrid( point, team )
-    if GameRules.teams[team] == nil or GameRules.teams[team].grids == nil or GameRules.teams[team].grids.shared == nil then return false end
-    if Info:IsInGrid(point, GameRules.teams[team].grids.shared) then return true end
+-- this one relies on GameRules.team_shared_grid
+function Info:IsInSharedGrid( point, team )  -- FIXME: remove this, it's redundant now that i stripped out the old shit
+    if Info:IsInGrid(point, GameRules.team_shared_grid[team]) then return true end
     return false
 end
 
@@ -199,20 +235,15 @@ end
 ---------------------------------------------------------------------------
 -- creep table functions
 ---------------------------------------------------------------------------
-function Info:AddCreep( creep_table, cname, cowner, crate, ccount, citems )
+function Info:AddCreep( creep_table, cname, cowner, crate, ccount, citems )  -- FIXME: this does not belong here, move to spawning.lua
     local ccount = ccount or 1
     local citems = citems  -- or nil
 
     -- test parameters
-    if type(creep_table) ~= "table"  then return end
-    if type(cname)       ~= "string" then return end
-    if type(cowner)      ~= "number" then return end
-    if type(crate)       ~= "number" then return end
+    if type(creep_table) ~= "table" or type(cname) ~= "string" or type(cowner) ~= "number" or type(crate) ~= "number" then return end
 
     -- test the creep
-    local test_creep = CreateUnitByName(cname, Vector(0,0,-1024), false, nil, nil, DOTA_TEAM_NOTEAM)
-    if test_creep == nil then return end
-    test_creep:Kill(nil, nil)
+    if GameRules.npc_units_custom[cname] == nil then return end
 
     -- check if there's a creep with these attributes already
     local creep_to_modify = nil
@@ -233,7 +264,7 @@ function Info:AddCreep( creep_table, cname, cowner, crate, ccount, citems )
     end
 
     -- if we have a creep to modify, do that now, otherwise create a new creep
-    if type(creep_to_modify) ~= "nil" then
+    if creep_to_modify ~= nil then
         creep_to_modify.count = creep_to_modify.count + ccount
     else
         table.insert(creep_table, {

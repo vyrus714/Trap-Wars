@@ -2,7 +2,7 @@
 
 ---- Global Variable Dependant Spawning Functions ----
 function CreepSpawnThinker( creep_table, creep_spawns, team )
-    for k,creep in pairs(creep_table) do
+    for k, creep in pairs(creep_table) do
         creep._incr = 0
     end
 

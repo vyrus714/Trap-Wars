@@ -1,4 +1,7 @@
 function GameMode:OnInitGameMode()
+    -- Here we go!
+    print('[Trap Wars] Game logic started.')
+
     -- grid stuff
     --TileGrid = Grid:GetGridLocations()  -- get grid from the map
 
@@ -11,12 +14,12 @@ function GameMode:OnInitGameMode()
     -------------------------------------------------------------------
     local tick, ticks_to_claim = 0.5, 8
     Timers:CreateTimer(function()
-        for team, info in pairs(GameRules.teams) do
+        for team, _ in pairs(GameRules.valid_teams) do
             -- get players on this team
-            local players = {}
+            local players = {}  -- key=playerid, value=hero entity handle
             for i=1, PlayerResource:GetPlayerCountForTeam(team) do
                 local pid = PlayerResource:GetNthPlayerIDOnTeam(team, i)
-                if PlayerResource:IsValidTeamPlayerID(pid) and PlayerResource:IsValidTeamPlayer(pid) then
+                if PlayerResource:IsValidTeamPlayerID(pid) and PlayerResource:IsValidTeamPlayer(pid) then  -- yes, i am paranoid!
                     local player = PlayerResource:GetPlayer(pid)
                     if player ~= nil then
                         players[pid] = player:GetAssignedHero()
@@ -24,14 +27,14 @@ function GameMode:OnInitGameMode()
                 end
             end
 
-            -- update claim status for grids in the unclaimed grid table
-            for grid_key, grid in pairs(info.grids.unclaimed) do
+            -- update claim status for grids in the GameRules.team_open_grids table
+            for grid_key, grid in pairs(GameRules.team_open_grids[team]) do
                 -- on first loop for this grid:
                 if grid.player_claims == nil then
                     -- make sure grid has claim table
                     grid.player_claims = {}
                     -- outline grid with particles
-                    if grid.particles == nil then grid.particles = {} end
+                    if grid.particles == nil then grid.particles={} end
                     for _, line in pairs(grid.lines) do
                         local part = ParticleManager:CreateParticle("particles/line_stars_continuous.vpcf", PATTACH_CUSTOMORIGIN, nil)
                         ParticleManager:SetParticleControl(part, 0, line.start)
@@ -119,18 +122,18 @@ function GameMode:OnInitGameMode()
                             hero_temp.claim_indicator_parts = nil
                         end
 
-                        -- remove the grid's outlining particles
+                        -- remove the grid's outlining particles and claim table
                         for _, part in pairs(grid.particles) do
                             ParticleManager:DestroyParticle(part, false)
                             ParticleManager:ReleaseParticleIndex(part)
                         end
                         grid.particles = nil
-
-                        -- set our current player as the grid owner
                         grid.player_claims = nil
-                        if not info.grids.claimed[pid] then info.grids.claimed[pid]={} end
-                        table.insert(info.grids.claimed[pid], info.grids.unclaimed[grid_key])
-                        table.remove(info.grids.unclaimed, grid_key)
+
+                        -- move the grid to this player's grid table
+                        if not GameRules.player_grids[pid] then GameRules.player_grids[pid]={} end
+                        table.insert(GameRules.player_grids[pid], grid)
+                        table.remove(GameRules.team_open_grids[team], grid_key)
 
                         -- add some fancy particles: on the hero ...
                         DebugDrawSphere(hero:GetAbsOrigin()+Vector(0,-60,20), Vector(0,255,0), 1, 200, true, 0.06)  -- FIXME
@@ -188,32 +191,43 @@ function GameMode:OnInitGameMode()
 end
 
 function GameMode:OnGameInProgress()
-    local grids = GameRules.teams[2].grids.claimed
+    -- FIXME: remove this shitty debug thing  --
     Timers:CreateTimer(function()
-        local player, hero, position = nil, nil, nil
-        player = PlayerResource:GetPlayer(0)
-        if player ~= nil then hero=player:GetAssignedHero() end
-        if hero   ~= nil then position=hero:GetAbsOrigin() end
-        if position ~= nil then
-            DebugDrawBox(Info:Get2DGridCenter(position), Vector(-64, -64, 0), Vector(64, 64, 0), 0, 128, 0, 0.75, 1/10)
-            DebugDrawSphere(Info:GetGridCenter(position), Vector(0, 0, 128), 0.75, 20, true, 1/10)
-            if GameRules.teams[2].grids.claimed[0] ~= nil then
-                for _, grid in pairs(GameRules.teams[2].grids.claimed[0]) do
-                    if Info:IsInGrid(position, grid) then
+        for team, _ in pairs(GameRules.valid_teams) do
+            -- get players on this team
+            local players = {}  -- key=playerid, value=hero entity handle
+            for i=1, PlayerResource:GetPlayerCountForTeam(team) do
+                local pid = PlayerResource:GetNthPlayerIDOnTeam(team, i)
+                if PlayerResource:IsValidTeamPlayerID(pid) and PlayerResource:IsValidTeamPlayer(pid) then  -- yes, i am paranoid!
+                    players[pid] = PlayerResource:GetSelectedHeroEntity(pid)
+                end
+            end
+
+            for pid, hero in pairs(players) do
+                local position = hero:GetAbsOrigin()
+                if position ~= nil then
+                    -- draw some chmansy debug lines
+                    DebugDrawBox(Info:Get2DGridCenter(position), Vector(-64, -64, 0), Vector(64, 64, 0), 0, 128, 0, 0.75, 1/10)
+                    DebugDrawSphere(Info:GetGridCenter(position), Vector(0, 0, 128), 0.75, 20, true, 1/10)
+                    -- if in one of this player's grids, draw a schmansy sphere
+                    if GameRules.player_grids[pid] ~= nil and Info:IsInPlayersGrid(position, pid) then
                         DebugDrawSphere(Info:GetGridCenter(position), Vector(128, 0, 0), 0.75, 24, true, 1/10)
                     end
                 end
             end
         end
+
         return 1/10
     end)
+    ----------------------------------------------
 
-    --Spawners:SpawnCreepsOnInterval(CreepSpawners, 0, 10)
-    --CreepSpawnThinker(TW_CREEPS)
-    for team, info in pairs(GameRules.teams) do
-        Info:AddCreep(info.creeps, "npc_trapwars_creep_kobol_basic", 0, 10, 3)
-        Info:AddCreep(info.creeps, "npc_trapwars_creep_kobol_spear", 0, 10, 1, {"item_ring_of_basilius"})
-        CreepSpawnThinker(info.creeps, info.creep_spawns, team)
+
+    --  FIXME: this whole block is horribly outdated, need to fix the entire spawning system
+    for team, _ in pairs(GameRules.valid_teams) do
+        GameRules.team_creeps[team] = {}
+        Info:AddCreep(GameRules.team_creeps[team], "npc_trapwars_creep_kobol_basic", 0, 10, 3)
+        Info:AddCreep(GameRules.team_creeps[team], "npc_trapwars_creep_kobol_spear", 0, 10, 1, {"item_ring_of_basilius"})
+        CreepSpawnThinker(GameRules.team_creeps[team], GameRules.team_spawners[team], team)
     end
 
     FireGameEvent( "show_center_message", {message="Begin!", duration=3} )
@@ -255,20 +269,20 @@ end  ]]
 
 -- this updates the score and determines win/loss
 function GameMode:OnTrapWarsScoreUpdated( keys )
-    if true then return end  -- FIXME
+    if true then return end  -- FIXME disabled the win condition for testing
     -- keys.team           team id #
     -- keys.delta_score    desired change in score
-    if not keys.team or not keys.delta_score then return end
-    if not GameRules.teams[keys.team] then return end
+    if not keys.team or not keys.delta_score then return end  -- if there's no team or score to change
+    if not GameRules.valid_teams[keys.team] then return end  -- if this team isn't valid
 
     -- change the score
-    GameRules.teams[keys.team].lives = GameRules.teams[keys.team].lives + keys.delta_score
+    GameRules.team_lives[keys.team] = GameRules.team_lives[keys.team] + keys.delta_score
 
     -- check game conditions   <- FIXME, won't work for more than 2 teams
-    if GameRules.teams[keys.team].lives < 1 then
-        GameRules.teams[keys.team].lives = 0
+    if GameRules.team_lives[keys.team] < 1 then
+        GameRules.team_lives[keys.team] = 0
         GameRules:SetSafeToLeave(true)
-        if keys.team == DOTA_TEAM_GOODGUYS then          -- FIXME, see above, need to implement per-team loss that won't end game
+        if keys.team == DOTA_TEAM_GOODGUYS then  -- FIXME, see above, need to implement per-team loss that won't end game
             GameRules:SetGameWinner(DOTA_TEAM_BADGUYS)
         else 
             GameRules:SetGameWinner(DOTA_TEAM_GOODGUYS)
@@ -276,7 +290,7 @@ function GameMode:OnTrapWarsScoreUpdated( keys )
     end
 
     -- update the scoreboard  <- FIXME, still only works for 2 teams (radient/dire), need to write custom scoreboard
-    GameRules:GetGameModeEntity():SetTopBarTeamValue(keys.team, GameRules.teams[keys.team].lives)
+    GameRules:GetGameModeEntity():SetTopBarTeamValue(keys.team, GameRules.team_lives[keys.team])
 end
 
 -- modify some player's dummy unit
@@ -302,14 +316,14 @@ function GameMode:OnTestButton( keys )
         --print("LUA: "..keys.id)
         local hero = PlayerResource:GetPlayer(0):GetAssignedHero()
         local yesno = SpawnTrap(hero:GetAbsOrigin(), "npc_trapwars_trap_firevent", 0)
-        if yesno then print("trap spawned") else print("trap NOT spawned") end
+        --if yesno then print("trap spawned") else print("trap NOT spawned") end
     end
     --------------------
     if keys.id == 2 then
         --print("LUA: "..keys.id)
         local hero = PlayerResource:GetPlayer(0):GetAssignedHero()
         local yesno = SpawnTrap(hero:GetAbsOrigin(), "npc_trapwars_trap_spike", 0)
-        if yesno then print("trap spawned") else print("trap NOT spawned") end
+        --if yesno then print("trap spawned") else print("trap NOT spawned") end
     end
     --------------------
     if keys.id == 3 then
