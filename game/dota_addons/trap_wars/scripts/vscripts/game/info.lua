@@ -217,7 +217,7 @@ function Info:FindEnemyUnitsInTile( position, team )
 end
 
 -- find clear space for units in a tile -- a bit around the tile, since it's cheaper
-function Info:UnstuckUnitsInTile( position )
+function Info:UnstuckUnitsInTile( position )  -- FIXME: this is not an INFORMATION function, gtfo of this file you imposter!
     local position = Info:Get2DGridCenter(position)
 
     local ents = Entities:FindAllInSphere(position, diagonal/2)

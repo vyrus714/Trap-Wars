@@ -1,5 +1,11 @@
 -- creep format: { name="creepname", count=1, rate=4, owner=OWNER_PLAYER_ID, random=false, items={"itemname", "itemname"} }
 
+
+-- wrap utility functions in a class to avoid naming issues
+if Spawn == nil then
+    Spawn = class({})
+end
+
 ---- Global Variable Dependant Spawning Functions ----
 function CreepSpawnThinker( creep_table, creep_spawns, team )
     for k, creep in pairs(creep_table) do

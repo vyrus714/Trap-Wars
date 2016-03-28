@@ -222,13 +222,80 @@ function GameMode:OnGameInProgress()
     ----------------------------------------------
 
 
-    --  FIXME: this whole block is horribly outdated, need to fix the entire spawning system
-    for team, _ in pairs(GameRules.valid_teams) do
-        GameRules.team_creeps[team] = {}
-        Info:AddCreep(GameRules.team_creeps[team], "npc_trapwars_creep_kobol_basic", 0, 10, 3)
-        Info:AddCreep(GameRules.team_creeps[team], "npc_trapwars_creep_kobol_spear", 0, 10, 1, {"item_ring_of_basilius"})
-        CreepSpawnThinker(GameRules.team_creeps[team], GameRules.team_spawners[team], team)
-    end
+    ----------------------------------------------
+    --               Creep Waves                --
+    ----------------------------------------------
+    local level, pool, wave = 0, {}, {1}
+    Timers:CreateTimer(function()
+        local gameTime = math.floor(GameRules:GetDOTATime(false, false))
+
+        -- every 2 minutes
+        if gameTime % 240 == 0 then
+            -- add a new slot to the creep wave
+            wave[#wave+1] = true
+        end
+
+        -- every minute
+        if gameTime % 60 == 0 then
+            -- increase the creep level by 1 (cap at 18)
+            if level < 18 then level=level+1 end
+            -- recalculate the creep pool to include the current level + 5 levels under it
+            pool = {}
+            for i=0, 5 do
+                if GameRules.npc_lanecreeps[level-i] ~= nil then
+                    for _, name in pairs(GameRules.npc_lanecreeps[level-i]) do
+                        table.insert(pool, name)
+                    end
+                end
+            end
+        end
+
+        -- every 20 seconds
+        if gameTime % 20 == 0 then
+            -- get new random creep wave
+            for key, _ in pairs(wave) do
+                -- add a random creep from the available pool to the creep wave
+                wave[key] = pool[RandomInt(1, #pool)]
+            end
+
+            -- spawn creepwaves
+            for team, spawners in pairs(GameRules.team_spawners) do
+                for _, spawner in pairs(spawners) do
+                    for _, name in pairs(wave) do
+                        -- create the creep
+                        local creep = CreateUnitByName(name, spawner:GetAbsOrigin(), true, nil, nil, team)
+                        -- precache the unit (if it hasn't been already)
+                        if GameRules.npc_units_custom[name]._IsPrecached == nil then
+                            GameRules.npc_units_custom[name]._IsPrecached = true
+                            PrecacheUnitByNameAsync(name, function()end)
+                        end
+                        -- add attachments
+                        if GameRules.npc_units_custom[name].Attachments ~= nil then
+                            for attach_point, models in pairs(GameRules.npc_units_custom[name].Attachments) do
+                                for model, properties in pairs(models) do
+                                    Attachments:AttachProp(creep, attach_point, model, properties.scale, properties)
+                                end
+                            end
+                        end
+                        -- execute attack move order  FIXME, needs waypoints unfortunatley
+                        ExecuteOrderFromTable{
+                            UnitIndex = creep:entindex(),
+                            OrderType = DOTA_UNIT_ORDER_ATTACK_MOVE,
+                            Position  = spawner:GetRootMoveParent():GetAbsOrigin(),
+                            Queue     = true }
+                    end
+                end
+            end
+        end
+
+        return 1  -- check every second, just to be sure
+    end)
+
+    ----------------------------------------------
+    --              Creep Heroes                --
+    ----------------------------------------------
+    -- FIXME: todo
+
 
     FireGameEvent( "show_center_message", {message="Begin!", duration=3} )
 end
@@ -332,5 +399,30 @@ function GameMode:OnTestButton( keys )
     --------------------
     if keys.id == 4 then
         print("LUA: "..keys.id)
+    end
+    --------------------
+
+    if keys.id == 5 and keys.unit ~= nil then
+        if GameRules.npc_units_custom[keys.unit] == nil then
+            print(keys.unit, "not a valid creep name")
+            return
+        end
+
+        local hero = PlayerResource:GetSelectedHeroEntity(0)
+        local creep = CreateUnitByName(keys.unit, hero:GetAbsOrigin()+Vector(-100, 0, 0), true, hero, hero, hero:GetTeam())
+
+        Timers:CreateTimer(0.03, function()
+            if creep == nil then return end
+
+            if GameRules.npc_units_custom[keys.unit].Attachments ~= nil then
+                for attach_point, models in pairs(GameRules.npc_units_custom[keys.unit].Attachments) do
+                    for model, properties in pairs(models) do
+                        Attachments:AttachProp(creep, attach_point, model, properties.scale, properties)
+                    end
+                end
+            end
+
+            creep:SetControllableByPlayer(0, true)
+        end)
     end
 end

@@ -28,3 +28,12 @@ function PrintObject( object, space ) {
   		}
   	}
 }
+
+function SpawnUnit() {
+    var unit = $('#UnitText').text;
+    GameEvents.SendCustomGameEventToServer("test_button", { id: 5, unit: unit });
+}
+
+function InspectElement( element_name ) {
+    $.Msg(Object.keys($('#'+element_name)))
+}

@@ -1,0 +1,88 @@
+"Attachments"
+{
+	"models/creeps/neutral_creeps/n_creep_kobold/kobold_b/n_creep_kobold_b.vmdl"
+	{
+		"attach_hitloc"
+		{
+			"models/heroes/huskar/huskar_spear.vmdl"
+			{
+				"scale"		"1.2000000476837"
+				"pitch"		"20"
+				"roll"		"92"
+				"ZPos"		"-3"
+				"YPos"		"-8"
+				"yaw"		"130"
+				"XPos"		"14"
+			}
+			"models/props_gameplay/stout_shield.vmdl"
+			{
+				"scale"		"1.1000000238419"
+				"pitch"		"44"
+				"roll"		"-5"
+				"ZPos"		"-11"
+				"YPos"		"-2"
+				"yaw"		"0"
+				"XPos"		"-3"
+			}
+			"models/items/chaos_knight/lighthunter_shield/lighthunter_shield.vmdl"
+			{
+				"scale"		"1.2000000476837"
+				"pitch"		"20"
+				"roll"		"92"
+				"ZPos"		"-3"
+				"YPos"		"-8"
+				"yaw"		"130"
+				"XPos"		"14"
+			}
+			"models/items/chaos_knight/shield_of_entropy/shield_of_entropy.vmdl"
+			{
+				"scale"		"1"
+				"pitch"		"0"
+				"roll"		"0"
+				"ZPos"		"0"
+				"YPos"		"0"
+				"yaw"		"0"
+				"XPos"		"0"
+			}
+		}
+		"attach_attack"
+		{
+			"models/heroes/huskar/huskar_spear.vmdl"
+			{
+				"scale"		"1.1000000238419"
+				"pitch"		"0"
+				"roll"		"0"
+				"ZPos"		"0"
+				"YPos"		"1"
+				"yaw"		"0"
+				"XPos"		"0"
+			}
+		}
+	}
+	"models/creeps/neutral_creeps/n_creep_forest_trolls/n_creep_forest_troll_berserker.vmdl"
+	{
+		"attach_attack1"
+		{
+			"models/heroes/troll_warlord/troll_warlord_axe_melee_l.vmdl"
+			{
+				"scale"		"1.039999961853"
+				"pitch"		"-13"
+				"roll"		"-100"
+				"ZPos"		"-16"
+				"YPos"		"-5"
+				"yaw"		"32"
+				"XPos"		"0"
+			}
+			"models/heroes/alchemist/alchemist_sword.vmdl"
+			{
+				"scale"		"1"
+				"pitch"		"-77.900001525879"
+				"roll"		"90"
+				"ZPos"		"-5.5999999046326"
+				"YPos"		"0.69999998807907"
+				"yaw"		"-6.5999999046326"
+				"XPos"		"20"
+			}
+		}
+	}
+}

@@ -7,9 +7,9 @@ end
 -- libraries
 require('libraries/util')
 require('libraries/timers')
+require('libraries/attachments')
 -- game functions
 require('game/info')
-require('game/spawning')
 require('game/traps')
 -- main game logic
 require('gamemode')
@@ -21,8 +21,31 @@ function GameMode:InitGameMode()
     ---------------------------
     -- Unit and Ability Data --
     ---------------------------
-    GameRules.npc_abilities_custom = LoadKeyValues("scripts/npc/npc_abilities_custom.txt")
+    --GameRules.npc_abilities_custom = LoadKeyValues("scripts/npc/npc_abilities_custom.txt")  FIXME: need this? likely no
     GameRules.npc_units_custom     = LoadKeyValues("scripts/npc/npc_units_custom.txt")
+
+    -- parse out unit names from GameRules.npc_units_custom into three specific types | only store the unit name, for data use ^^
+    GameRules.npc_herocreeps = {}  -- npc_trapwars_herocreep_
+    GameRules.npc_traps      = {}  -- npc_trapwars_trap_
+    GameRules.npc_lanecreeps = {}  -- npc_trapwars_lanecreep_
+
+    for name, info in pairs(GameRules.npc_units_custom) do
+        if string.match(name, '^npc_trapwars_herocreep_.-') == "npc_trapwars_herocreep_" then table.insert(GameRules.npc_herocreeps, name)
+        elseif string.match(name, '^npc_trapwars_trap_.-') == "npc_trapwars_trap_" then table.insert(GameRules.npc_traps, name)
+        elseif string.match(name, '^npc_trapwars_lanecreep_.-') == "npc_trapwars_lanecreep_" then
+            local level = GameRules.npc_units_custom[name].Level
+            if GameRules.npc_lanecreeps[level] == nil then GameRules.npc_lanecreeps[level]={} end
+            table.insert(GameRules.npc_lanecreeps[level], name)
+        else end
+    end
+
+    -- precache the lane creeps now, the traps and hero creeps can be done on-use since we don't know how many of them will be used
+    for _, creeps in pairs(GameRules.npc_lanecreeps) do
+        for _, name in pairs(creeps) do
+            GameRules.npc_units_custom[name]._IsPrecached = true
+            PrecacheUnitByNameAsync(name, function()end)
+        end
+    end
 
     -----------------------
     -- Generic Variables --
@@ -42,7 +65,6 @@ function GameMode:InitGameMode()
     ----------------------------------------------
     -- Team Specific Values | key = team number --
     ----------------------------------------------
-    GameRules.team_creeps      = {}  -- set semi-randomly based on time during gameplay
     GameRules.team_lives       = {}
     GameRules.team_portals     = {}
     GameRules.team_spawners    = {}
