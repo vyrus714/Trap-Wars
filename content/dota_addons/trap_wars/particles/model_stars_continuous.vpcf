@@ -15,7 +15,7 @@
 			[
 				0.000000,
 				0.000000,
-				4.000000,
+				60.000000,
 			]
 		},
 		{
@@ -26,6 +26,26 @@
 			m_flEndTime = 0.750000
 			m_flEndScale = 2.000000
 			m_bEaseInAndOut = true
+		},
+		{
+			_class = "C_OP_OscillateVector"
+			m_RateMax =
+			[
+				1.000000,
+				1.000000,
+				1.000000,
+			]
+			m_FrequencyMin =
+			[
+				0.700000,
+				0.700000,
+				0.700000,
+			]
+			m_nField = 6
+			m_bProportional = false
+		},
+		{
+			_class = "C_OP_RemapCPtoCP"
 		},
 	]
 	m_Renderers =
@@ -38,24 +58,17 @@
 	m_Initializers =
 	[
 		{
-			_class = "C_INIT_CreateAlongPath"
-			m_PathParams =
-			{
-				m_nEndControlPointNumber = 1
-			}
-		},
-		{
-			_class = "C_INIT_PositionPlaceOnGround"
-			m_flOffset = 16.000000
+			_class = "C_INIT_CreateOnModel"
+			m_flHitBoxScale = 1.500000
 		},
 		{
 			_class = "C_INIT_RandomLifeTime"
-			m_fLifetimeMax = 4.000000
+			m_fLifetimeMax = 2.000000
 		},
 		{
 			_class = "C_INIT_RandomRadius"
-			m_flRadiusMin = 8.000000
-			m_flRadiusMax = 16.000000
+			m_flRadiusMin = 4.000000
+			m_flRadiusMax = 12.000000
 		},
 		{
 			_class = "C_INIT_RandomRotation"
@@ -65,6 +78,11 @@
 			m_flDegreesMin = -180.000000
 			m_flDegreesMax = 180.000000
 			m_nFieldOutput = 5
+		},
+		{
+			_class = "C_INIT_InitialVelocityFromHitbox"
+			m_flVelocityMin = 20.000000
+			m_flVelocityMax = 60.000000
 		},
 		{
 			_class = "C_INIT_RemapCPtoVector"
@@ -83,41 +101,16 @@
 				1.000000,
 			]
 		},
-		{
-			_class = "C_INIT_VelocityRandom"
-			m_LocalCoordinateSystemSpeedMin =
-			[
-				-10.000000,
-				-10.000000,
-				2.000000,
-			]
-			m_LocalCoordinateSystemSpeedMax =
-			[
-				10.000000,
-				10.000000,
-				6.000000,
-			]
-			m_nControlPointNumber = -1
-		},
 	]
 	m_Emitters =
 	[
 		{
 			_class = "C_OP_ContinuousEmitter"
-			m_flEmitRate = 1.000000
-			m_nScaleControlPoint = 3
+			m_flEmitRate = 80.000000
 		},
 		{
 			_class = "C_OP_MaintainEmitter"
-			m_nParticlesToMaintain = 1
-			m_nScaleControlPoint = 3
-			m_bDisableOperator = true
-		},
-	]
-	m_Constraints =
-	[
-		{
-			_class = "C_OP_WorldCollideConstraint"
+			m_nParticlesToMaintain = 200
 			m_bDisableOperator = true
 		},
 	]

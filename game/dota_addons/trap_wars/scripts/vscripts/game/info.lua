@@ -42,7 +42,8 @@ end
 
 function Info:GetSharedGrid( team )
     local grid = Entities:FindAllByName("Grid_"..team)
-    grid.lines = Info:GetGridOutline(grid)
+    --grid.lines = Info:GetGridOutline(grid)
+    grid.lines = Info:GetGridOutlineNew(grid)
 
     return grid
 end
@@ -53,7 +54,8 @@ function Info:GetUnclaimedGrids( team )
     for i=1, DOTA_MAX_TEAM do  -- max # of players per team            -- FIXME: ok, why is this assuming 1 grid max per player total?
         local grid = Entities:FindAllByName("Grid_"..team.."_"..i)    -- FIXME: ... ok, i rly need a better way of doing this
         if type(grid) == "table" and 0 < Util:TableCount(grid) then
-            grid.lines = Info:GetGridOutline(grid)
+            --grid.lines = Info:GetGridOutline(grid)
+            grid.lines = Info:GetGridOutlineNew(grid)
             table.insert(grids, grid)
         end
     end
@@ -158,6 +160,80 @@ function Info:GetGridOutline( grid )
                     if not in_ent then
                         drawing = true
                         lstart = point
+                    end
+                end
+            end
+        end
+    end
+
+    return grid_lines
+end
+
+function Info:GetBoundsOutline( ent )
+    local min, max = ent:GetAbsOrigin()+ent:GetBoundingMins(), ent:GetAbsOrigin()+ent:GetBoundingMaxs()
+    return {
+        Vector(min.x, min.y, min.z),
+        Vector(max.x, min.y, min.z),
+        Vector(max.x, max.y, min.z),
+        Vector(min.x, max.y, min.z)
+    }
+end
+
+function Info:GetGridOutlineNew( grid )
+    local grid_lines = {}
+
+    for _, ent in pairs(grid) do
+        local lines = Info:GetBoundsOutline(ent)
+
+        for i, point in pairs(lines) do
+            -- get the end point for this line
+            local epoint = Vector(0, 0, 0)
+            if i >= #lines then
+                epoint = lines[1]
+            else
+                epoint = lines[i+1]
+            end
+
+            -- get the change in the x and y directions
+            local dx, dy = epoint.x-point.x, epoint.y-point.y
+
+            -- find out which direction we'll be moving
+            local count = math.abs(dy)
+            if dy == 0 then count=math.abs(dx) end
+            count = math.floor(count+0.5)
+
+
+            -- loop over every point on this line and create lines when we're on an empty (not touching another trigger ent) edge
+            local drawing, start = false, point+0
+            for j=0, count-1 do
+                -- find the iteration point
+                local ipoint = point+0
+                if dy == 0 then
+                    ipoint.x = point.x + j
+                    if dx < 0 then ipoint.x=point.x-j end
+                else
+                    ipoint.y = point.y + j
+                    if dy < 0 then ipoint.y=point.y-j end
+                end
+
+                -- are we touching another trigger entity?
+                local touching = false
+                for _, e in pairs(grid) do
+                    if not touching and e ~= ent then
+                        if Info:IsInEntity(ipoint, e) then touching=true end
+                    end
+                end
+
+                -- if we're touching another trigger & drawing a line, stop drawing | if not either, start drawing
+                if drawing then
+                    if touching or j == count-1 then
+                        drawing = false
+                        table.insert(grid_lines, {start=start, stop=ipoint})
+                    end
+                else
+                    if not touching then
+                        drawing = true
+                        start = ipoint+0
                     end
                 end
             end

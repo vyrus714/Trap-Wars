@@ -1,14 +1,6 @@
 function GameMode:OnInitGameMode()
-    -- Here we go!
-    print('[Trap Wars] Game logic started.')
-
-    -- grid stuff
-    --TileGrid = Grid:GetGridLocations()  -- get grid from the map
-
-    -- send the table information to our table: "trap_wars_info"
-    --CustomNetTables:SetTableValue("trap_wars_info", "spawners", spawners)
-    --CustomNetTables:SetTableValue("trap_wars_info", "portals", portals)
-
+    print('[Trap Wars] Setting up game logic ...')
+    --Util:PrintTable(GameRules.team_open_grids)
     -------------------------------------------------------------------
     -- Claiming / Drawing unclaimed grid areas
     -------------------------------------------------------------------
@@ -36,11 +28,17 @@ function GameMode:OnInitGameMode()
                     -- outline grid with particles
                     if grid.particles == nil then grid.particles={} end
                     for _, line in pairs(grid.lines) do
-                        local part = ParticleManager:CreateParticle("particles/line_stars_continuous.vpcf", PATTACH_CUSTOMORIGIN, nil)
+                        --[[local part = ParticleManager:CreateParticle("particles/line_stars_continuous.vpcf", PATTACH_CUSTOMORIGIN, nil)
                         ParticleManager:SetParticleControl(part, 0, line.start)
                         ParticleManager:SetParticleControl(part, 1, line.stop)
                         ParticleManager:SetParticleControl(part, 2, Vector(255, 255, 255))
                         ParticleManager:SetParticleControl(part, 3, Vector(math.ceil(Util:Distance(line.start, line.stop)*0.08), 0, 0))
+                        table.insert(grid.particles, part)]]
+                        part = ParticleManager:CreateParticle("particles/ui_mouseactions/bounding_area_view_a.vpcf", PATTACH_CUSTOMORIGIN, nil)
+                        ParticleManager:SetParticleControl(part, 0, line.start)
+                        ParticleManager:SetParticleControl(part, 1, line.stop)
+                        ParticleManager:SetParticleControl(part, 15, Vector(255, 255, 255))
+                        ParticleManager:SetParticleControl(part, 16, Vector(1, 0, 0))
                         table.insert(grid.particles, part)
                     end
                 end
@@ -136,9 +134,10 @@ function GameMode:OnInitGameMode()
                         table.remove(GameRules.team_open_grids[team], grid_key)
 
                         -- add some fancy particles: on the hero ...
-                        DebugDrawSphere(hero:GetAbsOrigin()+Vector(0,-60,20), Vector(0,255,0), 1, 200, true, 0.06)  -- FIXME
-                        local part = ParticleManager:CreateParticle("particles/overhead_flame.vpcf", PATTACH_OVERHEAD_FOLLOW, hero)
-                        --ParticleManager:SetParticleControlEnt(part, PATTACH_OVERHEAD_FOLLOW, hero, PATTACH_OVERHEAD_FOLLOW, "follow_overhead", hero:GetAbsOrigin(), true)
+                        --[[local part = ParticleManager:CreateParticle("particles/overhead_flame.vpcf", PATTACH_OVERHEAD_FOLLOW, hero)
+                        ParticleManager:SetParticleControl(part, 2, color)]]
+                        local part = ParticleManager:CreateParticle("particles/model_stars_continuous.vpcf", PATTACH_ABSORIGIN_FOLLOW, hero)
+                        ParticleManager:SetParticleControlEnt(part, 0, hero, PATTACH_POINT_FOLLOW, "attach_hitloc", hero:GetAbsOrigin(), true)
                         ParticleManager:SetParticleControl(part, 2, color)
                         -- and remove them
                         Timers:CreateTimer(8, function()
@@ -155,15 +154,20 @@ function GameMode:OnInitGameMode()
                             ParticleManager:SetParticleControl(part, 1, line.stop)
                             ParticleManager:SetParticleControl(part, 2, color)
                             ParticleManager:SetParticleControl(part, 3, Vector(math.ceil(Util:Distance(line.start, line.stop)*0.08), 0, 0))
+                            --[[local part = ParticleManager:CreateParticle("particles/ui_mouseactions/bounding_area_view_a.vpcf", PATTACH_CUSTOMORIGIN, nil)
+                            ParticleManager:SetParticleControl(part, 0, line.start)
+                            ParticleManager:SetParticleControl(part, 1, line.stop)
+                            ParticleManager:SetParticleControl(part, 15, color)
+                            ParticleManager:SetParticleControl(part, 16, Vector(1, 0, 0))]]
                             table.insert(short_particles, part)
 
                             -- longer starburst particles
-                            part = ParticleManager:CreateParticle("particles/line_stars_burst.vpcf", PATTACH_CUSTOMORIGIN, nil)
+                            --[[part = ParticleManager:CreateParticle("particles/line_stars_burst.vpcf", PATTACH_CUSTOMORIGIN, nil)
                             ParticleManager:SetParticleControl(part, 0, line.start)
                             ParticleManager:SetParticleControl(part, 1, line.stop)
                             ParticleManager:SetParticleControl(part, 2, color)
                             ParticleManager:SetParticleControl(part, 3, Vector(math.ceil(Util:Distance(line.start, line.stop)*0.08), 0, 0))
-                            table.insert(long_particles, part)
+                            table.insert(long_particles, part)]]
                         end
                         -- and remove them
                         Timers:CreateTimer(2, function()
@@ -191,6 +195,8 @@ function GameMode:OnInitGameMode()
 end
 
 function GameMode:OnGameInProgress()
+    print('[Trap Wars] Game logic started.')
+
     -- FIXME: remove this shitty debug thing  --
     Timers:CreateTimer(function()
         for team, _ in pairs(GameRules.valid_teams) do

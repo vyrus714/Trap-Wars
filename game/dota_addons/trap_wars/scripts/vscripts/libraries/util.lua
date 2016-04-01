@@ -126,3 +126,26 @@ function Util:Distance( point1, point2 )
 
     return math.sqrt(inside)
 end
+
+
+
+-- valve forgot a few math lib functions: http://lua-users.org/wiki/InfAndNanComparisons
+-- Gives 1 if value is +inf, -1 for -inf, and false otherwise (even for NaN)
+function math.isinf( value )
+    if type(value) ~= "number" then return false end
+    if value == math.huge then return 1 end
+    if value == -math.huge then return -1 end
+    return false
+end
+-- Gives true if value is NaN and false otherwise
+function math.isnan( value )
+    if type(value) ~= "number" then return true end
+    if value ~= value then return true end
+    return false
+end
+-- Gives true if value is NaN and not +/-inf and false otherwise
+function math.finite( value )
+    if type(value) ~= "number" then return false end
+    if -math.huge < value and value < math.huge then return true end
+    return false
+end
