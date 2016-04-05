@@ -40,8 +40,23 @@ function Info:GetValidTeams()
     return valid_teams
 end
 
+function Info:GetSpawners( team )
+    local spawners = {}
+
+    for _, ent in pairs(Entities:FindAllByName("Spawn_"..team)) do
+        table.insert(spawners, ent:GetEntityIndex())
+    end
+
+    return spawners
+end
+
 function Info:GetSharedGrid( team )
-    local grid = Entities:FindAllByName("Grid_"..team)
+    local grid = {}
+
+    for _, ent in pairs(Entities:FindAllByName("Grid_"..team)) do
+        table.insert(grid, ent:GetEntityIndex())
+    end
+
     --grid.lines = Info:GetGridOutline(grid)
     grid.lines = Info:GetGridOutlineNew(grid)
 
@@ -51,9 +66,15 @@ end
 function Info:GetUnclaimedGrids( team )
     local grids = {}
 
-    for i=1, DOTA_MAX_TEAM do  -- max # of players per team            -- FIXME: ok, why is this assuming 1 grid max per player total?
-        local grid = Entities:FindAllByName("Grid_"..team.."_"..i)    -- FIXME: ... ok, i rly need a better way of doing this
-        if type(grid) == "table" and 0 < Util:TableCount(grid) then
+    for i=1, DOTA_MAX_TEAM do  -- max # of players per team   -- FIXME: ok, why is this assuming 1 grid max per player total?
+        -- find grid #i for _team_
+        local grid = {}
+        for _, ent in pairs(Entities:FindAllByName("Grid_"..team.."_"..i)) do
+            table.insert(grid, ent:GetEntityIndex())
+        end
+
+        -- if the grid has entities in it, add the grid
+        if 0 < #grid then
             --grid.lines = Info:GetGridOutline(grid)
             grid.lines = Info:GetGridOutlineNew(grid)
             table.insert(grids, grid)
@@ -80,7 +101,7 @@ end
 
 function Info:IsInGrid( point, grid )
     for i=1, #grid do
-        if Info:IsInEntity(point, grid[i]) then return true end
+        if Info:IsInEntity(point, EntIndexToHScript(grid[i])) then return true end
     end
     return false
 end
@@ -182,7 +203,8 @@ end
 function Info:GetGridOutlineNew( grid )
     local grid_lines = {}
 
-    for _, ent in pairs(grid) do
+    for _, entid in pairs(grid) do
+        local ent = EntIndexToHScript(entid)
         local lines = Info:GetBoundsOutline(ent)
 
         for i, point in pairs(lines) do
@@ -218,7 +240,8 @@ function Info:GetGridOutlineNew( grid )
 
                 -- are we touching another trigger entity?
                 local touching = false
-                for _, e in pairs(grid) do
+                for _, eid in pairs(grid) do
+                    local e = EntIndexToHScript(eid)
                     if not touching and e ~= ent then
                         if Info:IsInEntity(ipoint, e) then touching=true end
                     end

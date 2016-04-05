@@ -20,6 +20,7 @@ function OnPortal(trigger)  --  trigger.activator, trigger.caller
 
     -- send the score event
     FireGameEvent("trapwars_score_update", {team=team, delta_score=-1})
+    -- FIXME: fire an effect\sound and remove creep without killing it  Noya: AddNoDraw
     -- kill the creep
     trigger.activator:Kill(nil, trigger.caller)
 end

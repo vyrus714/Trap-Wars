@@ -2,6 +2,11 @@
 {
   	custom_net_tables =
   	[
-    	"trap_wars_info"
+        "trapwars_static_info",
+        "trapwars_team_shared_grid",
+        "trapwars_team_scores",
+        "trapwars_valid_players",
+        "trapwars_player_colors",
+        "trapwars_player_grids"
   	]
 }

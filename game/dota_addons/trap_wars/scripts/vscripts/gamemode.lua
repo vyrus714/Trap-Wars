@@ -1,6 +1,6 @@
 function GameMode:OnInitGameMode()
     print('[Trap Wars] Setting up game logic ...')
-    --Util:PrintTable(GameRules.team_open_grids)
+
     -------------------------------------------------------------------
     -- Claiming / Drawing unclaimed grid areas
     -------------------------------------------------------------------
@@ -52,7 +52,7 @@ function GameMode:OnInitGameMode()
                     -- are we touching this grid?
                     local touching = false
                     for i=1, #grid do
-                        if grid[i]:IsTouching(hero) then touching=true end
+                        if EntIndexToHScript(grid[i]):IsTouching(hero) then touching=true end
                     end
 
                     -- update player's claims
@@ -266,7 +266,9 @@ function GameMode:OnGameInProgress()
 
             -- spawn creepwaves
             for team, spawners in pairs(GameRules.team_spawners) do
-                for _, spawner in pairs(spawners) do
+                for _, eid in pairs(spawners) do
+
+                    local spawner = EntIndexToHScript(eid)
                     for _, name in pairs(wave) do
                         -- create the creep
                         local creep = CreateUnitByName(name, spawner:GetAbsOrigin(), true, nil, nil, team)

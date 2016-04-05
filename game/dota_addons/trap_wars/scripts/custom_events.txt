@@ -1,4 +1,3 @@
-
 "CustomEvents"
 {
 	"trapwars_score_update"

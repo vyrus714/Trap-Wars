@@ -58,6 +58,7 @@ function GameMode:InitGameMode()
     ---------------------------------------------
     -- Player Specific Values | key = playerid --
     ---------------------------------------------
+    GameRules.valid_players = {}  -- same as vv
     GameRules.player_colors = {}  -- filled when the player gets their playerid, detected in GameMode:OnPlayerTeam() below
     GameRules.player_grids  = {}  -- store grids per-player ala vvvv  FIXME
     GameRules.player_creeps = {}  -- store creeps per-player, rather than a jumbled mess per team  FIXME
@@ -66,20 +67,22 @@ function GameMode:InitGameMode()
     -- Team Specific Values | key = team number --
     ----------------------------------------------
     GameRules.team_lives       = {}
-    GameRules.team_portals     = {}
     GameRules.team_spawners    = {}
     GameRules.team_shared_grid = {}
     GameRules.team_open_grids  = {}
 
     -- fill up those tables with info
     for team, _ in pairs(GameRules.valid_teams) do
-        GameRules.team_lives       [team] = GameRules.default_lives
-        GameRules.team_portals     [team] = Entities:FindAllByName("Portal_"..team)
-        GameRules.team_spawners    [team] = Entities:FindAllByName("Spawn_"..team)
-        GameRules.team_shared_grid [team] = Info:GetSharedGrid(team)
-        GameRules.team_open_grids  [team] = Info:GetUnclaimedGrids(team)
+        GameRules.team_lives      [team] = GameRules.default_lives
+        GameRules.team_spawners   [team] = Info:GetSpawners(team)
+        GameRules.team_shared_grid[team] = Info:GetSharedGrid(team)
+        GameRules.team_open_grids [team] = Info:GetUnclaimedGrids(team)  -- FIXME: give this a nettable\move drawing clientside?
+
+        -- set net table initial values for the stuff we're using above here
+        CustomNetTables:SetTableValue("trapwars_team_shared_grid", ""..team, GameRules.team_shared_grid[team]) -- FIXME: sending full unit handle, bad!
+        CustomNetTables:SetTableValue("trapwars_team_scores", ""..team, {GameRules.team_lives[team]})
     end
-    
+
     ----------------
     -- Game Rules --
     ----------------
@@ -100,6 +103,23 @@ function GameMode:InitGameMode()
         GameRules:SetCustomGameTeamMaxPlayers(team, max_players)
     end
 
+    ----------------------------------
+    -- Initialize Static Net Tables --
+    ----------------------------------
+    -- static (non-changing) values are in one net table, since they don't change
+    CustomNetTables:SetTableValue("trapwars_static_info", "creeps",      GameRules.npc_herocreeps)
+    CustomNetTables:SetTableValue("trapwars_static_info", "traps",       GameRules.npc_traps)
+    CustomNetTables:SetTableValue("trapwars_static_info", "valid_teams", GameRules.valid_teams)
+    CustomNetTables:SetTableValue("trapwars_static_info", "vars",        {default_lives=GameRules.default_lives})
+
+    -- other, changing, net tables each get their own table, so the values can update independantly
+    -- these are listed here for reference, even though they are set\updated elsewhere
+    -- "trapwars_team_shared_grid", "team_id", GameRules.team_shared_grid[team]  forget what that is
+    -- "trapwars_team_scores", "team_id", {int}
+    -- "trapwars_valid_players", "pid", {boolean}
+    -- "trapwars_player_colors", "pid", {vector}
+    -- "trapwars_player_grids", "pid", grid tables  --FIXME: implement
+
     ------------------------------
     -- Setup specific Listeners --
     ------------------------------
@@ -112,8 +132,7 @@ function GameMode:InitGameMode()
     ------------------------
     ListenToGameEvent('npc_spawned', Dynamic_Wrap(GameMode, 'OnNPCSpawned'), self)
     ListenToGameEvent("trapwars_score_update", Dynamic_Wrap(GameMode, 'OnTrapWarsScoreUpdated'), self)
-    CustomGameEventManager:RegisterListener("trapwars_modify_dummy", Dynamic_Wrap(GameMode, 'OnTrapWarsModifyDummy'))
-
+    --CustomGameEventManager:RegisterListener("trapwars_modify_dummy", Dynamic_Wrap(GameMode, 'OnTrapWarsModifyDummy'))
     CustomGameEventManager:RegisterListener("test_button", Dynamic_Wrap(GameMode, 'OnTestButton'))  -- FIXME TESTING
 
 
@@ -172,12 +191,25 @@ function GameMode:OnPlayerTeam(keys)
                 break
             end
         end
-        --print("setting player "..pid.."'s color to: ("..red.." "..green.." "..blue..")")
+
         -- set the player's color
         PlayerResource:SetCustomPlayerColor(pid, red, green, blue)
+
         -- add color to GameRules.player_colors
         GameRules.player_colors[pid] = Vector(red, green, blue)
+
+        -- add the value to the net table "trapwars_player_colors", "pid", {vector}
+        CustomNetTables:SetTableValue("trapwars_player_colors", ""..pid, {Vector(red, green, blue)})
     end
+
+    -- if the team is a playing-team (not spectators etc) then add to GameRules.valid_players
+    if  keys.team >= DOTA_TEAM_FIRST    and keys.team <= DOTA_TEAM_CUSTOM_MAX and 
+        keys.team ~= DOTA_TEAM_NEUTRALS and keys.team ~= DOTA_TEAM_NOTEAM then
+            CustomNetTables:SetTableValue("trapwars_valid_players", ""..pid, {true})
+    elseif CustomNetTables:GetTableValue("trapwars_valid_players", ""..pid)[1] == true then
+        CustomNetTables:SetTableValue("trapwars_valid_players", ""..pid, nil)
+    end
+
 end
 
 function GameMode:OnGameRulesStateChange(keys)
