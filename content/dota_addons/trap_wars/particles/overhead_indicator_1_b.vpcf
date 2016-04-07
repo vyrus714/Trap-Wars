@@ -97,4 +97,5 @@
 			_class = "C_OP_PositionLock"
 		},
 	]
+	m_flDepthSortBias = 100.000000
 }
