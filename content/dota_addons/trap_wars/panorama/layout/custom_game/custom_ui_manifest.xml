@@ -1,6 +1,6 @@
 <root>
   <scripts>
-    <!--<include src="file://{resources}/scripts/custom_game/playertables/playertables_base.js" />-->
+    <include src="file://{resources}/scripts/custom_game/trapwars_sound_event.js" />
   </scripts>
   <script>
     // Uncomment any of the following lines in order to disable that portion of the default UI

@@ -1,5 +1,5 @@
 function GameMode:OnInitGameMode()
-    print('[Trap Wars] Setting up game logic ...')
+    --print('[Trap Wars] Setting up game logic ...')
 
     -------------------------------------------------------------------
     -- Claiming / Drawing unclaimed grid areas
@@ -279,9 +279,11 @@ function GameMode:OnGameInProgress()
                         end
                         -- add attachments
                         if GameRules.npc_units_custom[name].Attachments ~= nil then
+                            creep.attachments = {}
                             for attach_point, models in pairs(GameRules.npc_units_custom[name].Attachments) do
                                 for model, properties in pairs(models) do
-                                    Attachments:AttachProp(creep, attach_point, model, properties.scale, properties)
+                                    local prop = Attachments:AttachProp(creep, attach_point, model, properties.scale, properties)
+                                    table.insert(creep.attachments, prop)
                                 end
                             end
                         end

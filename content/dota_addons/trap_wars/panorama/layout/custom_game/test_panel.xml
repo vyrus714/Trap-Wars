@@ -2,7 +2,7 @@
     <styles>
     </styles>
     <scripts>
-       <include src="file://{resources}/scripts/custom_game/trap_wars_generic.js" />
+       <include src="file://{resources}/scripts/custom_game/trapwars_generic.js" />
     </scripts>
 
     <Panel style="vertical-align:bottom; horizontal-align:center; margin-bottom:184px; margin-left:104px; width:700px; height:80px; flow-children:down;" >

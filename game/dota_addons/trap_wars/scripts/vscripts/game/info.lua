@@ -50,6 +50,28 @@ function Info:GetSpawners( team )
     return spawners
 end
 
+function Info:GetPortals( team )
+    local portals = {}
+
+    for _, ent in pairs(Entities:FindAllByName("Portal_"..team)) do
+        local portal = {}
+
+        -- add the entity id
+        portal.entindex = ent:GetEntityIndex()
+        -- add the particles for this portal
+        portal.particles = {}
+        local part = ParticleManager:CreateParticle("particles/econ/events/fall_major_2015/teleport_end_fallmjr_2015_lvl2.vpcf", PATTACH_CUSTOMORIGIN, nil)
+        ParticleManager:SetParticleControl(part, 0, ent:GetAbsOrigin()-Vector(0,0,100))
+        ParticleManager:SetParticleControl(part, 1, ent:GetAbsOrigin()-Vector(0,0,100))
+        table.insert(portal.particles, part)
+
+        -- add portal to table
+        table.insert(portals, portal)
+    end
+
+    return portals
+end
+
 function Info:GetSharedGrid( team )
     local grid = {}
 

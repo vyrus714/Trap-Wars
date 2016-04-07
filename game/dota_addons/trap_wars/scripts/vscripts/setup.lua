@@ -68,6 +68,7 @@ function GameMode:InitGameMode()
     ----------------------------------------------
     GameRules.team_lives       = {}
     GameRules.team_spawners    = {}
+    GameRules.team_portals     = {}
     GameRules.team_shared_grid = {}
     GameRules.team_open_grids  = {}
 
@@ -77,6 +78,8 @@ function GameMode:InitGameMode()
         GameRules.team_spawners   [team] = Info:GetSpawners(team)
         GameRules.team_shared_grid[team] = Info:GetSharedGrid(team)
         GameRules.team_open_grids [team] = Info:GetUnclaimedGrids(team)  -- FIXME: give this a nettable\move drawing clientside?
+
+        Timers:CreateTimer(1, function() GameRules.team_portals[team] = Info:GetPortals(team) end) -- doesn't like making particles so early
 
         -- set net table initial values for the stuff we're using above here
         CustomNetTables:SetTableValue("trapwars_team_shared_grid", ""..team, GameRules.team_shared_grid[team]) -- FIXME: sending full unit handle, bad!
