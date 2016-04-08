@@ -58,8 +58,8 @@ function GameMode:InitGameMode()
     ---------------------------------------------
     -- Player Specific Values | key = playerid --
     ---------------------------------------------
-    GameRules.valid_players = {}  -- same as vv
-    GameRules.player_colors = {}  -- filled when the player gets their playerid, detected in GameMode:OnPlayerTeam() below
+    GameRules.valid_players = {}  -- filled when players join teams in OnPlayerTeam()
+    GameRules.player_colors = {}  -- filled when players first connect in OnPlayerConnectFull()
     GameRules.player_grids  = {}  -- store grids per-player ala vvvv  FIXME
     GameRules.player_creeps = {}  -- store creeps per-player, rather than a jumbled mess per team  FIXME
 
@@ -100,6 +100,17 @@ function GameMode:InitGameMode()
     GameRules:SetCreepMinimapIconScale(1)
     GameRules:SetStartingGold(10000)   -- FIXME
 
+    local GameModeEntity = GameRules:GetGameModeEntity()
+    GameModeEntity:SetFogOfWarDisabled(true)
+    GameModeEntity:SetCameraDistanceOverride(1337)
+    --GameModeEntity:SetCustomBuybackCostEnabled(true)
+    --GameModeEntity:SetCustomBuybackCooldownEnabled(true)
+    GameModeEntity:SetFixedRespawnTime(20.0)  -- BALANCE
+    --GameModeEntity:SetTopBarTeamValuesVisible(true)
+    GameModeEntity:SetTopBarTeamValuesOverride(true)  -- FIXME
+    GameModeEntity:SetTopBarTeamValue(DOTA_TEAM_GOODGUYS, GameRules.default_lives)  -- FIXME
+    GameModeEntity:SetTopBarTeamValue(DOTA_TEAM_BADGUYS, GameRules.default_lives)  -- FIXME
+
     -- set the max players for each team (rounds down if given an odd # of players for the map)
     local max_players = math.floor(Info:GetTotalPlayers() / Util:TableCount(GameRules.valid_teams))
     for team, _ in pairs(GameRules.valid_teams) do 
@@ -123,9 +134,9 @@ function GameMode:InitGameMode()
     -- "trapwars_player_colors", "pid", {vector}
     -- "trapwars_player_grids", "pid", grid tables  --FIXME: implement
 
-    ------------------------------
-    -- Setup specific Listeners --
-    ------------------------------
+    ---------------------
+    -- Setup Listeners --
+    ---------------------
     ListenToGameEvent('player_connect_full', Dynamic_Wrap(GameMode, 'OnPlayerConnectFull'), self)
     ListenToGameEvent('player_team', Dynamic_Wrap(GameMode, 'OnPlayerTeam'), self)
     ListenToGameEvent('game_rules_state_change', Dynamic_Wrap(GameMode, 'OnGameRulesStateChange'), self)
@@ -144,37 +155,20 @@ function GameMode:InitGameMode()
     GameMode:OnInitGameMode()
 end
 
----------------------------------------------------------------------------
--- Listener Functions
----------------------------------------------------------------------------
+-------------------------------
+-- Setup Listener Functions  --
+-------------------------------
 
-function GameMode:OnPlayerConnectFull()
-    local GameModeEntity = GameRules:GetGameModeEntity()
-
-    GameModeEntity:SetFogOfWarDisabled(true)
-    GameModeEntity:SetCameraDistanceOverride(1337)
-
-    --GameModeEntity:SetCustomBuybackCostEnabled(true)
-    --GameModeEntity:SetCustomBuybackCooldownEnabled(true)
-    GameModeEntity:SetFixedRespawnTime(20.0)  -- BALANCE
-    
-    --GameModeEntity:SetTopBarTeamValuesVisible(true)
-    GameModeEntity:SetTopBarTeamValuesOverride(true)  -- FIXME
-    GameModeEntity:SetTopBarTeamValue(DOTA_TEAM_GOODGUYS, GameRules.default_lives)  -- FIXME
-    GameModeEntity:SetTopBarTeamValue(DOTA_TEAM_BADGUYS, GameRules.default_lives)  -- FIXME
-end
-
--- called when a player joins\changes teams - bots result with a pid of -1, very annoying
-function GameMode:OnPlayerTeam(keys)
-    -- the player in question
-    local player = PlayerInstanceFromIndex(keys.userid)
-    -- if (for some reason) it's not actually a player, gtfo
-    if not player:IsPlayer() then return end
-    -- get the player id
+function GameMode:OnPlayerConnectFull(keys)
+    local player = EntIndexToHScript(keys.index+1)
     local pid = player:GetPlayerID()
 
+    -- when a player connects, store their userid and playerid so we can associate the two elsewhere
+    if not GameRules.UserIDPlayerID then GameRules.UserIDPlayerID = {} end
+    Timers:CreateTimer(function() GameRules.UserIDPlayerID[keys.userid]=pid end)
 
-    -- only execute this the first time they join a team: basically on connect, when they get their PID
+
+    -- functions executed only on a player's first join
     if not player._firstJoin then
         player._firstJoin = true
 
@@ -194,25 +188,28 @@ function GameMode:OnPlayerTeam(keys)
                 break
             end
         end
-
         -- set the player's color
         PlayerResource:SetCustomPlayerColor(pid, red, green, blue)
-
         -- add color to GameRules.player_colors
         GameRules.player_colors[pid] = Vector(red, green, blue)
-
         -- add the value to the net table "trapwars_player_colors", "pid", {vector}
         CustomNetTables:SetTableValue("trapwars_player_colors", ""..pid, {Vector(red, green, blue)})
     end
 
+end
+
+-- called when a player joins\changes teams - bots result with a pid of -1, very annoying
+function GameMode:OnPlayerTeam(keys)
+    local pid = GameRules.UserIDPlayerID[keys.userid]
+
     -- if the team is a playing-team (not spectators etc) then add to GameRules.valid_players
-    if  keys.team >= DOTA_TEAM_FIRST    and keys.team <= DOTA_TEAM_CUSTOM_MAX and 
-        keys.team ~= DOTA_TEAM_NEUTRALS and keys.team ~= DOTA_TEAM_NOTEAM then
+    if keys.team >= DOTA_TEAM_FIRST and keys.team <= DOTA_TEAM_CUSTOM_MAX and keys.team ~= DOTA_TEAM_NEUTRALS and keys.team ~= DOTA_TEAM_NOTEAM then
+            GameRules.valid_players[pid] = true
             CustomNetTables:SetTableValue("trapwars_valid_players", ""..pid, {true})
     elseif CustomNetTables:GetTableValue("trapwars_valid_players", ""..pid)[1] == true then
+        GameRules.valid_players[pid] = nil  -- make sure they are removed if they exit a valid team
         CustomNetTables:SetTableValue("trapwars_valid_players", ""..pid, nil)
     end
-
 end
 
 function GameMode:OnGameRulesStateChange(keys)
