@@ -1,14 +1,13 @@
 local GameMode = GameRules.GameMode
 
--- settings file
-require('setup')
 -- libraries
 require('libraries/util')
 require('libraries/timers')
 require('libraries/attachments')
 -- game functions
-require('game/info')
-require('game/traps')
+require('game/setup')
+require('game/information')
+require('game/actions')
 
 function GameMode:InitGameMode()
     -- load settings from the setup file
