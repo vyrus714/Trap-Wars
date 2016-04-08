@@ -1,21 +1,6 @@
--- function state object
-if GameMode == nil then
-    GameMode = class({})
-    GameRules.GameMode = GameMode
-end
+local GameMode = GameRules.GameMode
 
--- libraries
-require('libraries/util')
-require('libraries/timers')
-require('libraries/attachments')
--- game functions
-require('game/info')
-require('game/traps')
--- main game logic
-require('gamemode')
-
-
-function GameMode:InitGameMode()
+function GameMode:SetupGameMode()
     print('[Trap Wars] Setting up Game Mode ...')
 
     ---------------------------
@@ -52,8 +37,9 @@ function GameMode:InitGameMode()
     -----------------------
     GameRules.max_player_grids = 1 -- FIXME: perhaps add some map\player variability to this
     GameRules.default_lives    = 50
-    GameRules.valid_teams      = Info:GetValidTeams()
-    --GameRules.valid_players  FIXME, do this? yes no?
+    GameRules.valid_teams      = GameMode:GetValidTeams()
+
+    GameRules.UserIDPlayerID   = {}  -- for associating userid's and playerid's for event handling; in OnPlayerConnectFull()
 
     ---------------------------------------------
     -- Player Specific Values | key = playerid --
@@ -75,11 +61,11 @@ function GameMode:InitGameMode()
     -- fill up those tables with info
     for team, _ in pairs(GameRules.valid_teams) do
         GameRules.team_lives      [team] = GameRules.default_lives
-        GameRules.team_spawners   [team] = Info:GetSpawners(team)
-        GameRules.team_shared_grid[team] = Info:GetSharedGrid(team)
-        GameRules.team_open_grids [team] = Info:GetUnclaimedGrids(team)  -- FIXME: give this a nettable\move drawing clientside?
+        GameRules.team_spawners   [team] = GameMode:GetSpawners(team)
+        GameRules.team_shared_grid[team] = GameMode:GetSharedGrid(team)
+        GameRules.team_open_grids [team] = GameMode:GetUnclaimedGrids(team)  -- FIXME: give this a nettable\move drawing clientside?
 
-        Timers:CreateTimer(1, function() GameRules.team_portals[team] = Info:GetPortals(team) end) -- doesn't like making particles so early
+        Timers:CreateTimer(1, function() GameRules.team_portals[team] = GameMode:GetPortals(team) end) -- doesn't like making particles so early
 
         -- set net table initial values for the stuff we're using above here
         CustomNetTables:SetTableValue("trapwars_team_shared_grid", ""..team, GameRules.team_shared_grid[team]) -- FIXME: sending full unit handle, bad!
@@ -112,7 +98,7 @@ function GameMode:InitGameMode()
     GameModeEntity:SetTopBarTeamValue(DOTA_TEAM_BADGUYS, GameRules.default_lives)  -- FIXME
 
     -- set the max players for each team (rounds down if given an odd # of players for the map)
-    local max_players = math.floor(Info:GetTotalPlayers() / Util:TableCount(GameRules.valid_teams))
+    local max_players = math.floor(GameMode:GetTotalPlayers() / Util:TableCount(GameRules.valid_teams))
     for team, _ in pairs(GameRules.valid_teams) do 
         GameRules:SetCustomGameTeamMaxPlayers(team, max_players)
     end
@@ -134,25 +120,20 @@ function GameMode:InitGameMode()
     -- "trapwars_player_colors", "pid", {vector}
     -- "trapwars_player_grids", "pid", grid tables  --FIXME: implement
 
-    ---------------------
-    -- Setup Listeners --
-    ---------------------
+    ------------------------
+    -- Register Listeners --
+    ------------------------
+    -- setup file functions
     ListenToGameEvent('player_connect_full', Dynamic_Wrap(GameMode, 'OnPlayerConnectFull'), self)
     ListenToGameEvent('player_team', Dynamic_Wrap(GameMode, 'OnPlayerTeam'), self)
     ListenToGameEvent('game_rules_state_change', Dynamic_Wrap(GameMode, 'OnGameRulesStateChange'), self)
-
-    ------------------------
-    -- GameMode Listeners --
-    ------------------------
+    --gamemode file functions
     ListenToGameEvent('npc_spawned', Dynamic_Wrap(GameMode, 'OnNPCSpawned'), self)
     ListenToGameEvent("trapwars_score_update", Dynamic_Wrap(GameMode, 'OnTrapWarsScoreUpdated'), self)
-    --CustomGameEventManager:RegisterListener("trapwars_modify_dummy", Dynamic_Wrap(GameMode, 'OnTrapWarsModifyDummy'))
     CustomGameEventManager:RegisterListener("test_button", Dynamic_Wrap(GameMode, 'OnTestButton'))  -- FIXME TESTING
 
 
-    -- setup complete, continue in the gamemode file
     print('[Trap Wars] Setup Complete.')
-    GameMode:OnInitGameMode()
 end
 
 -------------------------------
@@ -161,41 +142,43 @@ end
 
 function GameMode:OnPlayerConnectFull(keys)
     local player = EntIndexToHScript(keys.index+1)
-    local pid = player:GetPlayerID()
 
-    -- when a player connects, store their userid and playerid so we can associate the two elsewhere
-    if not GameRules.UserIDPlayerID then GameRules.UserIDPlayerID = {} end
-    Timers:CreateTimer(function() GameRules.UserIDPlayerID[keys.userid]=pid end)
+    -- delay one frame so we get an accurate player id
+    Timers:CreateTimer(function()
+        local pid = player:GetPlayerID()
 
+        -- when a player connects, store their userid and playerid so we can associate the two elsewhere
+        GameRules.UserIDPlayerID[keys.userid] = pid
 
-    -- functions executed only on a player's first join
-    if not player._firstJoin then
-        player._firstJoin = true
+        -- functions executed only on a player's first join
+        if not player._firstJoin then
+            player._firstJoin = true
 
-        -- for each player that connects, give them a random color and store it in GameRules.player_colors
-        local red, green, blue = 255, 255, 255
-        -- attempt to find a suitable color 100 times before giving up and returning white
-        for i=1, 100 do
-            local r, g, b = RandomInt(0, 255), RandomInt(0, 255), RandomInt(0, 255)
+            -- for each player that connects, give them a random color and store it in GameRules.player_colors
+            local red, green, blue = 255, 255, 255
+            -- attempt to find a suitable color 100 times before giving up and returning white
+            for i=1, 100 do
+                local r, g, b = RandomInt(0, 255), RandomInt(0, 255), RandomInt(0, 255)
 
-            local valid = true
-            for _, color in pairs(GameRules.player_colors) do
-                if 102 < math.abs(color.x-r) and 102 < math.abs(color.y-g) and 102 < math.abs(color.z-b) then valid=false end
+                local valid = true
+                for _, color in pairs(GameRules.player_colors) do
+                    if 102 < math.abs(color.x-r) and 102 < math.abs(color.y-g) and 102 < math.abs(color.z-b) then valid=false end
+                end
+
+                if valid then
+                    red, green, blue = r, g, b
+                    break
+                end
             end
 
-            if valid then
-                red, green, blue = r, g, b
-                break
-            end
+            -- set the player's color and add it to GameRules.player_colors to keep track of it
+            PlayerResource:SetCustomPlayerColor(pid, red, green, blue)
+            GameRules.player_colors[pid] = Vector(red, green, blue)
+            
+            -- add the value to the net table "trapwars_player_colors", "pid", {vector}
+            CustomNetTables:SetTableValue("trapwars_player_colors", ""..pid, {Vector(red, green, blue)})
         end
-        -- set the player's color
-        PlayerResource:SetCustomPlayerColor(pid, red, green, blue)
-        -- add color to GameRules.player_colors
-        GameRules.player_colors[pid] = Vector(red, green, blue)
-        -- add the value to the net table "trapwars_player_colors", "pid", {vector}
-        CustomNetTables:SetTableValue("trapwars_player_colors", ""..pid, {Vector(red, green, blue)})
-    end
-
+    end)
 end
 
 -- called when a player joins\changes teams - bots result with a pid of -1, very annoying

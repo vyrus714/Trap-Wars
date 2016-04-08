@@ -1,18 +1,15 @@
--- wrap utility functions in a class to avoid naming issues
-if Info == nil then
-    Info = class({})
-end
+local GameMode = GameRules.GameMode
 
 ---------------------------------------------------------------------------
 -- some general team info functions
 ---------------------------------------------------------------------------
-function Info:IsPlayerTeam( teamID )
+function GameMode:IsPlayerTeam( teamID )
     if  teamID == DOTA_TEAM_GOODGUYS   or  teamID == DOTA_TEAM_BADGUYS or
         teamID >= DOTA_TEAM_CUSTOM_MIN and teamID <= DOTA_TEAM_CUSTOM_MAX then return true end
     return false
 end
 
-function Info:GetTotalPlayers()
+function GameMode:GetTotalPlayers()
     local totalPlayers = 0
     local addoninfo = LoadKeyValues("addoninfo.txt")
 
@@ -25,11 +22,11 @@ function Info:GetTotalPlayers()
 end
 
 -- list of teams specific to this map
-function Info:GetValidTeams()
+function GameMode:GetValidTeams()
     -- find teams based on the player start points in the map
     local valid_teams = {}
     for _, pstart in pairs(Entities:FindAllByClassname("info_player_start_dota")) do
-        if Info:IsPlayerTeam(pstart:GetTeam()) then valid_teams[pstart:GetTeam()]=true end
+        if GameMode:IsPlayerTeam(pstart:GetTeam()) then valid_teams[pstart:GetTeam()]=true end
     end
 
     -- if valid_teams is out of bounds, use default radiant/dire
@@ -40,7 +37,7 @@ function Info:GetValidTeams()
     return valid_teams
 end
 
-function Info:GetSpawners( team )
+function GameMode:GetSpawners( team )
     local spawners = {}
 
     for _, ent in pairs(Entities:FindAllByName("Spawn_"..team)) do
@@ -50,7 +47,7 @@ function Info:GetSpawners( team )
     return spawners
 end
 
-function Info:GetPortals( team )
+function GameMode:GetPortals( team )
     local portals = {}
 
     for _, ent in pairs(Entities:FindAllByName("Portal_"..team)) do
@@ -72,20 +69,20 @@ function Info:GetPortals( team )
     return portals
 end
 
-function Info:GetSharedGrid( team )
+function GameMode:GetSharedGrid( team )
     local grid = {}
 
     for _, ent in pairs(Entities:FindAllByName("Grid_"..team)) do
         table.insert(grid, ent:GetEntityIndex())
     end
 
-    --grid.lines = Info:GetGridOutline(grid)
-    grid.lines = Info:GetGridOutlineNew(grid)
+    --grid.lines = GameMode:GetGridOutline(grid)
+    grid.lines = GameMode:GetGridOutlineNew(grid)
 
     return grid
 end
 
-function Info:GetUnclaimedGrids( team )
+function GameMode:GetUnclaimedGrids( team )
     local grids = {}
 
     for i=1, DOTA_MAX_TEAM do  -- max # of players per team   -- FIXME: ok, why is this assuming 1 grid max per player total?
@@ -97,8 +94,8 @@ function Info:GetUnclaimedGrids( team )
 
         -- if the grid has entities in it, add the grid
         if 0 < #grid then
-            --grid.lines = Info:GetGridOutline(grid)
-            grid.lines = Info:GetGridOutlineNew(grid)
+            --grid.lines = GameMode:GetGridOutline(grid)
+            grid.lines = GameMode:GetGridOutlineNew(grid)
             table.insert(grids, grid)
         end
     end
@@ -109,7 +106,7 @@ end
 ---------------------------------------------------------------------------
 -- Per-Player Grid Functions -- if i ever get around to it i'll rename this, since it's slightly(majorly) confusing FIXME
 ---------------------------------------------------------------------------
-function Info:IsInEntity( point, entity )
+function GameMode:IsInEntity( point, entity )
     if entity == nil then return false end
 
     local min = entity:GetBoundingMins() + entity:GetAbsOrigin()
@@ -121,31 +118,31 @@ function Info:IsInEntity( point, entity )
     return false
 end
 
-function Info:IsInGrid( point, grid )
+function GameMode:IsInGrid( point, grid )
     for i=1, #grid do
-        if Info:IsInEntity(point, EntIndexToHScript(grid[i])) then return true end
+        if GameMode:IsInEntity(point, EntIndexToHScript(grid[i])) then return true end
     end
     return false
 end
 
 -- this one relies on GameRules.player_grids
-function Info:IsInPlayersGrid( point, player_id )
+function GameMode:IsInPlayersGrid( point, player_id )
     if GameRules.player_grids[player_id] == nil then return false end
 
     for _, grid in pairs(GameRules.player_grids[player_id]) do
-        if Info:IsInGrid(point, grid) then return true end
+        if GameMode:IsInGrid(point, grid) then return true end
     end
 
     return false
 end
 
 -- this one relies on GameRules.team_shared_grid
-function Info:IsInSharedGrid( point, team )  -- FIXME: remove this, it's redundant now that i stripped out the old shit
-    if Info:IsInGrid(point, GameRules.team_shared_grid[team]) then return true end
+function GameMode:IsInSharedGrid( point, team )  -- FIXME: remove this, it's redundant now that i stripped out the old shit
+    if GameMode:IsInGrid(point, GameRules.team_shared_grid[team]) then return true end
     return false
 end
 
-function Info:GetGridOutline( grid )
+function GameMode:GetGridOutline( grid )
     local grid_lines = {}
 
     for _, ent in pairs(grid) do
@@ -189,7 +186,7 @@ function Info:GetGridOutline( grid )
                 local in_ent = false
                 for _, g in pairs(grid) do
                     if not in_ent and g ~= ent then
-                        if Info:IsInEntity(point, g) then in_ent = true end
+                        if GameMode:IsInEntity(point, g) then in_ent = true end
                     end
                 end
 
@@ -212,7 +209,7 @@ function Info:GetGridOutline( grid )
     return grid_lines
 end
 
-function Info:GetBoundsOutline( ent )
+function GameMode:GetBoundsOutline( ent )
     local min, max = ent:GetAbsOrigin()+ent:GetBoundingMins(), ent:GetAbsOrigin()+ent:GetBoundingMaxs()
     return {
         Vector(min.x, min.y, min.z),
@@ -222,12 +219,12 @@ function Info:GetBoundsOutline( ent )
     }
 end
 
-function Info:GetGridOutlineNew( grid )
+function GameMode:GetGridOutlineNew( grid )
     local grid_lines = {}
 
     for _, entid in pairs(grid) do
         local ent = EntIndexToHScript(entid)
-        local lines = Info:GetBoundsOutline(ent)
+        local lines = GameMode:GetBoundsOutline(ent)
 
         for i, point in pairs(lines) do
             -- get the end point for this line
@@ -265,7 +262,7 @@ function Info:GetGridOutlineNew( grid )
                 for _, eid in pairs(grid) do
                     local e = EntIndexToHScript(eid)
                     if not touching and e ~= ent then
-                        if Info:IsInEntity(ipoint, e) then touching=true end
+                        if GameMode:IsInEntity(ipoint, e) then touching=true end
                     end
                 end
 
@@ -295,22 +292,22 @@ local tile = 128
 local diagonal = math.sqrt(tile*tile*2)  -- corner to corner distance
 
 -- the absolute center of the nearest grid tile to _position_
-function Info:GetGridCenter( position )
+function GameMode:GetGridCenter( position )
     return Vector(   math.floor((position.x+tile/2)/tile)*tile,
                      math.floor((position.y+tile/2)/tile)*tile,
                     (math.floor(position.z/tile)+0.5)    *tile  )
 end
 
 -- x and y are centered, z is floored for practicality
-function Info:Get2DGridCenter( position )
+function GameMode:Get2DGridCenter( position )
     return Vector(  math.floor((position.x+tile/2)/tile)*tile,
                     math.floor((position.y+tile/2)/tile)*tile,
                     math.floor(position.z/tile)         *tile  )
 end
 
 -- find all units whithin a tile
-function Info:FindUnitsInTile( position )
-    local position = Info:Get2DGridCenter(position)
+function GameMode:FindUnitsInTile( position )
+    local position = GameMode:Get2DGridCenter(position)
 
     -- filter out non-npc entities, or entities not in the actual tile square
     local ents = Entities:FindAllInSphere(position, diagonal/2)
@@ -326,8 +323,8 @@ function Info:FindUnitsInTile( position )
 end
 
 -- find all units not on _team_ within a tile
-function Info:FindEnemyUnitsInTile( position, team )
-    local units = Info:FindUnitsInTile(position)
+function GameMode:FindEnemyUnitsInTile( position, team )
+    local units = GameMode:FindUnitsInTile(position)
 
     -- filter out units not in said team
     for k, unit in pairs(units) do
@@ -338,8 +335,8 @@ function Info:FindEnemyUnitsInTile( position, team )
 end
 
 -- find clear space for units in a tile -- a bit around the tile, since it's cheaper
-function Info:UnstuckUnitsInTile( position )  -- FIXME: this is not an INFORMATION function, gtfo of this file you imposter!
-    local position = Info:Get2DGridCenter(position)
+function GameMode:UnstuckUnitsInTile( position )  -- FIXME: this is not an INFORMATION function, gtfo of this file you imposter!
+    local position = GameMode:Get2DGridCenter(position)
 
     local ents = Entities:FindAllInSphere(position, diagonal/2)
     for _, ent in pairs(ents) do
@@ -348,15 +345,15 @@ function Info:UnstuckUnitsInTile( position )  -- FIXME: this is not an INFORMATI
 end
 
 -- is there an "npc_dota_building" in this tile?
-function Info:IsBuildingInTile( position )
-    if Entities:FindByClassnameWithin(nil, "npc_dota_building", Info:Get2DGridCenter(position), tile/2) == nil then return false end
+function GameMode:IsBuildingInTile( position )
+    if Entities:FindByClassnameWithin(nil, "npc_dota_building", GameMode:Get2DGridCenter(position), tile/2) == nil then return false end
     return true
 end
 
 ---------------------------------------------------------------------------
 -- creep table functions
 ---------------------------------------------------------------------------
-function Info:AddCreep( creep_table, cname, cowner, crate, ccount, citems )  -- FIXME: this does not belong here, move to spawning.lua
+function GameMode:AddCreep( creep_table, cname, cowner, crate, ccount, citems )  -- FIXME: this does not belong here, move to spawning.lua
     local ccount = ccount or 1
     local citems = citems  -- or nil
 

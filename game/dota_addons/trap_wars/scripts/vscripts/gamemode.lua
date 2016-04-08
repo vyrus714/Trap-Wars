@@ -1,5 +1,18 @@
-function GameMode:OnInitGameMode()
-    --print('[Trap Wars] Setting up game logic ...')
+local GameMode = GameRules.GameMode
+
+-- settings file
+require('setup')
+-- libraries
+require('libraries/util')
+require('libraries/timers')
+require('libraries/attachments')
+-- game functions
+require('game/info')
+require('game/traps')
+
+function GameMode:InitGameMode()
+    -- load settings from the setup file
+    GameMode:SetupGameMode()
 
     -------------------------------------------------------------------
     -- Claiming / Drawing unclaimed grid areas
@@ -213,11 +226,11 @@ function GameMode:OnGameInProgress()
                 local position = hero:GetAbsOrigin()
                 if position ~= nil then
                     -- draw some chmansy debug lines
-                    DebugDrawBox(Info:Get2DGridCenter(position), Vector(-64, -64, 0), Vector(64, 64, 0), 0, 128, 0, 0.75, 1/10)
-                    DebugDrawSphere(Info:GetGridCenter(position), Vector(0, 0, 128), 0.75, 20, true, 1/10)
+                    DebugDrawBox(GameMode:Get2DGridCenter(position), Vector(-64, -64, 0), Vector(64, 64, 0), 0, 128, 0, 0.75, 1/10)
+                    DebugDrawSphere(GameMode:GetGridCenter(position), Vector(0, 0, 128), 0.75, 20, true, 1/10)
                     -- if in one of this player's grids, draw a schmansy sphere
-                    if GameRules.player_grids[pid] ~= nil and Info:IsInPlayersGrid(position, pid) then
-                        DebugDrawSphere(Info:GetGridCenter(position), Vector(128, 0, 0), 0.75, 24, true, 1/10)
+                    if GameRules.player_grids[pid] ~= nil and GameMode:IsInPlayersGrid(position, pid) then
+                        DebugDrawSphere(GameMode:GetGridCenter(position), Vector(128, 0, 0), 0.75, 24, true, 1/10)
                     end
                 end
             end
