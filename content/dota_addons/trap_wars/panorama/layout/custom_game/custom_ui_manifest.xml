@@ -43,7 +43,7 @@
   <Panel>
     <!-- CustomUIElements go here.-->
 
-    <!-- <CustomUIElement type="Hud" layoutfile="file://{resources}/layout/custom_game/trap_wars_menu.xml" />  -->
+    <CustomUIElement type="Hud" layoutfile="file://{resources}/layout/custom_game/trapwars_menu.xml" />
     <CustomUIElement type="Hud" layoutfile="file://{resources}/layout/custom_game/test_panel.xml" />
     <CustomUIElement type="Hud" layoutfile="file://{resources}/layout/custom_game/barebones_attachments.xml" />
 
