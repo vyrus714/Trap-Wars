@@ -106,11 +106,20 @@ function GameMode:SetupGameMode()
     ----------------------------------
     -- Initialize Static Net Tables --
     ----------------------------------
-    -- static (non-changing) values are in one net table, since they don't change
-    CustomNetTables:SetTableValue("trapwars_static_info", "creeps",      GameRules.npc_herocreeps)
-    CustomNetTables:SetTableValue("trapwars_static_info", "traps",       GameRules.npc_traps)
+    -- tables set on a one-time-only basis at the start of the game
     CustomNetTables:SetTableValue("trapwars_static_info", "valid_teams", GameRules.valid_teams)
     CustomNetTables:SetTableValue("trapwars_static_info", "vars",        {default_lives=GameRules.default_lives})
+
+    for key, value in pairs(GameRules.npc_herocreeps) do
+        if GameRules.npc_units_custom[value] then
+            CustomNetTables:SetTableValue("trapwars_npc_herocreeps", value, GameRules.npc_units_custom[value])
+        end
+    end
+    for key, value in pairs(GameRules.npc_traps) do
+        if GameRules.npc_units_custom[value] then
+            CustomNetTables:SetTableValue("trapwars_npc_traps", value, GameRules.npc_units_custom[value])
+        end
+    end
 
     -- other, changing, net tables each get their own table, so the values can update independantly
     -- these are listed here for reference, even though they are set\updated elsewhere

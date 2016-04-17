@@ -3,6 +3,8 @@
   	custom_net_tables =
   	[
         "trapwars_static_info",
+        "trapwars_npc_herocreeps",
+        "trapwars_npc_traps",
         "trapwars_team_shared_grid",
         "trapwars_team_scores",
         "trapwars_valid_players",

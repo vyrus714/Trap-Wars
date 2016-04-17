@@ -1,0 +1,56 @@
+<root>
+    <styles>
+        <!--<include src="file://{resources}/styles/dotastyles.css" /> -->
+        <!--<include src="s2r://panorama/styles/dotastyles.vcss_c" /> -->
+        <!--<include src="s2r://panorama/styles/dotastyles.css" /> -->
+        <include src="file://{resources}/styles/custom_game/trapwars_menu.css" />
+    </styles>
+    <scripts>
+        <include src="file://{resources}/scripts/custom_game/trapwars_menu.js" />
+    </scripts>
+    <Panel class="root">
+
+        <Panel class="menu" id="menu">
+            <!-- Tab Bar at the top of the menu -->
+            <Panel class="tab_container">
+                <Panel class="tab">
+                    <RadioButton class="tab_button tb_left" group="tab_btns" onactivate="SwitchToTab('tab1')" id="tab1_btn" checked="checked">
+                        <Label class="button_text" text="Traps"  />
+                    </RadioButton>
+                </Panel>
+
+                <Panel class="tab">
+                    <RadioButton class="tab_button tb_right" group="tab_btns" onactivate="SwitchToTab('tab2')" id="tab2_btn">
+                        <Label class="button_text" text="Creeps" />
+                    </RadioButton>
+                </Panel>
+
+            </Panel>
+
+            <!-- The main content of the menu -->
+            <Panel class="body">
+                <!--<Panel style="width: 100%; height: 40px; background-color: black; opacity: 0.6;" />-->
+                <Panel id="tab1" class="body_tab start">
+                    <Panel id="list1" class="list" />
+                    <Panel class="display">
+                        <Panel class="display_pic" />
+                        <Panel class="display_info" />
+                    </Panel>
+                </Panel>
+
+                <Panel id="tab2" class="body_tab">
+                    <Panel id="list2" class="list" />
+                    <Panel class="display">
+                        <Panel class="display_pic" />
+                        <Panel class="display_info" />
+                    </Panel>
+                </Panel>
+
+            </Panel>
+        </Panel>
+
+
+        <Button class="toggle_button" id="menu_toggle" onactivate="ToggleMenu()"><Label class="button_text" text="Upgrades" /></Button>
+
+    </Panel>
+</root>

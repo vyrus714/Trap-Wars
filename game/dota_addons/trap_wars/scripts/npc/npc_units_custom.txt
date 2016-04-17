@@ -92,12 +92,17 @@
         "CombatClassDefend"         "DOTA_COMBAT_CLASS_DEFEND_STRUCTURE"
         "UnitRelationshipClass"     "DOTA_NPC_UNIT_RELATIONSHIP_TYPE_DEFAULT"
 
-        // Modifiers
+        // TrapWars Creep Info
         //----------------------------------------------------------------
         "modifiers"
         {
             "1"                     "modifier_phased"
             "2"                     "modifier_invulnerable"
+        }
+        "info"
+        {
+            "image"                 "file://{images}/custom_game/traps/spiketrap_spikes.png"
+            "class"                 "damage"
         }
 
         // LUA AI function
@@ -190,12 +195,17 @@
         "CombatClassDefend"         "DOTA_COMBAT_CLASS_DEFEND_STRUCTURE"
         "UnitRelationshipClass"     "DOTA_NPC_UNIT_RELATIONSHIP_TYPE_DEFAULT"
 
-        // Modifiers
+        // TrapWars Creep Info
         //----------------------------------------------------------------
         "modifiers"
         {
             "1"                     "modifier_phased"
             "2"                     "modifier_invulnerable"
+        }
+        "info"
+        {
+            //"image"                 ""  FIXME
+            "class"                 "damage"
         }
 
         // LUA AI function
@@ -277,6 +287,13 @@
         "CombatClassAttack"         "DOTA_COMBAT_CLASS_ATTACK_LIGHT"
         "CombatClassDefend"         "DOTA_COMBAT_CLASS_DEFEND_STRONG"
         "UnitRelationshipClass"     "DOTA_NPC_UNIT_RELATIONSHIP_TYPE_DEFAULT"
+
+        // TrapWars Creep Info
+        //----------------------------------------------------------------
+        "info"
+        {
+            //"image"                 ""  FIXME
+        }
     }       
 
     // Neutral: Furbolg Disrupter    FIXME: test unit
@@ -349,6 +366,13 @@
         "CombatClassAttack"         "DOTA_COMBAT_CLASS_ATTACK_LIGHT"
         "CombatClassDefend"         "DOTA_COMBAT_CLASS_DEFEND_STRONG"
         "UnitRelationshipClass"     "DOTA_NPC_UNIT_RELATIONSHIP_TYPE_DEFAULT"
+
+        // TrapWars Creep Info
+        //----------------------------------------------------------------
+        "info"
+        {
+            //"image"                 ""  FIXME
+        }
 
         // LUA AI function
         //----------------------------------------------------------------

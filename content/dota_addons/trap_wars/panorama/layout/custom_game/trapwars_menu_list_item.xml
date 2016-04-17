@@ -1,0 +1,17 @@
+<root>
+    <styles><include src="file://{resources}/styles/custom_game/trapwars_menu.css" /></styles>
+
+    <Button class="list_item">
+        <Image class="list_item_icon" id="icon" />
+
+        <Panel class="list_item_information">
+            <Panel class="list_item_header">
+                <Label class="list_item_title" id="title" />
+                <Label class="list_item_class" id="class" />
+            </Panel>
+
+            <Label class="list_item_description" id="description" />
+        </Panel>
+    </Button>
+
+</root>
