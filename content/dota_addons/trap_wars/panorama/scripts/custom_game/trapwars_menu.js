@@ -1,6 +1,6 @@
-////////////////////////
-// First Time Startup //
-////////////////////////
+/**********************/
+/* First Time Startup */
+/**********************/
 
 // get netnettable values
 var npc_herocreeps = GetAllNetTableValues("trapwars_npc_herocreeps");
@@ -18,9 +18,9 @@ function GetAllNetTableValues( table_name ) {
 }
 
 // mess with some panel stuff on UI creation
-$.Schedule(0.1, function(){
+$.Schedule(0.1, function() {
     // set the default tab-button, since xml was buggy
-    var panel = $('#tab1_btn');
+    var panel = $("#tab1_btn");
     if(panel === undefined || panel === null) {return;}
     panel.checked = true;
 
@@ -36,13 +36,9 @@ $.Schedule(0.1, function(){
             panel.BLoadLayout("file://{resources}/layout/custom_game/trapwars_menu_list_item.xml", false, false);
 
             // get info from the data table
-            var info = data_table[k].info;
-            if(typeof info === "undefined") {
-                info = {image: "file://{images}/custom_game/empty_slot_avatar.png", class: "#unknown"};
-            } else {
-                if(typeof info.image !== "string") { info.image="file://{images}/custom_game/empty_slot_avatar.png"; }
-                if(typeof info.class !== "string") { info.class="#unknown"; }
-            }
+            var info = data_table[k];
+            if(typeof info.image !== "string") { info.image="file://{images}/custom_game/empty_slot_avatar.png"; }
+            if(typeof info.class !== "string") { info.class="c_unknown"; }
 
             // add the icon
             var child = panel.FindChildTraverse("icon");
@@ -60,15 +56,22 @@ $.Schedule(0.1, function(){
             // add the description text
             child = panel.FindChildTraverse("description");
             child.text = $.Localize(k+"_description");
+
+
+            // test thing, brain make slow time
+            //DeepPrintObject(panel);
+            panel.SetPanelEvent("onactivate", function(){ TestFunc("now it works, sucker"); } );
         }
     }
 })
 
+function TestFunc( text ) { $.Msg(text); }
 
 
-//////////////////
-// UI Functions //
-//////////////////
+
+/****************/
+/* UI Functions */
+/****************/
 
 function SwitchToTab( tab_id ) {
     // these are our tabs and buttons, make sure they line up
@@ -86,18 +89,24 @@ function SwitchToTab( tab_id ) {
     var panel = $('#'+tab_id);
     if(panel == null) { return; }  // something fucked up ¯\_(ツ)_/¯
 
-    // ok should be good! now set all of the other tabs in _tabs_ fully transparent
+    // remove visibility from all of the tabs
     for(i=0; i<tabs.length; i++) {
         var temp_panel = $('#'+tabs[i]);
-        if(panel != temp_panel) {
-            temp_panel.style["z-index"] = 0;
-            temp_panel.style.opacity = 0;
-        }
+        if(temp_panel != null) { temp_panel.RemoveClass("body_tab_visible"); }
     }
 
-    // and set our specific panel to fully opaque
-    panel.style["z-index"] = 1;
-    panel.style.opacity = 1;
+    // add visibility to this specific tab
+    panel.AddClass("body_tab_visible");
+}
+
+function ExpandUpgrades() {
+    var upgrade_panel = $("#upgrades");
+    var list_panel = $("#list2");
+    var upgrade_btn = $("#upgrades_btn");
+
+    upgrade_panel.ToggleClass("creep_upgrades_visible");
+    list_panel.ToggleClass("list_hidden");
+    upgrade_btn.ToggleClass("creep_upgrades_button_toggled");
 }
 
 function ToggleMenu() {
@@ -117,6 +126,9 @@ function ToggleMenu() {
 
 
 
+/****************/
+/* misc / debug */
+/****************/
 
 // useful for finding out what is things
 function DeepPrintObject( object, indent ) {

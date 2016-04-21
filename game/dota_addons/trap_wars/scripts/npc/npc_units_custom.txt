@@ -94,15 +94,12 @@
 
         // TrapWars Creep Info
         //----------------------------------------------------------------
+        "image"                     "file://{images}/custom_game/traps/spiketrap_spikes.png"
+        "class"                     "c_damage"
         "modifiers"
         {
             "1"                     "modifier_phased"
             "2"                     "modifier_invulnerable"
-        }
-        "info"
-        {
-            "image"                 "file://{images}/custom_game/traps/spiketrap_spikes.png"
-            "class"                 "damage"
         }
 
         // LUA AI function
@@ -197,21 +194,52 @@
 
         // TrapWars Creep Info
         //----------------------------------------------------------------
+        //"image"                     ""  FIXME
+        "class"                     "c_damage"
         "modifiers"
         {
             "1"                     "modifier_phased"
             "2"                     "modifier_invulnerable"
-        }
-        "info"
-        {
-            //"image"                 ""  FIXME
-            "class"                 "damage"
         }
 
         // LUA AI function
         //----------------------------------------------------------------
         "vscripts"					"unit_scripts/firevent.lua"
     }
+
+    "npc_trapwars_trap_test_01"   {
+        "BaseClass"    "npc_dota_building"
+        "image"        "file://{images}/custom_game/test/one.png"
+    }
+    "npc_trapwars_trap_test_02"   {
+        "BaseClass"    "npc_dota_building"
+        "image"        "file://{images}/custom_game/test/two.png"
+    }
+    "npc_trapwars_trap_test_03"   {
+        "BaseClass"    "npc_dota_building"
+        "image"        "file://{images}/custom_game/test/three.png"
+    }
+    "npc_trapwars_trap_test_04"   {
+        "BaseClass"    "npc_dota_building"
+        "image"        "file://{images}/custom_game/test/four.png"
+    }
+    "npc_trapwars_trap_test_05"   {
+        "BaseClass"    "npc_dota_building"
+        "image"        "file://{images}/custom_game/test/five.png"
+    }
+    "npc_trapwars_trap_test_06"   {
+        "BaseClass"    "npc_dota_building"
+        "image"        "file://{images}/custom_game/test/six.png"
+    }
+    "npc_trapwars_trap_test_07"   {
+        "BaseClass"    "npc_dota_building"
+        "image"        "file://{images}/custom_game/test/seven.png"
+    }
+    "npc_trapwars_trap_test_08"   {
+        "BaseClass"    "npc_dota_building"
+        "image"        "file://{images}/custom_game/test/eight.png"
+    }
+
 
     //================================================================================= 
     // H E R O   C R E E P S  -  upgradeable creeps to augment normal lane creeps
@@ -290,10 +318,8 @@
 
         // TrapWars Creep Info
         //----------------------------------------------------------------
-        "info"
-        {
-            //"image"                 ""  FIXME
-        }
+        //"image"                     ""  FIXME
+        //"class"                     ""  FIXME
     }       
 
     // Neutral: Furbolg Disrupter    FIXME: test unit
@@ -369,15 +395,47 @@
 
         // TrapWars Creep Info
         //----------------------------------------------------------------
-        "info"
-        {
-            //"image"                 ""  FIXME
-        }
+        //"image"                     ""  FIXME
+        //"class"                     ""  FIXME
 
         // LUA AI function
         //----------------------------------------------------------------
         "vscripts"                  "unit_scripts/tomato.lua"
     }
+
+    "npc_trapwars_herocreep_test_01"   {
+        "BaseClass"    "npc_dota_building"
+        "image"        "file://{images}/custom_game/test/one.png"
+    }
+    "npc_trapwars_herocreep_test_02"   {
+        "BaseClass"    "npc_dota_building"
+        "image"        "file://{images}/custom_game/test/two.png"
+    }
+    "npc_trapwars_herocreep_test_03"   {
+        "BaseClass"    "npc_dota_building"
+        "image"        "file://{images}/custom_game/test/three.png"
+    }
+    "npc_trapwars_herocreep_test_04"   {
+        "BaseClass"    "npc_dota_building"
+        "image"        "file://{images}/custom_game/test/four.png"
+    }
+    "npc_trapwars_herocreep_test_05"   {
+        "BaseClass"    "npc_dota_building"
+        "image"        "file://{images}/custom_game/test/five.png"
+    }
+    "npc_trapwars_herocreep_test_06"   {
+        "BaseClass"    "npc_dota_building"
+        "image"        "file://{images}/custom_game/test/six.png"
+    }
+    "npc_trapwars_herocreep_test_07"   {
+        "BaseClass"    "npc_dota_building"
+        "image"        "file://{images}/custom_game/test/seven.png"
+    }
+    "npc_trapwars_herocreep_test_08"   {
+        "BaseClass"    "npc_dota_building"
+        "image"        "file://{images}/custom_game/test/eight.png"
+    }
+
 
 	//=================================================================================	
 	// L A N E   C R E E P S  -  lane creeps that will periodically spawn 

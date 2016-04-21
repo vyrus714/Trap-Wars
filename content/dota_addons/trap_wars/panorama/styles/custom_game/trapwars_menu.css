@@ -24,10 +24,11 @@
 
 .tab_container {
     width: 100%;
-    height: 30px;
-    margin-bottom: 12px;
+    height: 42px;
+    padding-bottom: 12px;
     vertical-align: top;
     flow-children: right;
+    border-bottom: 1px solid #000000de;
 }
 
 .tab {
@@ -44,7 +45,7 @@
     background-image: url("s2r://panorama/images/backgrounds/background_play_button_2x_png.vtex");
     background-size: 100% 100%;
     border-radius: 4px;
-    transition: box-shadow 0.1s linear 0.0s;
+    transition: box-shadow 0.4s linear 0.0s;
 }
 
 .tab_button:active {
@@ -75,28 +76,30 @@
 .body {
     width: 100%;
     height: 100%;
-    padding-top: 10px;
-    border-top: 1px solid #000000de;
     flow-children: none;
 }
 
 .body_tab {
     width: 100%;
     height: 100%;
-    opacity: 0;
-    transition: opacity 0.2s linear 0.1s;
-    flow-children: down;
+    opacity: 0.0;
+    z-index: 0;
+    transition: opacity 0.4s linear 0.1s;
+    flow-children: none;
 }
 
-.start {  /* the tab with this class will be on top by default */
+.body_tab_visible {
+    opacity: 1.0;
     z-index: 1;
-    opacity: 1;
 }
 
 .list {
     width: 100%;
     height: 420px;
+    margin-bottom: 10px;
     padding-right: 20px;
+    position: 0px 10px 0px;
+    transition: opacity 0.4s linear 0.0s;
     flow-children: down;
     overflow: squish scroll;
 }
@@ -159,18 +162,126 @@
     text-shadow: 2px 2px 8px 1.0 black;
 }
 
+#list2 {
+    height: 334px;
+    margin-bottom: 0px;
+    border-bottom: 0px solid red;
+}
+
+.list_hidden {
+    opacity: 0.0;
+}
+
+.creep_upgrades {
+    width: 100%;
+    height: 10px;
+    position: 0px 344px 0px;
+    z-index: 2;
+    background-color: #00000044;
+    transition-property: position, height;
+    transition-timing-function: linear;
+    transition-duration: 0.4s;
+    flow-children: none;
+}
+
+.creep_upgrades_visible {
+    position: 0px 0px 0px;
+    height: 354px;
+}
+
+.creep_upgrades_button {
+    width: 40px;
+    height: 5px;
+    horizontal-align: center;
+    position: 0px 5px 0px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    background-color: #000000aa;
+    transition-property: width, height, position, border-radius, background-color;
+    transition-timing-function: linear;
+    transition-duration: 0.1s;
+}
+
+.creep_upgrades_button:hover {
+    width: 64px;
+    height: 8px;
+    position: 0px 2px 0px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    background-color: #000000de;
+}
+
+.creep_upgrades_button_toggled {
+    //transition: position 0.4s linear 0.0s;    
+    //transition: border-radius 0.4s linear 0.0s;
+    position: 0px 0px 0px;
+    border-radius: 0px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.creep_upgrades_button_toggled:hover {
+    position: 0px -1px 0px;
+    border-radius: 0px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.creep_tree_tab {
+    width: 100%;
+    height: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    opacity: 0.0;
+    z-index: 0;
+    flow-children: down;
+
+    border: 1px solid red;
+}
+
+.creep_tree_tab_visible {
+    opacity: 1.0;
+    z-index: 3;
+}
+
+.creep_upgrade_tree {
+    width: 100%;
+    height: fit-children;
+}
+
+.creep_slot_container {
+    width: 100%;
+    height: 86px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    position: 0px 354px 0px;
+    border-top: 1px solid #000000de;
+    //border-bottom: 1px solid #000000de;
+    flow-children: right;
+    overflow: clip squish;
+}
+
+.creep_slot {
+    width: 66px;
+    height: 66px;
+    margin-left: 7px;
+    margin-right: 7px;
+    vertical-align: center;
+}
+
 .display {
     width: 100%;
     height: 172px;
-    margin-top: 10px;
+    //margin-top: 10px;
+    padding-top: 10px;
+    position: 0px 440px 0px;
     border-top: 1px solid #000000de;
     flow-children: right;
 }
 
 .display_pic {
     height: 100%;
-    width: 152px;
-    margin-top: 10px;
+    width: 162px;
     margin-right: 5px;
     border: 1px solid #00000066;
     background-color: #000000aa;
@@ -179,10 +290,10 @@
 .display_info {
     width: 100%;
     height: 100%;
-    margin-top: 10px;
     margin-left: 5px;
     border: 1px solid #00000066;
-    background-color: #000000aa;}
+    background-color: #000000aa;
+}
 
 .toggle_button {
     width: 200px;
@@ -249,8 +360,7 @@ VerticalScrollBar
     width: 10px;
     height: 100%;
     margin-left: 10px;
-    //padding-top: 1px;
-    //padding-bottom: 1px;
+    //margin-bottom: 10px;
     //background-color: rgba(0, 0, 0, 128);
     //box-shadow: fill #00000055 -3px 0px 3px 4px;
     background-color: #000000aa;
