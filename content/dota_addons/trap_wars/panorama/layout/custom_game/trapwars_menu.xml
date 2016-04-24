@@ -12,13 +12,13 @@
             <!-- Tab Bar at the top of the menu -->
             <Panel class="tab_container">
                 <Panel class="tab">
-                    <RadioButton id="tab1_btn" class="tab_button tb_left" group="tab_btns" onactivate="SwitchToTab('tab1')" checked="checked">
+                    <RadioButton id="tab1_btn" class="tab_button tb_left" group="tab_btns" onactivate="SwitchToBodyTab('tab1')" checked="checked">
                         <Label class="button_text" text="Traps"  />
                     </RadioButton>
                 </Panel>
 
                 <Panel class="tab">
-                    <RadioButton id="tab2_btn" class="tab_button tb_right" group="tab_btns" onactivate="SwitchToTab('tab2')">
+                    <RadioButton id="tab2_btn" class="tab_button tb_right" group="tab_btns" onactivate="SwitchToBodyTab('tab2')">
                         <Label class="button_text" text="Creeps" />
                     </RadioButton>
                 </Panel>
@@ -27,41 +27,30 @@
 
             <!-- The main content of the menu -->
             <Panel class="body">
-                <!--<Panel style="width: 100%; height: 40px; background-color: black; opacity: 0.6;" />-->
                 <Panel id="tab1" class="body_tab body_tab_visible">
                     <Panel id="list1" class="list" />
-                    <Panel id="display1" class="display">
-                        <Panel class="display_pic" />
-                        <Panel class="display_info" />
-                    </Panel>
+                    <Panel id="display1" class="display" />
                 </Panel>
 
                 <Panel id="tab2" class="body_tab">
                     <Panel id="list2" class="list" />
 
                     <Panel id="upgrades" class="creep_upgrades">
-                        <Button id="upgrades_btn" class="creep_upgrades_button" onactivate="ExpandUpgrades()" />
-                        <Panel id="" class="creep_tree_tab creep_tree_tab_visible" />
+                        <Button id="upgrades_btn" class="creep_upgrades_button" onactivate="ToggleUpgrades()" />
                     </Panel>
-                    <Panel class="creep_slot_container">
-                        <Image class="creep_slot" src="file://{images}/custom_game/empty_slot_avatar.png" />
-                        <Image class="creep_slot" src="file://{images}/custom_game/empty_slot_avatar.png" />
-                        <Image class="creep_slot" src="file://{images}/custom_game/empty_slot_avatar.png" />
-                        <Image class="creep_slot" src="file://{images}/custom_game/empty_slot_avatar.png" />
-                        <Image class="creep_slot" src="file://{images}/custom_game/empty_slot_avatar.png" />
-                    </Panel>
-                    
-                    <Panel id="display2" class="display">
-                        <Panel class="display_pic" />
-                        <Panel class="display_info" />
-                    </Panel>
+                    <Panel id="slot_container" class="creep_slot_container" />
+            
+                    <Panel id="display2" class="display display_creeps display_creeps_visible" />
+                    <Panel id="display3" class="display display_creeps" />
                 </Panel>
 
             </Panel>
         </Panel>
 
 
-        <Button id="menu_toggle" class="toggle_button" onactivate="ToggleMenu()"><Label class="button_text" text="Upgrades" /></Button>
+        <Button id="menu_toggle" class="toggle_button" onactivate="ToggleMenu()">
+            <Label class="button_text" text="Upgrades" />
+        </Button>
 
     </Panel>
 </root>

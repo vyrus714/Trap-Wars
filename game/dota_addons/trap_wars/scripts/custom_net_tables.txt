@@ -9,6 +9,7 @@
         "trapwars_team_scores",
         "trapwars_valid_players",
         "trapwars_player_colors",
-        "trapwars_player_grids"
+        "trapwars_player_grids",
+        "trapwars_player_creeps"
   	]
 }

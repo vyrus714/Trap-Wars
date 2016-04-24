@@ -111,7 +111,13 @@
     //border-radius: 4px;
     border: 1px solid #00000066;
     background-color: #000000aa;
+    transition: border 0.4s linear 0.0s, box-shadow 0.4s linear 0.0s;
     flow-children: right;
+}
+
+.list_item:selected {
+    border: 1px solid teal;
+    box-shadow: teal 0px 0px 4px 0px;
 }
 
 .list_item_icon {
@@ -133,25 +139,56 @@
 
 .list_item_header {
     width: 100%;
-    margin-top: 2px;
-    margin-bottom: 3px;
-    font-size: 17;
-    color: white;
+    margin-top: 5px;
+    margin-bottom: 1px;
     text-shadow: 2px 2px 8px 1.0 black;
-    //background-color: orange;
-    //border: 1px solid red;
 }
 .list_item_title {
+    //width: 220px;
     horizontal-align: left;
-    vertical-align: center;
+    vertical-align: bottom;
+    font-size: 16;
+    color: white;
+}
+
+.list_item_title_info {
+    width: fit-children;
+    margin-right: 6px;
+    horizontal-align: right;
+    vertical-align: bottom;
+    flow-children: right;
 }
 
 .list_item_class {
-    horizontal-align: right;
-    vertical-align: center;
-    margin-right: 4px;
+    //width: 49px;
+    vertical-align: bottom;
+    margin-right: 2px;
     font-size: 14;
     font-style: italic;
+}
+
+.list_item_gold_icon {
+    height: 17px;
+    width: 18px;
+    margin-right: 3px;
+    vertical-align: bottom;
+    background-image: url("s2r://panorama/images/hud/icon_gold.psd");
+    background-position: 0px 1px;
+    background-size: 100% 100%;
+}
+
+.list_item_gold_icon_poor {
+    //background-image: url("s2r://panorama/images/spellicons/modifier_buyback_gold_penalty.png");
+    background-image: url("s2r://panorama/images/compendium/compendiumcoins_ti5.png");
+    // FIXME: this image ^^ has black background for no reason )=
+}
+
+.list_item_gold {
+    width: 24px;
+    vertical-align: bottom;
+    font-size: 12;
+    font-style: italic;
+    color: gold;
 }
 
 .list_item_description {
@@ -174,28 +211,29 @@
 
 .creep_upgrades {
     width: 100%;
-    height: 10px;
+    height: 20px;
     position: 0px 344px 0px;
     z-index: 2;
-    background-color: #00000044;
-    transition-property: position, height;
+    //background-color: #00000044;
+    transition-property: position, height, background-color;
     transition-timing-function: linear;
     transition-duration: 0.4s;
     flow-children: none;
 }
 
 .creep_upgrades_visible {
-    position: 0px 0px 0px;
     height: 354px;
+    position: 0px 0px 0px;
+    background-color: #00000088;
 }
 
 .creep_upgrades_button {
-    width: 40px;
-    height: 5px;
+    width: 48px;
+    height: 6px;
     horizontal-align: center;
-    position: 0px 5px 0px;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
+    position: 0px 4px 0px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
     background-color: #000000aa;
     transition-property: width, height, position, border-radius, background-color;
     transition-timing-function: linear;
@@ -203,11 +241,11 @@
 }
 
 .creep_upgrades_button:hover {
-    width: 64px;
-    height: 8px;
-    position: 0px 2px 0px;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
+    width: 72px;
+    height: 9px;
+    position: 0px 1px 0px;
+    border-top-left-radius: 9px;
+    border-top-right-radius: 9px;
     background-color: #000000de;
 }
 
@@ -221,25 +259,26 @@
 }
 
 .creep_upgrades_button_toggled:hover {
-    position: 0px -1px 0px;
+    position: 0px 0px 0px;
     border-radius: 0px;
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 9px;
+    border-bottom-right-radius: 9px;
 }
 
-.creep_tree_tab {
+.creep_tab {
     width: 100%;
     height: 100%;
     margin-top: 10px;
     margin-bottom: 10px;
     opacity: 0.0;
     z-index: 0;
+    transition: opacity 0.4s linear 0.0s;
     flow-children: down;
 
     border: 1px solid red;
 }
 
-.creep_tree_tab_visible {
+.creep_tab_visible {
     opacity: 1.0;
     z-index: 3;
 }
@@ -256,43 +295,108 @@
     padding-bottom: 10px;
     position: 0px 354px 0px;
     border-top: 1px solid #000000de;
-    //border-bottom: 1px solid #000000de;
+    border-bottom: 1px solid #000000de;
     flow-children: right;
-    overflow: clip squish;
+    overflow: scroll squish;
 }
 
 .creep_slot {
-    width: 66px;
-    height: 66px;
-    margin-left: 7px;
-    margin-right: 7px;
+    width: 67px;
+    height: 67px;
+    margin-left: 8px;
+    margin-right: 8px;
     vertical-align: center;
+    border: 1px solid #00000066;
+    background-color: #000000aa;
+    background-size: 100% 100%;
+}
+
+.creep_slot:selected {
+    border: 1px solid teal;
+    box-shadow: teal 0px 0px 4px 0px;
+}
+
+.creep_slot_first {
+    margin-left: 0px;
+}
+
+.creep_slot_last {
+    margin-right: 0px;
 }
 
 .display {
     width: 100%;
-    height: 172px;
-    //margin-top: 10px;
-    padding-top: 10px;
+    height: 162px;
+    margin-top: 10px;
+    border: 1px solid #00000066;
+    background-color: #000000aa;
     position: 0px 440px 0px;
-    border-top: 1px solid #000000de;
+}
+
+.display_creeps {
+    opacity: 0.0;
+}
+
+.display_creeps_visible {
+    opacity: 1.0;
+    z-index: 1;
+}
+
+.display_item {
+    width: 100%;
+    height: 100%;
+    opacity: 0.0;
+    transition: opacity 0.4s linear 0.0s;
     flow-children: right;
 }
 
-.display_pic {
+.display_item_visible {
+    opacity: 1.0;
+    z-index: 2;
+}
+
+.display_preview {
     height: 100%;
     width: 162px;
-    margin-right: 5px;
-    border: 1px solid #00000066;
-    background-color: #000000aa;
+
+    background-color: orange;
+    opacity: 0.1;
 }
 
 .display_info {
-    width: 100%;
+    width: 238px;
     height: 100%;
-    margin-left: 5px;
-    border: 1px solid #00000066;
-    background-color: #000000aa;
+
+    background-color: red;
+    opacity: 0.1;
+}
+
+.display_info_purchase {
+    width: 120px;
+    height: 60px;
+    horizontal-align: center;
+    vertical-align: center;
+    background-color: red;
+    border-radius: 8px;
+    border: 2px solid white;
+    opacity: 0.3;
+}
+.display_info_purchase:hover {
+    opacity: 1.0;
+}
+
+.display_info_purchase:hover .button_text {
+    color: white;
+}
+
+.display_info_purchase:active {
+    width: 116px;
+    height: 58px;
+    border: 2px solid green;
+}
+
+.display_info_purchase:active .button_text {
+    color: lime;
 }
 
 .toggle_button {
