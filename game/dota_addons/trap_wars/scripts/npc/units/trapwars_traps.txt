@@ -5,12 +5,12 @@
 "Traps"
 {
     // a floor trap that shoots spikes out of the ground when walked over
-    "npc_trapwars_trap_spike"
+    "npc_trapwars_floor_spikes"
     {
         // General
         //----------------------------------------------------------------
         "BaseClass"                 "npc_dota_building"
-        "UnitLabel"                 "npc_trapwars_trap_spike"
+        "UnitLabel"                 "npc_trapwars_floor_spikes"
         "Model"                     "models/traps/spiketrap/spiketrap.vmdl"
         "ModelScale"                "0.46"
         "SoundSet"                  "0"                 // FIXME: add this?
@@ -106,12 +106,12 @@
     }
 
     // a floor trap that shoots spikes out of the ground when walked over
-    "npc_trapwars_trap_firevent"
+    "npc_trapwars_fire_vent"
     {
         // General
         //----------------------------------------------------------------
         "BaseClass"                 "npc_dota_building"
-        "UnitLabel"                 "npc_trapwars_trap_firevent"
+        "UnitLabel"                 "npc_trapwars_fire_vent"
         "Model"                     "models/props_structures/grate001.vmdl"
         "ModelScale"                "0.6"
         "SoundSet"                  "0"                 // FIXME: add this?

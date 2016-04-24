@@ -5,12 +5,12 @@
 "HeroCreeps"
 {
     // Neutral: Furbolg  FIXME: test unit
-    "npc_trapwars_herocreep_potato"
+    "npc_trapwars_potato"
     {                                       
         // General
         //----------------------------------------------------------------
         "BaseClass"                 "npc_dota_creature"
-        "UnitLabel"                 "npc_trapwars_herocreep_tomato"
+        "UnitLabel"                 "npc_trapwars_potato"
         "Model"                     "models/creeps/neutral_creeps/n_creep_beast/n_creep_beast.mdl"  // Model.
         "SoundSet"                  "n_creep_Melee"
         "Level"                     "4"
@@ -83,12 +83,12 @@
     }       
 
     // Neutral: Furbolg Disrupter    FIXME: test unit
-    "npc_trapwars_herocreep_tomato"
+    "npc_trapwars_tomato"
     {                                       
         // General
         //----------------------------------------------------------------
         "BaseClass"                 "npc_dota_creature"
-        "UnitLabel"                 "npc_trapwars_herocreep_tomato"
+        "UnitLabel"                 "npc_trapwars_tomato"
         "Model"                     "models/creeps/neutral_creeps/n_creep_furbolg/n_creep_furbolg_disrupter.mdl"    // Model.
         "SoundSet"                  "n_creep_Melee"
         "Level"                     "5"

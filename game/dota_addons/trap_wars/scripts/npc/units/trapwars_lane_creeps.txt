@@ -4,13 +4,13 @@
 
 "LaneCreeps"
 {
-    // small kobol footman
-    "npc_trapwars_lanecreep_kobol_basic_1"
+    // small supply trooper with a backpack
+    "npc_trapwars_supply_trooper_1"
     {
         // General
         //----------------------------------------------------------------
         "BaseClass"                 "npc_dota_creature"
-        "UnitLabel"                 "Kobol Pack Runner"
+        "UnitLabel"                 "npc_trapwars_supply_trooper_1"
         "Model"                     "models/creeps/neutral_creeps/n_creep_kobold/kobold_c/n_creep_kobold_c.vmdl"
         "ModelScale"                "0.9"
         "SoundSet"                  "n_creep_kobolds"
@@ -72,12 +72,12 @@
         "VisionNighttimeRange"      "200"       // Range of vision at night time.
     }
 
-    "npc_trapwars_lanecreep_kobol_basic_2"
+    "npc_trapwars_supply_trooper_2"
     {
         // General
         //----------------------------------------------------------------
         "BaseClass"                 "npc_dota_creature"
-        "UnitLabel"                 "Kobol Pack Runner"
+        "UnitLabel"                 "npc_trapwars_supply_trooper_2"
         "Model"                     "models/creeps/neutral_creeps/n_creep_kobold/kobold_c/n_creep_kobold_c.vmdl"
         "ModelScale"                "1.1"
         "SoundSet"                  "n_creep_kobolds"
@@ -165,12 +165,12 @@
         }
     }
 
-    "npc_trapwars_lanecreep_kobol_basic_3"
+    "npc_trapwars_supply_trooper_3"
     {
         // General
         //----------------------------------------------------------------
         "BaseClass"                 "npc_dota_creature"
-        "UnitLabel"                 "Kobol Pack Runner"
+        "UnitLabel"                 "npc_trapwars_supply_trooper_3"
         "Model"                     "models/creeps/neutral_creeps/n_creep_kobold/kobold_c/n_creep_kobold_c.vmdl"
         "ModelScale"                "1.3"
         "SoundSet"                  "n_creep_kobolds"
@@ -268,13 +268,13 @@
         }
     }
 
-    // small kobol footman with a spear
-    "npc_trapwars_lanecreep_kobol_spear_1"
+    // small foot soldier with a spear
+    "npc_trapwars_spear_trooper_1"
     {
         // General
         //----------------------------------------------------------------
         "BaseClass"                 "npc_dota_creature"
-        "UnitLabel"                 "Kobol Spearman"
+        "UnitLabel"                 "npc_trapwars_spear_trooper_1"
         "Model"                     "models/creeps/neutral_creeps/n_creep_kobold/kobold_b/n_creep_kobold_b.vmdl"
         "ModelScale"                "0.9"
         "SoundSet"                  "n_creep_kobolds"
@@ -336,12 +336,12 @@
         "VisionNighttimeRange"      "200"       // Range of vision at night time.
     }
 
-    "npc_trapwars_lanecreep_kobol_spear_2"
+    "npc_trapwars_spear_trooper_2"
     {
         // General
         //----------------------------------------------------------------
         "BaseClass"                 "npc_dota_creature"
-        "UnitLabel"                 "Kobol Spearman"
+        "UnitLabel"                 "npc_trapwars_spear_trooper_2"
         "Model"                     "models/creeps/neutral_creeps/n_creep_kobold/kobold_b/n_creep_kobold_b.vmdl"
         "ModelScale"                "1.1"
         "SoundSet"                  "n_creep_kobolds"
@@ -428,12 +428,12 @@
         }
     }
 
-    "npc_trapwars_lanecreep_kobol_spear_3"
+    "npc_trapwars_spear_trooper_3"
     {
         // General
         //----------------------------------------------------------------
         "BaseClass"                 "npc_dota_creature"
-        "UnitLabel"                 "Kobol Spearman"
+        "UnitLabel"                 "npc_trapwars_spear_trooper_3"
         "Model"                     "models/creeps/neutral_creeps/n_creep_kobold/kobold_b/n_creep_kobold_b.vmdl"
         "ModelScale"                "1.3"
         "SoundSet"                  "n_creep_kobolds"
@@ -534,13 +534,13 @@
         }
     }
 
-    // small troll with a shield
-    "npc_trapwars_lanecreep_troll_basic_1"
+    // small soldier with a shield
+    "npc_trapwars_shield_bearer_1"
     {
         // General
         //----------------------------------------------------------------
         "BaseClass"                 "npc_dota_creature"
-        "UnitLabel"                 "Troll Sheildbearer"
+        "UnitLabel"                 "npc_trapwars_shield_bearer_1"
         "Model"                     "models/creeps/neutral_creeps/n_creep_forest_trolls/n_creep_forest_troll_berserker.vmdl"
         "ModelScale"                "0.9"
         "SoundSet"                  "n_creep_trollCommon"
@@ -602,12 +602,12 @@
         "VisionNighttimeRange"      "200"       // Range of vision at night time.
     }
 
-    "npc_trapwars_lanecreep_troll_basic_2"
+    "npc_trapwars_shield_bearer_2"
     {
         // General
         //----------------------------------------------------------------
         "BaseClass"                 "npc_dota_creature"
-        "UnitLabel"                 "Troll Sheildbearer"
+        "UnitLabel"                 "npc_trapwars_shield_bearer_2"
         "Model"                     "models/creeps/neutral_creeps/n_creep_forest_trolls/n_creep_forest_troll_berserker.vmdl"
         "ModelScale"                "1.1"
         "SoundSet"                  "n_creep_trollCommon"
@@ -680,12 +680,12 @@
         }
     }
 
-    "npc_trapwars_lanecreep_troll_basic_3"
+    "npc_trapwars_shield_bearer_3"
     {
         // General
         //----------------------------------------------------------------
         "BaseClass"                 "npc_dota_creature"
-        "UnitLabel"                 "Troll Sheildbearer"
+        "UnitLabel"                 "npc_trapwars_shield_bearer_3"
         "Model"                     "models/creeps/neutral_creeps/n_creep_forest_trolls/n_creep_forest_troll_berserker.vmdl"
         "ModelScale"                "1.3"
         "SoundSet"                  "n_creep_trollCommon"
@@ -758,13 +758,13 @@
         }
     }
 
-    // small troll with a shield
-    "npc_trapwars_lanecreep_troll_priest_1"
+    // priest (*shrug* i don't know what you expected)
+    "npc_trapwars_priest_1"
     {
         // General
         //----------------------------------------------------------------
         "BaseClass"                 "npc_dota_creature"
-        "UnitLabel"                 "Troll Priest"
+        "UnitLabel"                 "npc_trapwars_priest_1"
         "Model"                     "models/creeps/neutral_creeps/n_creep_forest_trolls/n_creep_forest_troll_high_priest.vmdl"
         "ModelScale"                "0.9"
         "SoundSet"                  "n_creep_trollCommon"
@@ -826,12 +826,12 @@
         "VisionNighttimeRange"      "200"       // Range of vision at night time.
     }
 
-    "npc_trapwars_lanecreep_troll_priest_2"
+    "npc_trapwars_priest_2"
     {
         // General
         //----------------------------------------------------------------
         "BaseClass"                 "npc_dota_creature"
-        "UnitLabel"                 "Troll Priest"
+        "UnitLabel"                 "npc_trapwars_priest_2"
         "Model"                     "models/creeps/neutral_creeps/n_creep_forest_trolls/n_creep_forest_troll_high_priest.vmdl"
         "ModelScale"                "1.1"
         "SoundSet"                  "n_creep_trollCommon"
@@ -904,12 +904,12 @@
         }
     }
 
-    "npc_trapwars_lanecreep_troll_priest_3"
+    "npc_trapwars_priest_3"
     {
         // General
         //----------------------------------------------------------------
         "BaseClass"                 "npc_dota_creature"
-        "UnitLabel"                 "Troll Priest"
+        "UnitLabel"                 "npc_trapwars_priest_3"
         "Model"                     "models/creeps/neutral_creeps/n_creep_forest_trolls/n_creep_forest_troll_high_priest.vmdl"
         "ModelScale"                "1.3"
         "SoundSet"                  "n_creep_trollCommon"
