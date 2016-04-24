@@ -1,0 +1,200 @@
+//================================================================================= 
+// H E R O   C R E E P S  -  upgradeable creeps for augmenting normal lane creeps
+//=================================================================================
+
+"HeroCreeps"
+{
+    // Neutral: Furbolg  FIXME: test unit
+    "npc_trapwars_herocreep_potato"
+    {                                       
+        // General
+        //----------------------------------------------------------------
+        "BaseClass"                 "npc_dota_creature"
+        "UnitLabel"                 "npc_trapwars_herocreep_tomato"
+        "Model"                     "models/creeps/neutral_creeps/n_creep_beast/n_creep_beast.mdl"  // Model.
+        "SoundSet"                  "n_creep_Melee"
+        "Level"                     "4"
+        "ModelScale"                ".80"
+        "HasInventory"              "1"
+        "CanBeDominated"            "0"
+
+        // Abilities
+        //----------------------------------------------------------------
+        "Ability1"                  ""          // Ability 1
+        "Ability2"                  ""          // Ability 2
+        "Ability3"                  ""          // Ability 3
+        "Ability4"                  ""          // Ability 4
+
+        // Armor
+        //----------------------------------------------------------------
+        "ArmorPhysical"             "3"         // Physical protection.
+
+        // Attack
+        //----------------------------------------------------------------
+        "AttackCapabilities"        "DOTA_UNIT_CAP_MELEE_ATTACK"
+        "AttackDamageMin"           "39"        // Damage range min.
+        "AttackDamageMax"           "44"        // Damage range max.    
+        "AttackRate"                "1.5"       // Speed of attack.
+        "AttackAnimationPoint"      "0.3"       // Normalized time in animation cycle to attack.
+        "AttackAcquisitionRange"    "500"       // Range within a target can be acquired.
+        "AttackRange"               "100"       // Range within a target can be attacked.
+        "ProjectileModel"           ""          // Particle system model for projectile.
+        "ProjectileSpeed"           "0"         // Speed of projectile.        
+
+        // Bounds
+        //----------------------------------------------------------------
+        "RingRadius"                "50"
+        "HealthBarOffset"           "180"
+
+        // Bounty
+        //----------------------------------------------------------------
+        "BountyXP"                  "88"        // Experience earn.
+        "BountyGoldMin"             "45"        // Gold earned min.
+        "BountyGoldMax"             "55"        // Gold earned max.
+
+        // Movement
+        //----------------------------------------------------------------
+        "MovementCapabilities"      "DOTA_UNIT_CAP_MOVE_GROUND"
+        "MovementSpeed"             "320"       // Speed.
+
+        // Status
+        //----------------------------------------------------------------
+        "StatusHealth"              "700"       // Base health.
+        "StatusHealthRegen"         "0.5"       // Health regeneration rate.
+        "StatusMana"                "0"         // Base mana.
+        "StatusManaRegen"           "0.0"       // Mana regeneration rate.       
+        
+        // Vision
+        //----------------------------------------------------------------
+        "VisionDaytimeRange"        "800"       // Range of vision during day light.
+        "VisionNighttimeRange"      "800"       // Range of vision at night time.
+
+        // Team
+        //----------------------------------------------------------------
+        "CombatClassAttack"         "DOTA_COMBAT_CLASS_ATTACK_LIGHT"
+        "CombatClassDefend"         "DOTA_COMBAT_CLASS_DEFEND_STRONG"
+        "UnitRelationshipClass"     "DOTA_NPC_UNIT_RELATIONSHIP_TYPE_DEFAULT"
+
+        // TrapWars Creep Info
+        //----------------------------------------------------------------
+        "Image"                     "file://{images}/custom_game/test/potato.png"  //FIXME: this is ... not right ... well this whole creep is a test creep anyway
+        //"Class"                     ""  FIXME
+        "GoldCost"                  "322"
+    }       
+
+    // Neutral: Furbolg Disrupter    FIXME: test unit
+    "npc_trapwars_herocreep_tomato"
+    {                                       
+        // General
+        //----------------------------------------------------------------
+        "BaseClass"                 "npc_dota_creature"
+        "UnitLabel"                 "npc_trapwars_herocreep_tomato"
+        "Model"                     "models/creeps/neutral_creeps/n_creep_furbolg/n_creep_furbolg_disrupter.mdl"    // Model.
+        "SoundSet"                  "n_creep_Melee"
+        "Level"                     "5"
+        "ModelScale"                ".95"
+        "HasInventory"              "1"
+        "CanBeDominated"            "0"
+
+        // Abilities
+        //----------------------------------------------------------------
+        "Ability1"                  "polar_furbolg_ursa_warrior_thunder_clap"           // Ability 1
+        "Ability2"                  "centaur_khan_endurance_aura"           // Ability 2
+        "Ability3"                  ""          // Ability 3
+        "Ability4"                  ""          // Ability 4
+
+        // Armor
+        //----------------------------------------------------------------
+        "ArmorPhysical"             "4"         // Physical protection.
+
+        // Attack
+        //----------------------------------------------------------------
+        "AttackCapabilities"        "DOTA_UNIT_CAP_MELEE_ATTACK"
+        "AttackDamageMin"           "49"        // Damage range min.
+        "AttackDamageMax"           "55"        // Damage range max.    
+        "AttackRate"                "1.55"      // Speed of attack.
+        "AttackAnimationPoint"      "0.3"       // Normalized time in animation cycle to attack.
+        "AttackAcquisitionRange"    "500"       // Range within a target can be acquired.
+        "AttackRange"               "100"       // Range within a target can be attacked.
+        "ProjectileModel"           ""          // Particle system model for projectile.
+        "ProjectileSpeed"           "0"         // Speed of projectile.        
+
+        // Bounds
+        //----------------------------------------------------------------
+        "RingRadius"                "70"
+        "HealthBarOffset"           "215"
+
+        // Bounty
+        //----------------------------------------------------------------
+        "BountyXP"                  "119"       // Experience earn.
+        "BountyGoldMin"             "76"        // Gold earned min.
+        "BountyGoldMax"             "88"        // Gold earned max.
+
+        // Movement
+        //----------------------------------------------------------------
+        "MovementCapabilities"      "DOTA_UNIT_CAP_MOVE_GROUND"
+        "MovementSpeed"             "320"       // Speed.
+
+        // Status
+        //----------------------------------------------------------------
+        "StatusHealth"              "950"       // Base health.
+        "StatusHealthRegen"         "1"         // Health regeneration rate.
+        "StatusMana"                "300"       // Base mana.
+        "StatusManaRegen"           "0.0"       // Mana regeneration rate.       
+        
+        // Vision
+        //----------------------------------------------------------------
+        "VisionDaytimeRange"        "800"       // Range of vision during day light.
+        "VisionNighttimeRange"      "800"       // Range of vision at night time.
+
+        // Team
+        //----------------------------------------------------------------
+        "CombatClassAttack"         "DOTA_COMBAT_CLASS_ATTACK_LIGHT"
+        "CombatClassDefend"         "DOTA_COMBAT_CLASS_DEFEND_STRONG"
+        "UnitRelationshipClass"     "DOTA_NPC_UNIT_RELATIONSHIP_TYPE_DEFAULT"
+
+        // TrapWars Creep Info
+        //----------------------------------------------------------------
+        "Image"                     "file://{images}/custom_game/test/tomato.png"  //FIXME same as teh spud creep
+        //"Class"                     ""  FIXME
+        "GoldCost"                  "420"
+
+        // LUA AI function
+        //----------------------------------------------------------------
+        "vscripts"                  "unit_scripts/tomato.lua"
+    }
+
+    "npc_trapwars_herocreep_test_01"   {
+        "BaseClass"    "npc_dota_building"
+        "Image"        "file://{images}/custom_game/test/one.png"
+    }
+    "npc_trapwars_herocreep_test_02"   {
+        "BaseClass"    "npc_dota_building"
+        "Image"        "file://{images}/custom_game/test/two.png"
+    }
+    "npc_trapwars_herocreep_test_03"   {
+        "BaseClass"    "npc_dota_building"
+        "Image"        "file://{images}/custom_game/test/three.png"
+    }
+    "npc_trapwars_herocreep_test_04"   {
+        "BaseClass"    "npc_dota_building"
+        "Image"        "file://{images}/custom_game/test/four.png"
+    }
+    "npc_trapwars_herocreep_test_05"   {
+        "BaseClass"    "npc_dota_building"
+        "Image"        "file://{images}/custom_game/test/five.png"
+    }
+    "npc_trapwars_herocreep_test_06"   {
+        "BaseClass"    "npc_dota_building"
+        "Image"        "file://{images}/custom_game/test/six.png"
+    }
+    "npc_trapwars_herocreep_test_07"   {
+        "BaseClass"    "npc_dota_building"
+        "Image"        "file://{images}/custom_game/test/seven.png"
+    }
+    "npc_trapwars_herocreep_test_08"   {
+        "BaseClass"    "npc_dota_building"
+        "Image"        "file://{images}/custom_game/test/eight.png"
+    }
+
+}

@@ -57,9 +57,10 @@ function GameMode:GetPortals( team )
         portal.entindex = ent:GetEntityIndex()
         -- add the particles for this portal
         portal.particles = {}
-        local part = ParticleManager:CreateParticle("particles/econ/events/fall_major_2015/teleport_end_fallmjr_2015_lvl2.vpcf", PATTACH_CUSTOMORIGIN, nil)
-        ParticleManager:SetParticleControl(part, 0, ent:GetAbsOrigin()-Vector(0,0,100))
-        ParticleManager:SetParticleControl(part, 1, ent:GetAbsOrigin()-Vector(0,0,100))
+        --local part = ParticleManager:CreateParticle("particles/econ/events/fall_major_2015/teleport_end_fallmjr_2015_lvl2.vpcf", PATTACH_CUSTOMORIGIN, nil)
+        local part = ParticleManager:CreateParticle("particles/portal.vpcf", PATTACH_CUSTOMORIGIN, nil)
+        ParticleManager:SetParticleControl(part, 0, ent:GetAbsOrigin()+Vector(0,0,-80))
+        --ParticleManager:SetParticleControl(part, 1, ent:GetAbsOrigin()+Vector(0,0,-100))
         table.insert(portal.particles, part)
 
         -- add portal to table
@@ -348,50 +349,4 @@ end
 function GameMode:IsBuildingInTile( position )
     if Entities:FindByClassnameWithin(nil, "npc_dota_building", GameMode:Get2DGridCenter(position), tile/2) == nil then return false end
     return true
-end
-
----------------------------------------------------------------------------
--- creep table functions
----------------------------------------------------------------------------
-function GameMode:AddCreep( creep_table, cname, cowner, crate, ccount, citems )  -- FIXME: this does not belong here, move to spawning.lua
-    local ccount = ccount or 1
-    local citems = citems  -- or nil
-
-    -- test parameters
-    if type(creep_table) ~= "table" or type(cname) ~= "string" or type(cowner) ~= "number" or type(crate) ~= "number" then return end
-
-    -- test the creep
-    if GameRules.npc_units_custom[cname] == nil then return end
-
-    -- check if there's a creep with these attributes already
-    local creep_to_modify = nil
-    for _, creep in pairs(creep_table) do
-        -- if all of these components match for this creep, set this creep as our 'creep to modify'
-        if creep.name == cname and creep.owner == cowner and creep.rate == crate then
-            -- no items for either creep
-            if type(citems) == "nil" and type(creep.items) == "nil" then
-                creep_to_modify = creep
-                break
-            end
-            -- both creeps have the same items
-            if type(citems) == "table" and type(creep.items) == "table" and Util:ShallowTableCompareLoose(citems, creep.items) then
-                creep_to_modify = creep
-                break
-            end
-        end
-    end
-
-    -- if we have a creep to modify, do that now, otherwise create a new creep
-    if creep_to_modify ~= nil then
-        creep_to_modify.count = creep_to_modify.count + ccount
-    else
-        table.insert(creep_table, {
-            name  = cname,
-            owner = cowner,
-            count = ccount,
-            rate  = crate,
-            items = citems,
-            _incr = 0
-        })
-    end
 end

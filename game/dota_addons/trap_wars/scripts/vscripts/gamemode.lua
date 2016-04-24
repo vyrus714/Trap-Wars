@@ -243,7 +243,7 @@ function GameMode:OnGameInProgress()
     ----------------------------------------------
     --               Creep Waves                --
     ----------------------------------------------
-    local level, pool, wave = 0, {}, {1}
+    --[[local level, pool, wave = 0, {}, {1}
     Timers:CreateTimer(function()
         local gameTime = math.floor(GameRules:GetDOTATime(false, false))
 
@@ -311,7 +311,7 @@ function GameMode:OnGameInProgress()
         end
 
         return 1  -- check every second, just to be sure
-    end)
+    end)]]
 
     ----------------------------------------------
     --              Creep Heroes                --
@@ -335,7 +335,47 @@ function GameMode:OnNPCSpawned( keys )
     end
 end
 
---[[ function GameMode:OnHeroInGame( hero )
+-- FIXME: this function should probably be split into OnBuyCreep() and OnBuyTrap(), or something like that
+--[[
+function OnBuyItem( keys )  -- <keys.item> <keys.playerID> (keys.position) (keys.slot)
+    -- Is this a valid unit?
+    --if GameRules.npc_herocreeps[keys.item] == nil or GameRules.npc_traps[keys.item] == nil then return end
+    if GameRules.npc_units_custom[keys.item] == nil then return end
+    local unit_info = GameRules.npc_units_custom[keys.item]
+    -- can this person afford said item
+    --unit_info.GoldCost = unit_info.GoldCost or 0
+    if unit_info.GoldCost ~= nil and PlayerResource:GetGold(keys.playerID) < unit_info.GoldCost then return end
+    --if unit_info.CustomResourceCost ~= nil and SomeFunc() < SomeThing() then return end
+
+
+    -- Attempt to give the player this item
+    if keys.position ~= nil then
+        -- can this item be placed here (in the event of a trap)
+        if keys.position ~= nil and not GameMode:IsInPlayersGrid(keys.position, keys.playerID)
+            and not GameMode:IsInSharedGrid(keys.position, PlayerResource:GetTeam(keys.playerID)) then return end
+        -- try to create trap
+        local istrap = GameMode:SpawnTrap(keys.position, keys.item, keys.playerID)
+        -- play invalid sounds if we can't make it
+    else
+        -- if there is no slot given, or given a used slot, return
+        if not keys.slot or GameRules.player_creeps[keys.playerID][keys.slot] ~= 0 then return end
+        -- if said slot is out-of-bounds (no cheating!), return
+        if keys.slot < 1 or GameRules.max_player_creeps < keys.slot then return end
+
+        -- add this creep to said slot
+        GameRules.player_creeps[keys.PlayerID][keys.slot] = keys.item
+    end
+
+
+    -- If we were successful above (we're still here), remove gold/resources for said purchase and inform the client
+    if unit_info.GoldCost ~= nil then PlayerResource:SpendGold(keys.playerID, unit_info.GoldCost, DOTA_ModifyGold_PurchaseItem) end
+    --SomeCustomResourceSpendFunction(playerid/unit_info.blah)
+    -- play gold noise
+    -- update the nettable to let the client know it was successful (otherwise presumes invalid purchase)
+    CustomNetTables:SetTableValue("trapwars_player_creeps", ""..pid, GameRules.player_creeps[pid])
+end  ]]
+
+--[[ function GameMode:OnHeroInGame( hero )  FIXME: remove whatever the hell this was
     --grid stuff
     local ent = SpawnEntityFromTableSynchronous("prop_dynamic", {
         origin = Vector(0, 0, 0),
@@ -357,7 +397,7 @@ end
 end  ]]
 
 -- this updates the score and determines win/loss
-function GameMode:OnTrapWarsScoreUpdated( keys )
+function GameMode:OnTrapWarsScoreUpdated( keys )  --FIXME: remove this as well
     if true then return end  -- FIXME disabled the win condition for testing
     -- keys.team           team id #
     -- keys.delta_score    desired change in score
@@ -383,7 +423,7 @@ function GameMode:OnTrapWarsScoreUpdated( keys )
 end
 
 -- modify some player's dummy unit
-function GameMode:OnTrapWarsModifyDummy( keys )
+function GameMode:OnTrapWarsModifyDummy( keys )  --FIXME: remove, not using (probably)
     if not keys.entid then return end             -- no entity id, no deal
     
     local entity = EntIndexToHScript(keys.entid)  -- no entity BY that id? also no deal!
@@ -404,14 +444,14 @@ function GameMode:OnTestButton( keys )
     if keys.id == 1 then
         --print("LUA: "..keys.id)
         local hero = PlayerResource:GetPlayer(0):GetAssignedHero()
-        local yesno = SpawnTrap(hero:GetAbsOrigin(), "npc_trapwars_trap_firevent", 0)
+        local yesno = GameMode:SpawnTrap(hero:GetAbsOrigin(), "npc_trapwars_trap_firevent", 0)
         --if yesno then print("trap spawned") else print("trap NOT spawned") end
     end
     --------------------
     if keys.id == 2 then
         --print("LUA: "..keys.id)
         local hero = PlayerResource:GetPlayer(0):GetAssignedHero()
-        local yesno = SpawnTrap(hero:GetAbsOrigin(), "npc_trapwars_trap_spike", 0)
+        local yesno = GameMode:SpawnTrap(hero:GetAbsOrigin(), "npc_trapwars_trap_spike", 0)
         --if yesno then print("trap spawned") else print("trap NOT spawned") end
     end
     --------------------
@@ -425,8 +465,13 @@ function GameMode:OnTestButton( keys )
     --------------------
 
     if keys.id == 5 and keys.unit ~= nil then
-        if GameRules.npc_units_custom[keys.unit] == nil then
-            print(keys.unit, "not a valid creep name")
+        local info = {}
+        if GameRules.npc_herocreeps[keys.unit] ~= nil then
+            info = GameRules.npc_herocreeps[keys.unit]
+        elseif GameRules.npc_lanecreeps[keys.unit] ~= nil then
+            info = GameRules.npc_lanecreeps[keys.unit]
+        else
+            print("\""..keys.unit.."\" is not a valid unit name!")
             return
         end
 
@@ -436,14 +481,13 @@ function GameMode:OnTestButton( keys )
         Timers:CreateTimer(0.03, function()
             if creep == nil then return end
 
-            if GameRules.npc_units_custom[keys.unit].Attachments ~= nil then
-                for attach_point, models in pairs(GameRules.npc_units_custom[keys.unit].Attachments) do
+            if info.Attachments ~= nil then
+                for attach_point, models in pairs(info.Attachments) do
                     for model, properties in pairs(models) do
                         Attachments:AttachProp(creep, attach_point, model, properties.scale, properties)
                     end
                 end
             end
-
             creep:SetControllableByPlayer(0, true)
         end)
     end

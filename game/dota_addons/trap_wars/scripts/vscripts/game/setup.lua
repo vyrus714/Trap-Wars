@@ -6,40 +6,25 @@ function GameMode:SetupGameMode()
     ---------------------------
     -- Unit and Ability Data --
     ---------------------------
-    --GameRules.npc_abilities_custom = LoadKeyValues("scripts/npc/npc_abilities_custom.txt")  FIXME: need this? likely no
-    GameRules.npc_units_custom     = LoadKeyValues("scripts/npc/npc_units_custom.txt")
+    GameRules.npc_units_custom = {}  --FIXME: in process of removationationating
 
-    -- parse out unit names from GameRules.npc_units_custom into three specific types | only store the unit name, for data use ^^
-    GameRules.npc_herocreeps = {}  -- npc_trapwars_herocreep_
-    GameRules.npc_traps      = {}  -- npc_trapwars_trap_
-    GameRules.npc_lanecreeps = {}  -- npc_trapwars_lanecreep_
-
-    for name, info in pairs(GameRules.npc_units_custom) do
-        if string.match(name, '^npc_trapwars_herocreep_.-') == "npc_trapwars_herocreep_" then table.insert(GameRules.npc_herocreeps, name)
-        elseif string.match(name, '^npc_trapwars_trap_.-') == "npc_trapwars_trap_" then table.insert(GameRules.npc_traps, name)
-        elseif string.match(name, '^npc_trapwars_lanecreep_.-') == "npc_trapwars_lanecreep_" then
-            local level = GameRules.npc_units_custom[name].Level
-            if GameRules.npc_lanecreeps[level] == nil then GameRules.npc_lanecreeps[level]={} end
-            table.insert(GameRules.npc_lanecreeps[level], name)
-        else end
-    end
+    GameRules.npc_herocreeps = LoadKeyValues("scripts/npc/units/trapwars_hero_creeps.txt")
+    GameRules.npc_lanecreeps = LoadKeyValues("scripts/npc/units/trapwars_lane_creeps.txt")
+    GameRules.npc_traps      = LoadKeyValues("scripts/npc/units/trapwars_traps.txt")
 
     -- precache the lane creeps now, the traps and hero creeps can be done on-use since we don't know how many of them will be used
-    for _, creeps in pairs(GameRules.npc_lanecreeps) do
-        for _, name in pairs(creeps) do
-            GameRules.npc_units_custom[name]._IsPrecached = true
-            PrecacheUnitByNameAsync(name, function()end)
-        end
+    for name, creeps in pairs(GameRules.npc_lanecreeps) do
+        PrecacheUnitByNameAsync(name, function()end)
+        GameRules.npc_lanecreeps[name]._IsPrecached = true
     end
 
     -----------------------
     -- Generic Variables --
     -----------------------
-    GameRules.max_player_grids = 1 -- FIXME: perhaps add some map\player variability to this
-    GameRules.default_lives    = 50
-    GameRules.valid_teams      = GameMode:GetValidTeams()
-
-    GameRules.UserIDPlayerID   = {}  -- for associating userid's and playerid's for event handling; in OnPlayerConnectFull()
+    GameRules.default_lives     = 50
+    GameRules.max_player_grids  = 1 -- FIXME: perhaps add some map\player variability to this
+    GameRules.max_player_creeps = 7 -- FIXME: same as ^^
+    GameRules.UserIDPlayerID    = {}  -- for associating userid's and playerid's for event handling; in OnPlayerConnectFull()
 
     ---------------------------------------------
     -- Player Specific Values | key = playerid --
@@ -52,6 +37,7 @@ function GameMode:SetupGameMode()
     ----------------------------------------------
     -- Team Specific Values | key = team number --
     ----------------------------------------------
+    GameRules.valid_teams      = GameMode:GetValidTeams()
     GameRules.team_lives       = {}
     GameRules.team_spawners    = {}
     GameRules.team_portals     = {}
@@ -62,10 +48,9 @@ function GameMode:SetupGameMode()
     for team, _ in pairs(GameRules.valid_teams) do
         GameRules.team_lives      [team] = GameRules.default_lives
         GameRules.team_spawners   [team] = GameMode:GetSpawners(team)
+        Timers:CreateTimer(1, function() GameRules.team_portals[team] = GameMode:GetPortals(team) end) -- doesn't like making particles so early FIXME
         GameRules.team_shared_grid[team] = GameMode:GetSharedGrid(team)
         GameRules.team_open_grids [team] = GameMode:GetUnclaimedGrids(team)  -- FIXME: give this a nettable\move drawing clientside?
-
-        Timers:CreateTimer(1, function() GameRules.team_portals[team] = GameMode:GetPortals(team) end) -- doesn't like making particles so early
 
         -- set net table initial values for the stuff we're using above here
         CustomNetTables:SetTableValue("trapwars_team_shared_grid", ""..team, GameRules.team_shared_grid[team]) -- FIXME: sending full unit handle, bad!
@@ -103,23 +88,19 @@ function GameMode:SetupGameMode()
         GameRules:SetCustomGameTeamMaxPlayers(team, max_players)
     end
 
-    ----------------------------------
-    -- Initialize Static Net Tables --
-    ----------------------------------
+    ---------------------------
+    -- Initialize Net Tables --
+    ---------------------------
     -- tables set on a one-time-only basis at the start of the game
     CustomNetTables:SetTableValue("trapwars_static_info", "valid_teams", GameRules.valid_teams)
-    CustomNetTables:SetTableValue("trapwars_static_info", "vars",        {default_lives=GameRules.default_lives})
+    CustomNetTables:SetTableValue("trapwars_static_info", "generic", {
+        default_lives     = GameRules.default_lives,
+        max_player_grids  = GameRules.max_player_grids,
+        max_player_creeps = GameRules.max_player_creeps
+    })
 
-    for key, value in pairs(GameRules.npc_herocreeps) do
-        if GameRules.npc_units_custom[value] then
-            CustomNetTables:SetTableValue("trapwars_npc_herocreeps", value, GameRules.npc_units_custom[value])
-        end
-    end
-    for key, value in pairs(GameRules.npc_traps) do
-        if GameRules.npc_units_custom[value] then
-            CustomNetTables:SetTableValue("trapwars_npc_traps", value, GameRules.npc_units_custom[value])
-        end
-    end
+    for unit_name, info in pairs(GameRules.npc_herocreeps) do CustomNetTables:SetTableValue("trapwars_npc_herocreeps", unit_name, info) end
+    for unit_name, info in pairs(GameRules.npc_traps) do CustomNetTables:SetTableValue("trapwars_npc_traps", unit_name, info) end
 
     -- other, changing, net tables each get their own table, so the values can update independantly
     -- these are listed here for reference, even though they are set\updated elsewhere
@@ -138,7 +119,8 @@ function GameMode:SetupGameMode()
     ListenToGameEvent('game_rules_state_change', Dynamic_Wrap(GameMode, 'OnGameRulesStateChange'), self)
     --gamemode file functions
     ListenToGameEvent('npc_spawned', Dynamic_Wrap(GameMode, 'OnNPCSpawned'), self)
-    ListenToGameEvent("trapwars_score_update", Dynamic_Wrap(GameMode, 'OnTrapWarsScoreUpdated'), self)
+    CustomGameEventManager:RegisterListener("trapwars_buy_item", Dynamic_Wrap(GameMode, 'OnBuyItem'))
+    --ListenToGameEvent("trapwars_score_update", Dynamic_Wrap(GameMode, 'OnTrapWarsScoreUpdated'), self) FIXME: remove this
     CustomGameEventManager:RegisterListener("test_button", Dynamic_Wrap(GameMode, 'OnTestButton'))  -- FIXME TESTING
 
 
@@ -179,13 +161,20 @@ function GameMode:OnPlayerConnectFull(keys)
                     break
                 end
             end
-
             -- set the player's color and add it to GameRules.player_colors to keep track of it
             PlayerResource:SetCustomPlayerColor(pid, red, green, blue)
             GameRules.player_colors[pid] = Vector(red, green, blue)
-            
             -- add the value to the net table "trapwars_player_colors", "pid", {vector}
             CustomNetTables:SetTableValue("trapwars_player_colors", ""..pid, {Vector(red, green, blue)})
+
+
+            -- add the player to GameRules.player_creeps, and give them GameRules.max_player_creeps empty creep slots
+            GameRules.player_creeps[pid] = {}
+            for i=1, GameRules.max_player_creeps do GameRules.player_creeps[pid][i]=0 end
+            GameRules.player_creeps[pid][3] = "npc_trapwars_herocreep_potato"  -- FIXME: debug line
+            GameRules.player_creeps[pid][4] = "npc_trapwars_herocreep_tomato"  -- FIXME: debug line
+            -- push this data to the net table trapwars_player_creeps
+            CustomNetTables:SetTableValue("trapwars_player_creeps", ""..pid, GameRules.player_creeps[pid])
         end
     end)
 end
