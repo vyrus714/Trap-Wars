@@ -1,5 +1,5 @@
-GameUI.CESubscribeEvent("show_tooltip", OnShowTooltip);
-GameUI.CESubscribeEvent("hide_tooltip", OnHideTooltip);
+GameUI.CustomUIConfig().Events.SubscribeEvent("show_tooltip", OnShowTooltip);
+GameUI.CustomUIConfig().Events.SubscribeEvent("hide_tooltip", OnHideTooltip);
 
 function OnShowTooltip(keys) {
     if(keys.id == null || keys.layout == null) {return;}

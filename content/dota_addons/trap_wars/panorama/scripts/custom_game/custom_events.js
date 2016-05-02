@@ -1,19 +1,20 @@
 /*
-Custom Events (CE)
-
 To use, place this line in your custom_ui_manifest.xml, under the <scripts></scripts> tags:
 <include src="file://{resources}/scripts/custom_game/custom_events.js" />
 
 Functions:
-int  GameUI.CESubscribeEvent   (string eventName, function callbackFunction)
-bool GameUI.CEUnSubscribeEvent (string eventName, int eventIndex)
-bool GameUI.CEFireEvent        (string eventName, object args)
+int  SubscribeEvent   (string eventName, function callbackFunction)
+bool UnSubscribeEvent (string eventName, int eventIndex)
+bool FireEvent        (string eventName, object args)
 */
 
 if(GameUI.CustomUIConfig().Events == null) {GameUI.CustomUIConfig().Events = {};}
 
-GameUI.CESubscribeEvent = function(eventName, callbackFunction) {
+GameUI.CustomUIConfig().Events.SubscribeEvent = function(eventName, callbackFunction) {
     var Events = GameUI.CustomUIConfig().Events;
+
+    // make sure noone overrides these event functions
+    if(eventName == "SubscribeEvent" || eventName == "UnSubscribeEvent" || eventName == "FireEvent") {return null;}
 
     // if there is no event stored by this name, create one
     if(!Events[eventName]) {Events[eventName] = [];}
@@ -29,7 +30,7 @@ GameUI.CESubscribeEvent = function(eventName, callbackFunction) {
     return i;
 }
 
-GameUI.CEUnSubscribeEvent = function(eventName, eventIndex) {
+GameUI.CustomUIConfig().Events.UnSubscribeEvent = function(eventName, eventIndex) {
     var Events = GameUI.CustomUIConfig().Events;
 
     // if there is no event by this name, or the event doesn't have a callback function for the specified index, return
@@ -40,7 +41,7 @@ GameUI.CEUnSubscribeEvent = function(eventName, eventIndex) {
     return true;
 }
 
-GameUI.CEFireEvent = function(eventName, args) {
+GameUI.CustomUIConfig().Events.FireEvent = function(eventName, args) {
     var Events = GameUI.CustomUIConfig().Events;
 
     // if there is no event by this name, exit

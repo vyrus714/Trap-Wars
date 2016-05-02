@@ -115,11 +115,11 @@ $.Schedule(0.1, function() {
 
         panel.SetPanelEvent("onmouseover", (function(a){return function(){
             //FireCustomEvent("show_tooltip", {id:a, layout:"file://{resources}/layout/custom_game/tooltips/menu_tooltip.xml"});
-            GameUI.CEFireEvent("show_tooltip", {id:a, layout:"file://{resources}/layout/custom_game/tooltips/menu_tooltip.xml"});
+            GameUI.CustomUIConfig().Events.FireEvent("show_tooltip", {id:a, layout:"file://{resources}/layout/custom_game/tooltips/menu_tooltip.xml"});
         }}(panel.id+"_tooltip")));
         panel.SetPanelEvent("onmouseout", (function(a){return function(){
             //FireCustomEvent("hide_tooltip", {id:a});
-            GameUI.CEFireEvent("hide_tooltip", {id:a});
+            GameUI.CustomUIConfig().Events.FireEvent("hide_tooltip", {id:a});
         }}(panel.id+"_tooltip")));
 
 
