@@ -1,0 +1,5 @@
+<root>
+    <styles><include src="file://{resources}/styles/custom_game/tooltips/tooltips.css" /></styles>
+    <scripts><include src="file://{resources}/scripts/custom_game/tooltips/tooltips.js" /></scripts>
+    <Panel class="tooltip_container" hittest="false" />
+</root>

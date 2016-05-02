@@ -1,0 +1,6 @@
+<root>
+    <styles><include src="file://{resources}/styles/custom_game/tooltips/menu_tooltip.css" /></styles>
+    <Panel class="menu_tooltip" hittest="false">
+        
+    </Panel>
+</root>

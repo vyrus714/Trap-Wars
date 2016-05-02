@@ -1,0 +1,35 @@
+<root>
+    <styles><include src="file://{resources}/styles/custom_game/trapwars_menu.css" /></styles>
+
+    <Panel class="display_item">
+        <Panel class="display_info">
+            <Panel class="display_info_health"><Label id="health" class="display_info_bar_text" text="102468" /></Panel>
+            <Panel class="display_info_mana"><Label id="mana" class="display_info_bar_text" text="102468" /></Panel>
+
+            <Panel class="display_info_stats">
+                <Panel class="display_info_damage"><Label id="damage" class="display_info_damage_text" text="102468" /></Panel>
+
+                <Panel class="display_info_armorspeed_container">
+                    <Panel class="display_info_armor"><Label id="armor" class="display_info_armorspeed_text" text="16" /></Panel>
+                    <Panel class="display_info_speed"><Label id="speed" class="display_info_armorspeed_text" text="312" /></Panel>
+                </Panel>
+            </Panel>
+
+            <Panel id="skills" class="display_info_skill_container">
+                <Panel class="display_info_skill"><Label text="1" style="horizontal-align: center; vertical-align: center;" /></Panel>
+                <Panel class="display_info_skill"><Label text="2" style="horizontal-align: center; vertical-align: center;" /></Panel>
+                <Panel class="display_info_skill"><Label text="3" style="horizontal-align: center; vertical-align: center;" /></Panel>
+                <Panel class="display_info_skill"><Label text="4" style="horizontal-align: center; vertical-align: center;" /></Panel>
+                <Panel class="display_info_skill"><Label text="5" style="horizontal-align: center; vertical-align: center;" /></Panel>
+                <Panel class="display_info_skill"><Label text="6" style="horizontal-align: center; vertical-align: center;" /></Panel>
+                <Panel class="display_info_skill"><Label text="7" style="horizontal-align: center; vertical-align: center;" /></Panel>
+                <Panel class="display_info_skill"><Label text="8" style="horizontal-align: center; vertical-align: center;" /></Panel>
+            </Panel>
+        </Panel>
+
+        <Panel class="display_interactable">
+            <Panel class="display_preview"><Label class="button_text" text="model preview" /></Panel>
+        </Panel>
+    </Panel>
+
+</root>

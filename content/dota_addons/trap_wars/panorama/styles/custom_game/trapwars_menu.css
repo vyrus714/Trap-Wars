@@ -10,7 +10,8 @@
     height: 680px;
     padding: 8px;
     padding-top: 12px;
-    padding-right: 10px;
+    //padding-right: 10px;
+    padding-right: 9px;
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
     border: 3px solid #000000de;
@@ -97,11 +98,40 @@
     width: 100%;
     height: 420px;
     margin-bottom: 10px;
-    padding-right: 20px;
+    //padding-right: 20px;
     position: 0px 10px 0px;
     transition: opacity 0.4s linear 0.0s;
-    flow-children: down;
-    overflow: squish scroll;
+    //flow-children: down;
+    flow-children: right-wrap;
+    //overflow: clip scroll;
+}
+
+.list_trap_item {
+    width: 72px;
+    height: 72px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+
+    background-image: url("file://{images}/custom_game/empty_slot_avatar.png");
+    background-size: 100%;
+    border-radius: 4px;
+    border: 1px solid #000000ee;
+    //box-shadow: #000000dd 0px 0px 1px 0px;
+    box-shadow: inset #000000dd 1px 1px 3px 2px;
+
+    tooltip-position: right;
+    tooltip-body-position: 0px 9px;
+    tooltip-arrow-position: 0px 36px;
+}
+
+.list_trap_item:selected {
+    border: 1px solid teal;
+    box-shadow: teal 0px 0px 8px 1px;
+}
+
+.list_trap_item:hover, .list_trap_item:selected:hover {
+    border: 1px solid white;
+    box-shadow: white 0px 0px 8px 1px;
 }
 
 .list_item {
@@ -207,6 +237,12 @@
 
 .list_hidden {
     opacity: 0.0;
+}
+
+.spacer {
+    width: 100%;
+    position: 0px 440px 0px;
+    border-bottom: 1px solid #000000de;
 }
 
 .creep_upgrades {
@@ -355,48 +391,132 @@
     z-index: 2;
 }
 
-.display_preview {
-    height: 100%;
-    width: 162px;
-
-    background-color: orange;
-    opacity: 0.1;
-}
-
 .display_info {
     width: 238px;
     height: 100%;
-
-    background-color: red;
-    opacity: 0.1;
+    font-size: 16;
+    color: white;
+    text-shadow: 2px 2px 8px 1.0 black;
+    flow-children: none;
 }
 
-.display_info_purchase {
-    width: 120px;
-    height: 60px;
+.display_info_health {
+    width: 100%;
+    height: 16px;
+    position: 0px 0px 0px;
+    //background-image: url('file://{resources}/images/custom_game/menu/bar_vertical.png');
+    //background-size: 100%;
+    //wash-color: #00ff00ff;
+    background-color: #005500ff;
+    border-radius: 6px;
+}
+
+.display_info_mana {
+    width: 100%;
+    height: 14px;
+    position: 0px 15px 0px;
+    //background-image: url('file://{resources}/images/custom_game/menu/bar_vertical.png');
+    //background-size: 100%;
+    //wash-color: #0000ffff;
+    background-color: #000077ff;
+    border-radius: 6px;
+}
+
+.display_info_bar_text {
     horizontal-align: center;
     vertical-align: center;
+    font-size: 12;
+}
+
+.display_info_stats {
+    width: 120px;
+    height: 92px;
+    position: -8px 31px 0px;
+    flow-children: none;
+}
+
+.display_info_damage {
+    width: 120px;
+    height: 50px;
+    position: 0px 0px 0px;
+    background-image: url('s2r://panorama/images/hud/hudv2_icondamage_png.vtex');
+    background-size: 150px 55px;
+    background-position: -2px -6px;
+}
+
+.display_info_damage_text {
+    horizontal-align: center;
+    vertical-align: top;
+    margin-top: 13px;
+}
+
+.display_info_armorspeed_container {
+    width: 120px;
+    height: 50px;
+    position: 0px 42px 0px;
+    flow-children: right;
+}
+
+.display_info_armor {
+    width: 50px;
+    height: 60px;
+    vertical-align: top;
+    margin-left: 12px;
+    background-image: url('s2r://panorama/images/hud/hudv2_iconarmor_png.vtex');
+    background-size: 48px 40px;
+    background-position: 1px -1px;
+    background-repeat: no-repeat;
+}
+
+.display_info_speed {
+    width: 48px;
+    height: 60px;
+    vertical-align: top;
+    background-image: url('s2r://panorama/images/hud/hudv2_iconspeed.png');
+    background-size: 48px 40px;
+    background-position: 4px 0px;
+    background-repeat: no-repeat;
+}
+
+.display_info_armorspeed_text {
+    horizontal-align: center;
+    vertical-align: bottom;
+    font-size: 14;
+}
+
+.display_info_skill_container {
+    width: 108px;
+    height: 88px;
+    position: 119px 34px 0px;
+    flow-children: right-wrap;
+    overflow: clip clip;
+
+    //border: 1px solid red;
+    background-color: gray;
+}
+
+.display_info_skill {
+    width: 50px;
+    height: 40px;
+    margin-right: 4px;
+    margin-bottom: 4px;
+
     background-color: red;
-    border-radius: 8px;
-    border: 2px solid white;
-    opacity: 0.3;
-}
-.display_info_purchase:hover {
-    opacity: 1.0;
 }
 
-.display_info_purchase:hover .button_text {
-    color: white;
+.display_interactable {
+    width: 162px;
+    height: 100%;
+    flow-children: down;
 }
 
-.display_info_purchase:active {
-    width: 116px;
-    height: 58px;
-    border: 2px solid green;
-}
+.display_preview {
+    //width: 120px;
+    width: 100%;
+    height: 120px;
+    //margin-left: 20px;
 
-.display_info_purchase:active .button_text {
-    color: lime;
+    background-color: gray;
 }
 
 .toggle_button {
@@ -448,17 +568,9 @@
 }
 
 
-
-
-
-
-
-
-
-
-
-
+/* *********** */
 /* Scroll Bars */
+/* *********** */
 VerticalScrollBar
 {
     width: 10px;

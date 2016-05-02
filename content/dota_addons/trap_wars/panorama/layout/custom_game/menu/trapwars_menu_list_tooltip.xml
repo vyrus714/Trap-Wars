@@ -1,0 +1,32 @@
+<root>
+    <styles>
+        .tooltip_contents {
+            width: 200px;
+            height: 40px;
+            padding: 10px;
+            flow-children: right;
+
+            background-color: #111111de;
+            border: 1px solid #000000de;
+            border-radius: 4px;
+        }
+    </styles>
+
+    <Panel class="tooltip_contents">
+        <Image id="icon" class="list_item_icon" />
+
+        <Panel class="list_item_information">
+            <Panel class="list_item_header">
+                <Label id="title" class="list_item_title" />
+                <Panel class="list_item_title_info">
+                    <Label id="class" class="list_item_class" />
+                    <Panel id="gold_icon" class="list_item_gold_icon" />
+                    <Label id="gold"  class="list_item_gold" />
+                </Panel>
+            </Panel>
+
+            <Label id="description" class="list_item_description" />
+        </Panel>
+    </Panel>
+
+</root>

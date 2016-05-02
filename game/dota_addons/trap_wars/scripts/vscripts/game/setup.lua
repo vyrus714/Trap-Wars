@@ -171,8 +171,8 @@ function GameMode:OnPlayerConnectFull(keys)
             -- add the player to GameRules.player_creeps, and give them GameRules.max_player_creeps empty creep slots
             GameRules.player_creeps[pid] = {}
             for i=1, GameRules.max_player_creeps do GameRules.player_creeps[pid][i]=0 end
-            GameRules.player_creeps[pid][3] = "npc_trapwars_herocreep_potato"  -- FIXME: debug line
-            GameRules.player_creeps[pid][4] = "npc_trapwars_herocreep_tomato"  -- FIXME: debug line
+            GameRules.player_creeps[pid][3] = "npc_trapwars_potato"  -- FIXME: debug line
+            GameRules.player_creeps[pid][4] = "npc_trapwars_tomato"  -- FIXME: debug line
             -- push this data to the net table trapwars_player_creeps
             CustomNetTables:SetTableValue("trapwars_player_creeps", ""..pid, GameRules.player_creeps[pid])
         end

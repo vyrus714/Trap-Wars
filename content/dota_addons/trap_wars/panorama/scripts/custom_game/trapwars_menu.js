@@ -26,6 +26,7 @@ function GetAllNetTableValues( table_name ) {
 $.Schedule(0.1, function() {
     // generate menu content based on nettable values //
     // set up trap list
+    /*
     var incr = 1;
     for(var k in npc_traps) {
         // create the panel
@@ -69,6 +70,66 @@ $.Schedule(0.1, function() {
         // remove the margin-bottom for the last item
         if(incr == Object.keys(npc_creeps).length) { panel.style["margin-bottom"]="0px"; }
         incr++;
+    }
+        */
+
+
+    var i=1;
+    for(var k in npc_traps) {
+        // create the panel
+        var panel = $.CreatePanel("Button", $("#list1"), k);
+        panel.AddClass("list_trap_item");
+        // if this panel is on the right-hand edge, strip off its margin
+        if(i%5 == 0) { panel.style["margin-right"]="0px"; }
+        // if we have an image for this trap (we should), override the base image
+        if(typeof npc_traps[k].Image === "string") { panel.style["background-image"]="url('"+npc_traps[k].Image+"');"; }
+
+
+        // display_item for this list_item
+        var display_item = $.CreatePanel("Panel", $("#display1"), k+"_display");
+        display_item.BLoadLayout("file://{resources}/layout/custom_game/trapwars_menu_display_item.xml", false, false);
+        var temp = display_item.FindChildTraverse("button_text");
+        if(temp != null) { temp.text=k; }
+
+
+        // info
+        var info = npc_traps[k];
+        if(typeof info.GoldCost !== "number") { info.GoldCost=0; }
+        if(typeof info.Class !== "string") { info.Class="c_unknown"; }
+        if(typeof info.Image !== "string") { info.Image="file://{images}/custom_game/empty_slot_avatar.png"; }
+
+
+        // when mousing over, display the localized tooltip. on mouse out, remove it
+        var text =  //"<img class='tooltip_icon' src='"+info.Image+"' />"+
+                    "<b>"+$.Localize(k)+"</b><br/>"+
+                    "<img class='gold_icon' src='s2r://panorama/images/hud/icon_gold.psd' />"+
+                    "<span class='gold'>"+info.GoldCost+"</span>"+
+                    "<center><span class='class'>"+$.Localize(info.Class)+"</span></center><br/>"+
+                    "<span class='desc'>"+$.Localize(k+"_description")+"</span>";
+        //panel.SetPanelEvent("onmouseover", (function(a, b){return function(){ $.DispatchEvent("DOTAShowTextTooltipStyled", a, b, "RoundedTooltip"); }}(panel, text)) );
+        //panel.SetPanelEvent("onmouseout", function(){ $.DispatchEvent("DOTAHideTextTooltip"); })
+        
+        //panel.SetPanelEvent("onmouseover", (function(a){return function(){ $.DispatchEvent( 'DOTAShowCustomLayoutParametersTooltip', a, "file://{resources}/layout/tooltips/tooltip_econ_set_preview.xml", "itemdef=20990&rotationspeed=2"); }}(panel.id+"_tooltip")));
+        //panel.SetPanelEvent("onmouseover", (function(a){return function(){ $.DispatchEvent( 'DOTAShowCustomLayoutParametersTooltip', a, "file://{resources}/layout/custom_game/trapwars_menu_list_tooltip.xml", "itemdef=20990&rotationspeed=2"); }}(panel.id+"_tooltip")));
+        //panel.SetPanelEvent("onmouseout", (function(a){return function(){ $.DispatchEvent("DOTAHideCustomLayoutTooltip", a); }}(panel.id+"_tooltip")));
+
+        panel.SetPanelEvent("onmouseover", (function(a){return function(){
+            //FireCustomEvent("show_tooltip", {id:a, layout:"file://{resources}/layout/custom_game/tooltips/menu_tooltip.xml"});
+            GameUI.CEFireEvent("show_tooltip", {id:a, layout:"file://{resources}/layout/custom_game/tooltips/menu_tooltip.xml"});
+        }}(panel.id+"_tooltip")));
+        panel.SetPanelEvent("onmouseout", (function(a){return function(){
+            //FireCustomEvent("hide_tooltip", {id:a});
+            GameUI.CEFireEvent("hide_tooltip", {id:a});
+        }}(panel.id+"_tooltip")));
+
+
+        // set the action on left click (onactivate)
+        panel.SetPanelEvent("onactivate", (function(a){ return function(){ShowListItem(a);} }(panel.id)) );
+        // set the action on right click (oncontextmenu)
+        panel.SetPanelEvent("oncontextmenu", (function(a){ return function(){ShowListItem(a);} }(panel.id)) );
+
+        // iterator
+        i++;
     }
 
     // Set up creep list
@@ -196,10 +257,12 @@ function OnPlayerCreepChange() {
     player_creeps = CustomNetTables.GetTableValue("trapwars_player_creeps", ""+Players.GetLocalPlayer());
 
     // re-set all of the information based on player creeps
-    for(var i=0; i<game_values.max_player_creeps; i++) {
+    for(var i=0; i<Object.keys(player_creeps).length; i++) {
+        var creep_id = player_creeps[i+1];
+
         // set the creep slot icons
         var image = "url('file://{images}/custom_game/empty_slot_avatar.png')";
-        if(player_creeps[i+1] != 0 && npc_creeps[player_creeps[i+1]] != null && npc_creeps[player_creeps[i+1]].Image != null) {
+        if(creep_id != 0 && npc_creeps[creep_id] != null && npc_creeps[creep_id].Image != null) {
             image = "url('"+npc_creeps[player_creeps[i+1]].Image+"')"; }
         var creep_slot = $("#slot_"+(i+1));
         if(creep_slot != null) { creep_slot.style["background-image"]=image; }
@@ -208,6 +271,7 @@ function OnPlayerCreepChange() {
         
 
         // set the creep upgrade tab contents
+
     }
 }
 
@@ -262,7 +326,7 @@ function ShowListItem( item_id ) {
     var item = $("#"+item_id);
     // get the current list
     var list = item.GetParent();
-    if(list.id != "list1" && list.id != "list2") { $.Msg("no joy"); return; }
+    if(list.id != "list1" && list.id != "list2") { return; }
 
 
     // hide highlighting of the other list items in this list
@@ -280,6 +344,7 @@ function ShowListItem( item_id ) {
         display = list.GetParent().FindChild("display2");
     } else { return; }
 
+
     // hide all of the children of the display panel
     var display_items = display.Children();
     for(var i in display_items) {
@@ -288,7 +353,9 @@ function ShowListItem( item_id ) {
 
     // un-hide the desired child
     var current_item = display.FindChild(item_id+"_display");
-    current_item.AddClass("display_item_visible");
+    if(current_item != null) {
+        current_item.AddClass("display_item_visible");
+    }
 }
 
 function ShowUpgrades() {

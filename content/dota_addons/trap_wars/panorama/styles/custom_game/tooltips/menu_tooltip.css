@@ -1,0 +1,31 @@
+/* Menu Tooltip */
+
+.menu_tooltip {
+    width: 200px;
+    height: 40px;
+    position: 430px 120px 0px;
+
+    background-color: #111111de;
+    border: 1px solid #000000de;
+    border-radius: 4px;
+}
+
+.menu_image {
+
+}
+
+.menu_title {
+
+}
+
+.menu_gold {
+
+}
+
+.menu_class {
+    
+}
+
+.menu_description {
+
+}
