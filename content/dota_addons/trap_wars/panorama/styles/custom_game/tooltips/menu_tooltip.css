@@ -1,31 +1,77 @@
 /* Menu Tooltip */
 
 .menu_tooltip {
-    width: 200px;
-    height: 40px;
-    position: 430px 120px 0px;
+    width: 300px;
+    min-height: 60px;
+    position: 426px 125px 0px;
+    padding: 10px;
+    padding-right: 4px;
+    flow-children: down;
 
     background-color: #111111de;
     border: 1px solid #000000de;
     border-radius: 4px;
+    box-shadow: inset black 1px 1px 2px 2px;
+
+    font-size: 16px;
+    color: white;
 }
 
-.menu_image {
-
+.menu_header {
+    width: 210px;
+    height: 56px;
+    margin-bottom: 6px;
+    flow-children: right;
 }
 
-.menu_title {
+.header_image {
+    height: 100%;
+    width: height-percentage(100%);
+    border-radius: 3px;
 
+    background-image: url("file://{images}/custom_game/empty_slot_avatar.png");
+    background-size: 100%;
 }
 
-.menu_gold {
-
+.header_info {
+    //height: 100%;
+    width: 100%;
+    height: 45px;
+    vertical-align: center;
+    margin-left: 12px;
+    flow-children: down;
 }
 
-.menu_class {
-    
+.title_text {
+    font-size: 22;
+}
+
+.info_container {
+    width: 100%;
+    flow-children: right;
+}
+
+.gold_icon {
+    width: 20px;
+    height: width-percentage(100%);
+    margin-right: 3px;
+
+    background-image: url("s2r://panorama/images/hud/icon_gold.psd");
+    background-size: 100%;
+    background-position: 0px -2px;
+}
+
+.gold_text {
+    color: gold;
+}
+
+.class_text {
+    horizontal-align: right;
+    color: red;
 }
 
 .menu_description {
-
+    width: 100%;
+    margin-left: 2px;
+    //color: gray;
 }

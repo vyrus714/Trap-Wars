@@ -24,56 +24,7 @@ function GetAllNetTableValues( table_name ) {
 
 // set up some panels on UI creation
 $.Schedule(0.1, function() {
-    // generate menu content based on nettable values //
-    // set up trap list
-    /*
-    var incr = 1;
-    for(var k in npc_traps) {
-        // create the panel
-        var panel = $.CreatePanel("Button", $("#list1"), k);
-        panel.BLoadLayout("file://{resources}/layout/custom_game/trapwars_menu_list_item.xml", false, false);
-
-        // get info from the data table
-        var info = npc_traps[k];
-        if(typeof info.Image !== "string") { info.Image="file://{images}/custom_game/empty_slot_avatar.png"; }
-        if(typeof info.Class !== "string") { info.Class="c_unknown"; }
-        if(typeof info.GoldCost !== "number") { info.GoldCost=0; }
-
-        // add the icon
-        var child = panel.FindChildTraverse("icon");
-        child.SetImage(info.Image);
-        // add the title text
-        child = panel.FindChildTraverse("title");
-        child.text = $.Localize(k);
-        if(child.text.slice(0,3) === "npc") { child.text="Unknown Item"; }
-        // add the class text
-        child = panel.FindChildTraverse("class");
-        child.text = $.Localize(info.Class);
-        child.style.color = $.Localize(info.Class+"_color");  // FIXME: ??? part of info i guess, don't know
-        // add the gold amount
-        child = panel.FindChildTraverse("gold");
-        child.text = info.GoldCost;
-        // add the description text
-        child = panel.FindChildTraverse("description");
-        child.text = $.Localize(k+"_description");
-        if(child.text.slice(0,3) === "npc") { child.text="No description."; }
-
-        // set the action to perform when someone clicks on this list item
-        panel.SetPanelEvent("onactivate", (function(j){return function(){ ShowListItem(j); }}(panel.id)) );
-
-        // display_item for this list_item
-        var display_item = $.CreatePanel("Panel", $("#display1"), k+"_display");
-        display_item.BLoadLayout("file://{resources}/layout/custom_game/trapwars_menu_display_item.xml", false, false);
-        var temp = display_item.FindChildTraverse("button_text");
-        if(temp != null) { temp.text=k; }
-
-        // remove the margin-bottom for the last item
-        if(incr == Object.keys(npc_creeps).length) { panel.style["margin-bottom"]="0px"; }
-        incr++;
-    }
-        */
-
-
+    // set up trap menu
     var i=1;
     for(var k in npc_traps) {
         // create the panel
@@ -85,48 +36,34 @@ $.Schedule(0.1, function() {
         if(typeof npc_traps[k].Image === "string") { panel.style["background-image"]="url('"+npc_traps[k].Image+"');"; }
 
 
-        // display_item for this list_item
+        // info for other panels to display
+        var info = {
+            "image": npc_traps[k].Image || "file://{images}/custom_game/empty_slot_avatar.png",
+            "title": k || "unknown_item",
+            "gold" : npc_traps[k].GoldCost || 0,
+            "class": npc_traps[k].Class || "c_unknown",
+            "description": k+"_description" || "unknown_item"
+        }
+
+        // create the display and fill it with info  FIXME
         var display_item = $.CreatePanel("Panel", $("#display1"), k+"_display");
         display_item.BLoadLayout("file://{resources}/layout/custom_game/trapwars_menu_display_item.xml", false, false);
         var temp = display_item.FindChildTraverse("button_text");
         if(temp != null) { temp.text=k; }
 
-
-        // info
-        var info = npc_traps[k];
-        if(typeof info.GoldCost !== "number") { info.GoldCost=0; }
-        if(typeof info.Class !== "string") { info.Class="c_unknown"; }
-        if(typeof info.Image !== "string") { info.Image="file://{images}/custom_game/empty_slot_avatar.png"; }
-
-
-        // when mousing over, display the localized tooltip. on mouse out, remove it
-        var text =  //"<img class='tooltip_icon' src='"+info.Image+"' />"+
-                    "<b>"+$.Localize(k)+"</b><br/>"+
-                    "<img class='gold_icon' src='s2r://panorama/images/hud/icon_gold.psd' />"+
-                    "<span class='gold'>"+info.GoldCost+"</span>"+
-                    "<center><span class='class'>"+$.Localize(info.Class)+"</span></center><br/>"+
-                    "<span class='desc'>"+$.Localize(k+"_description")+"</span>";
-        //panel.SetPanelEvent("onmouseover", (function(a, b){return function(){ $.DispatchEvent("DOTAShowTextTooltipStyled", a, b, "RoundedTooltip"); }}(panel, text)) );
-        //panel.SetPanelEvent("onmouseout", function(){ $.DispatchEvent("DOTAHideTextTooltip"); })
-        
-        //panel.SetPanelEvent("onmouseover", (function(a){return function(){ $.DispatchEvent( 'DOTAShowCustomLayoutParametersTooltip', a, "file://{resources}/layout/tooltips/tooltip_econ_set_preview.xml", "itemdef=20990&rotationspeed=2"); }}(panel.id+"_tooltip")));
-        //panel.SetPanelEvent("onmouseover", (function(a){return function(){ $.DispatchEvent( 'DOTAShowCustomLayoutParametersTooltip', a, "file://{resources}/layout/custom_game/trapwars_menu_list_tooltip.xml", "itemdef=20990&rotationspeed=2"); }}(panel.id+"_tooltip")));
-        //panel.SetPanelEvent("onmouseout", (function(a){return function(){ $.DispatchEvent("DOTAHideCustomLayoutTooltip", a); }}(panel.id+"_tooltip")));
-
-        panel.SetPanelEvent("onmouseover", (function(a){return function(){
-            //FireCustomEvent("show_tooltip", {id:a, layout:"file://{resources}/layout/custom_game/tooltips/menu_tooltip.xml"});
-            GameUI.CustomUIConfig().Events.FireEvent("show_tooltip", {id:a, layout:"file://{resources}/layout/custom_game/tooltips/menu_tooltip.xml"});
-        }}(panel.id+"_tooltip")));
-        panel.SetPanelEvent("onmouseout", (function(a){return function(){
-            //FireCustomEvent("hide_tooltip", {id:a});
+        // create tooltips and pass them info
+        panel.SetPanelEvent("onmouseover", (function(a, b) {return function() {
+            GameUI.CustomUIConfig().Events.FireEvent("show_tooltip", {id:a, layout:"file://{resources}/layout/custom_game/tooltips/menu_tooltip.xml", args:b});
+        }})(panel.id+"_tooltip", info));
+        panel.SetPanelEvent("onmouseout", (function(a) {return function() {
             GameUI.CustomUIConfig().Events.FireEvent("hide_tooltip", {id:a});
-        }}(panel.id+"_tooltip")));
+        }})(panel.id+"_tooltip"));
 
 
         // set the action on left click (onactivate)
         panel.SetPanelEvent("onactivate", (function(a){ return function(){ShowListItem(a);} }(panel.id)) );
         // set the action on right click (oncontextmenu)
-        panel.SetPanelEvent("oncontextmenu", (function(a){ return function(){ShowListItem(a);} }(panel.id)) );
+        panel.SetPanelEvent("oncontextmenu", (function(a){ return function(){ShowListItem(a);} }(panel.id)) );  // FIXME: buy trap etc etc
 
         // iterator
         i++;
@@ -274,6 +211,11 @@ function OnPlayerCreepChange() {
 
     }
 }
+
+
+/*******************/
+/* Setup Functions */
+/*******************/
 
 
 /****************/

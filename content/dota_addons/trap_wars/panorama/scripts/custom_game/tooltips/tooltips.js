@@ -7,7 +7,8 @@ function OnShowTooltip(keys) {
     // if there's no panel by this id, make one
     var panel = $("#"+keys.id);
     if(panel == null) {panel = $.CreatePanel("Panel", $.GetContextPanel(), keys.id);}
-
+    // pass any parameters to the panel
+    panel._args = keys.args || {};
     // load the specified layout
     panel.BLoadLayout(keys.layout, false, false);
 
