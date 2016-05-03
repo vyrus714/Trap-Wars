@@ -1,0 +1,140 @@
+.display_item {
+    width: 100%;
+    height: 100%;
+    opacity: 0.0;
+    transition: opacity 0.4s linear 0.0s;
+    flow-children: right;
+}
+
+.display_item_visible {
+    opacity: 1.0;
+    z-index: 2;
+}
+
+.display_info {
+    width: 238px;
+    height: 100%;
+    font-size: 16;
+    color: white;
+    text-shadow: 2px 2px 8px 1.0 black;
+    flow-children: none;
+}
+
+.display_info_health {
+    width: 100%;
+    height: 16px;
+    position: 0px 0px 0px;
+    //background-image: url('file://{resources}/images/custom_game/menu/bar_vertical.png');
+    //background-size: 100%;
+    //wash-color: #00ff00ff;
+    background-color: #005500ff;
+    border-radius: 6px;
+}
+
+.display_info_mana {
+    width: 100%;
+    height: 14px;
+    position: 0px 15px 0px;
+    //background-image: url('file://{resources}/images/custom_game/menu/bar_vertical.png');
+    //background-size: 100%;
+    //wash-color: #0000ffff;
+    background-color: #000077ff;
+    border-radius: 6px;
+}
+
+.display_info_bar_text {
+    horizontal-align: center;
+    vertical-align: center;
+    font-size: 12;
+}
+
+.display_info_stats {
+    width: 120px;
+    height: 92px;
+    position: -8px 31px 0px;
+    flow-children: none;
+}
+
+.display_info_damage {
+    width: 120px;
+    height: 50px;
+    position: 0px 0px 0px;
+    background-image: url('s2r://panorama/images/hud/hudv2_icondamage_png.vtex');
+    background-size: 150px 55px;
+    background-position: -2px -6px;
+}
+
+.display_info_damage_text {
+    horizontal-align: center;
+    vertical-align: top;
+    margin-top: 13px;
+}
+
+.display_info_armorspeed_container {
+    width: 120px;
+    height: 50px;
+    position: 0px 42px 0px;
+    flow-children: right;
+}
+
+.display_info_armor {
+    width: 50px;
+    height: 60px;
+    vertical-align: top;
+    margin-left: 12px;
+    background-image: url('s2r://panorama/images/hud/hudv2_iconarmor_png.vtex');
+    background-size: 48px 40px;
+    background-position: 1px -1px;
+    background-repeat: no-repeat;
+}
+
+.display_info_speed {
+    width: 48px;
+    height: 60px;
+    vertical-align: top;
+    background-image: url('s2r://panorama/images/hud/hudv2_iconspeed.png');
+    background-size: 48px 40px;
+    background-position: 4px 0px;
+    background-repeat: no-repeat;
+}
+
+.display_info_armorspeed_text {
+    horizontal-align: center;
+    vertical-align: bottom;
+    font-size: 14;
+}
+
+.display_info_skill_container {
+    width: 108px;
+    height: 88px;
+    position: 119px 34px 0px;
+    flow-children: right-wrap;
+    overflow: clip clip;
+
+    //border: 1px solid red;
+    background-color: gray;
+}
+
+.display_info_skill {
+    width: 50px;
+    height: 40px;
+    margin-right: 4px;
+    margin-bottom: 4px;
+
+    background-color: red;
+}
+
+.display_interactable {
+    width: 162px;
+    height: 100%;
+    flow-children: down;
+}
+
+.display_preview {
+    //width: 120px;
+    width: 100%;
+    height: 120px;
+    //margin-left: 20px;
+
+    background-color: gray;
+}

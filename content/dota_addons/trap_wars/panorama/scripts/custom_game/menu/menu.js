@@ -47,7 +47,7 @@ $.Schedule(0.1, function() {
 
         // create the display and fill it with info  FIXME
         var display_item = $.CreatePanel("Panel", $("#display1"), k+"_display");
-        display_item.BLoadLayout("file://{resources}/layout/custom_game/trapwars_menu_display_item.xml", false, false);
+        display_item.BLoadLayout("file://{resources}/layout/custom_game/menu/menu_display_item.xml", false, false);
         var temp = display_item.FindChildTraverse("button_text");
         if(temp != null) { temp.text=k; }
 
@@ -74,7 +74,7 @@ $.Schedule(0.1, function() {
     for(var k in npc_creeps) {
         // create the panel
         var panel = $.CreatePanel("Button", $("#list2"), k);
-        panel.BLoadLayout("file://{resources}/layout/custom_game/trapwars_menu_list_item.xml", false, false);
+        panel.BLoadLayout("file://{resources}/layout/custom_game/menu/menu_list_item.xml", false, false);
 
         // get info from the data table
         var info = npc_creeps[k];
@@ -106,7 +106,7 @@ $.Schedule(0.1, function() {
 
         // display_item for this list_item
         var display_item = $.CreatePanel("Panel", $("#display2"), k+"_display");
-        display_item.BLoadLayout("file://{resources}/layout/custom_game/trapwars_menu_display_item.xml", false, false);
+        display_item.BLoadLayout("file://{resources}/layout/custom_game/menu/menu_list_item.xml", false, false);
         var temp = display_item.FindChildTraverse("button_text");
         if(temp != null) { temp.text=k; }
 
@@ -133,7 +133,7 @@ $.Schedule(0.1, function() {
 
         // display_item for this creep slot
         var display_item = $.CreatePanel("Panel", $("#display3"), "tree_item_"+(i+1));
-        display_item.BLoadLayout("file://{resources}/layout/custom_game/trapwars_menu_display_item.xml", false, false);
+        display_item.BLoadLayout("file://{resources}/layout/custom_game/menu/menu_display_item.xml", false, false);
 
 
         // set the initial panels to visible:

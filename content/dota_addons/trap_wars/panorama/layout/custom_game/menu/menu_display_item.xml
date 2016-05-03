@@ -1,5 +1,5 @@
 <root>
-    <styles><include src="file://{resources}/styles/custom_game/trapwars_menu.css" /></styles>
+    <styles><include src="file://{resources}/styles/custom_game/menu/menu_display_item.css" /></styles>
 
     <Panel class="display_item">
         <Panel class="display_info">

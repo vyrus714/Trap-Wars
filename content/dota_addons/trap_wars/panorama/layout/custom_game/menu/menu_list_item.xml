@@ -1,18 +1,7 @@
 <root>
-    <styles>
-        .tooltip_contents {
-            width: 200px;
-            height: 40px;
-            padding: 10px;
-            flow-children: right;
+    <styles><include src="file://{resources}/styles/custom_game/menu/menu_list_item.css" /></styles>
 
-            background-color: #111111de;
-            border: 1px solid #000000de;
-            border-radius: 4px;
-        }
-    </styles>
-
-    <Panel class="tooltip_contents">
+    <Panel class="list_item">
         <Image id="icon" class="list_item_icon" />
 
         <Panel class="list_item_information">
