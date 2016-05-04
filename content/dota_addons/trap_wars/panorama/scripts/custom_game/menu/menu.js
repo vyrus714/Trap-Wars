@@ -83,7 +83,11 @@ $.Schedule(0.1, function() {
                 if(ability_panel) {
                     ability_panel.abilityname = info.abilities[j];
                     ability_panel.AddClass("display_info_skill");
-                    // add the tooltip for said class here
+                    // add the tooltip
+                    if(info.abilities[j].length > 1) {
+                        ability_panel.SetPanelEvent("onmouseover", (function(a, b) {return function(){ $.DispatchEvent("DOTAShowAbilityTooltip", a, b); }})(ability_panel, info.abilities[j]));
+                        ability_panel.SetPanelEvent("onmouseout", (function(a, b) {return function(){ $.DispatchEvent("DOTAHideAbilityTooltip"); }})());
+                    }
                 }
             }
         }
