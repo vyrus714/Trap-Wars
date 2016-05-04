@@ -42,14 +42,19 @@ $.Schedule(0.1, function() {
             "title": k || "unknown_item",
             "gold" : npc_traps[k].GoldCost || 0,
             "class": npc_traps[k].Class || "c_unknown",
-            "description": k+"_description" || "unknown_item"
+            "description": k+"_description" || "unknown_item",
+            "health": npc_traps[k].StatusHealth || "-",
+            "mana"  : npc_traps[k].StatusMana || "-",
+            "damage": (npc_traps[k].AttackDamageMin+npc_traps[k].AttackDamageMax)/2 || "-",
+            "armor" : npc_traps[k].ArmorPhysical || "-",
+            "speed" : npc_traps[k].MovementSpeed || "-"
+        }
+        info.abilities = [];
+        for(var j=0; j<npc_traps[k].AbilityLayout; j++) {
+            var ability = npc_traps[k]["Ability"+(j+1)];
+            if(typeof ability == "string") {info.abilities.push(ability);}
         }
 
-        // create the display and fill it with info  FIXME
-        var display_item = $.CreatePanel("Panel", $("#display1"), k+"_display");
-        display_item.BLoadLayout("file://{resources}/layout/custom_game/menu/menu_display_item.xml", false, false);
-        var temp = display_item.FindChildTraverse("button_text");
-        if(temp != null) { temp.text=k; }
 
         // create tooltips and pass them info
         panel.SetPanelEvent("onmouseover", (function(a, b) {return function() {
@@ -58,6 +63,30 @@ $.Schedule(0.1, function() {
         panel.SetPanelEvent("onmouseout", (function(a) {return function() {
             GameUI.CustomUIConfig().Events.FireEvent("hide_tooltip", {id:a});
         }})(panel.id+"_tooltip"));
+
+        // create the display
+        var display_item = $.CreatePanel("Panel", $("#display1"), k+"_display");
+        display_item.BLoadLayout("file://{resources}/layout/custom_game/menu/menu_display_item.xml", false, false);
+
+        // fill it with info
+        SetChildPropAndGreyOutParent(display_item, "health", "text", info.health);
+        SetChildPropAndGreyOutParent(display_item, "mana"  , "text", info.mana  );
+        SetChildProperty(display_item, "damage", "text", info.damage);
+        SetChildProperty(display_item, "armor" , "text", info.armor );
+        SetChildProperty(display_item, "speed" , "text", info.speed );
+
+        // generate panels for the skills
+        var skill_container = display_item.FindChildTraverse("skills");
+        if(skill_container) {
+            for(var j in info.abilities) {
+                var ability_panel = $.CreatePanel("DOTAAbilityImage", skill_container, info.abilities[j]+"_panel");
+                if(ability_panel) {
+                    ability_panel.abilityname = info.abilities[j];
+                    ability_panel.AddClass("display_info_skill");
+                    // add the tooltip for said class here
+                }
+            }
+        }
 
 
         // set the action on left click (onactivate)
@@ -216,6 +245,29 @@ function OnPlayerCreepChange() {
 /*******************/
 /* Setup Functions */
 /*******************/
+function SetChildProperty(parent, child_id, property_name, property_value) {
+    if(parent == null) {return false;}
+
+    // get the child
+    var child = parent.FindChildTraverse(child_id);
+    if(child == null) {return false;}
+
+    // if the property exists, set it 
+    if(child[property_name] == null) {return false;}
+    child[property_name] = property_value;
+
+    return true;
+}
+
+function SetChildPropAndGreyOutParent(parent, child_id, property_name, property_value) {
+    var test = SetChildProperty(parent, child_id, property_name, property_value);
+    if(test && property_value <= 0 || property_value == "-") {
+        parent.FindChildTraverse(child_id).GetParent().style.opacity = 0.8;
+        parent.FindChildTraverse(child_id).GetParent().style.brightness = 0.2;
+        parent.FindChildTraverse(child_id).GetParent().style.saturation = 0;
+        parent.FindChildTraverse(child_id).style["font-size"] = 20;
+    }
+}
 
 
 /****************/

@@ -1,9 +1,12 @@
 .display_item {
     width: 100%;
     height: 100%;
+    flow-children: down;
+
+    color: white;
+    text-shadow: 2px 2px 8px 1.0 black;
     opacity: 0.0;
     transition: opacity 0.4s linear 0.0s;
-    flow-children: right;
 }
 
 .display_item_visible {
@@ -11,57 +14,71 @@
     z-index: 2;
 }
 
-.display_info {
-    width: 238px;
-    height: 100%;
-    font-size: 16;
-    color: white;
-    text-shadow: 2px 2px 8px 1.0 black;
+.display_bar_container {
+    width: 100%;
+    //height: fit-children;
+    height: 35px;
     flow-children: none;
 }
 
 .display_info_health {
     width: 100%;
-    height: 16px;
+    height: 20px;
     position: 0px 0px 0px;
-    //background-image: url('file://{resources}/images/custom_game/menu/bar_vertical.png');
-    //background-size: 100%;
-    //wash-color: #00ff00ff;
-    background-color: #005500ff;
+    overflow: clip;
+
+    background-color: gradient(linear, 0% 100%, 0% 0%, from(#112211), color-stop(0.3, #117711), color-stop(0.70, #118811), color-stop(0.92, #55bb55), to(#ffffff));
     border-radius: 6px;
+    font-size: 14;
+}
+
+.bar_spacer {
+    width: 97.1%;
+    height: 3px;
+    horizontal-align: center;
+    position: 0px 18px -1px;
+    background-color: #111111;
 }
 
 .display_info_mana {
     width: 100%;
-    height: 14px;
-    position: 0px 15px 0px;
-    //background-image: url('file://{resources}/images/custom_game/menu/bar_vertical.png');
-    //background-size: 100%;
-    //wash-color: #0000ffff;
-    background-color: #000077ff;
-    border-radius: 6px;
+    height: 15px;
+    position: 0px 19px 0px;
+    overflow: clip;
+
+    background-color: gradient(linear, 0% 100%, 0% 0%, from(#111188), color-stop(0.3, #004377), color-stop(0.7, #1166cc), color-stop(0.92, #8888bb), to(#ffffff));
+    border-radius: 4px;
+    font-size: 12;
 }
 
 .display_info_bar_text {
     horizontal-align: center;
     vertical-align: center;
-    font-size: 12;
+    text-shadow: 0px 1px 2px 1.6 black;
+}
+
+.display_info {
+    width: 100%;
+    height: fit-children;
+    flow-children: right;
 }
 
 .display_info_stats {
-    width: 120px;
+    width: 98px;
     height: 92px;
-    position: -8px 31px 0px;
     flow-children: none;
 }
 
 .display_info_damage {
-    width: 120px;
+    width: 100%;
     height: 50px;
     position: 0px 0px 0px;
+
     background-image: url('s2r://panorama/images/hud/hudv2_icondamage_png.vtex');
-    background-size: 150px 55px;
-    background-position: -2px -6px;
+    //background-size: 150px 55px;
+    background-size: 120px 44px;
+    background-position: -2px -3px;
+    font-size: 12;
 }
 
 .display_info_damage_text {
@@ -70,71 +87,48 @@
     margin-top: 13px;
 }
 
-.display_info_armorspeed_container {
-    width: 120px;
-    height: 50px;
-    position: 0px 42px 0px;
-    flow-children: right;
-}
-
 .display_info_armor {
-    width: 50px;
-    height: 60px;
-    vertical-align: top;
-    margin-left: 12px;
+    width: 44px;
+    height: 42px;
+    position: 5px 36px 0px;
+
     background-image: url('s2r://panorama/images/hud/hudv2_iconarmor_png.vtex');
-    background-size: 48px 40px;
-    background-position: 1px -1px;
+    background-size: 34px 30px;
+    background-position: 50% 0px;
     background-repeat: no-repeat;
 }
 
 .display_info_speed {
-    width: 48px;
-    height: 60px;
-    vertical-align: top;
+    width: 40px;
+    height: 42px;
+    position: 44px 36px 0px;
+
     background-image: url('s2r://panorama/images/hud/hudv2_iconspeed.png');
-    background-size: 48px 40px;
-    background-position: 4px 0px;
+    background-size: 34px 30px;
+    background-position: 100% 0px;
     background-repeat: no-repeat;
 }
 
 .display_info_armorspeed_text {
     horizontal-align: center;
     vertical-align: bottom;
-    font-size: 14;
+    font-size: 12;
 }
 
 .display_info_skill_container {
-    width: 108px;
-    height: 88px;
-    position: 119px 34px 0px;
-    flow-children: right-wrap;
+    width: 300px;
+    height: 100%;
+    margin-top: 10px;
+    flow-children: right;
+    //overflow: scroll clip;
     overflow: clip clip;
-
-    //border: 1px solid red;
-    background-color: gray;
 }
 
 .display_info_skill {
-    width: 50px;
-    height: 40px;
-    margin-right: 4px;
-    margin-bottom: 4px;
+    width: 67px;
+    height: 67px;
+    margin-right: 10px;
 
-    background-color: red;
-}
-
-.display_interactable {
-    width: 162px;
-    height: 100%;
-    flow-children: down;
-}
-
-.display_preview {
-    //width: 120px;
-    width: 100%;
-    height: 120px;
-    //margin-left: 20px;
-
-    background-color: gray;
+    border-radius: 4px;
+    box-shadow: inset #000000dd 1px 1px 2px 2px;
 }
