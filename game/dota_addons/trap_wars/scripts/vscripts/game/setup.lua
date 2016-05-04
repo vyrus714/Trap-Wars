@@ -182,6 +182,7 @@ end
 -- called when a player joins\changes teams - bots result with a pid of -1, very annoying
 function GameMode:OnPlayerTeam(keys)
     local pid = GameRules.UserIDPlayerID[keys.userid]
+    if not pid then return end  -- pretty much a bot check - they were fucking things up
 
     -- if the team is a playing-team (not spectators etc) then add to GameRules.valid_players
     if keys.team >= DOTA_TEAM_FIRST and keys.team <= DOTA_TEAM_CUSTOM_MAX and keys.team ~= DOTA_TEAM_NEUTRALS and keys.team ~= DOTA_TEAM_NOTEAM then
