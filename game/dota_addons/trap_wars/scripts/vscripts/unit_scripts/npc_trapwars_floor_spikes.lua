@@ -1,5 +1,5 @@
 function Spawn( entityKeyValues )
-    ABILILTY_spiketrap_spikes = thisEntity:FindAbilityByName("spiketrap_spikes")
+    ABILILTY_spiketrap_spikes = thisEntity:FindAbilityByName("floor_spikes_activate")
     thisEntity:SetContextThink( "OnThink", OnThink , 1)
 end
 

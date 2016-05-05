@@ -444,14 +444,14 @@ function GameMode:OnTestButton( keys )
     if keys.id == 1 then
         --print("LUA: "..keys.id)
         local hero = PlayerResource:GetPlayer(0):GetAssignedHero()
-        local yesno = GameMode:SpawnTrap(hero:GetAbsOrigin(), "npc_trapwars_trap_firevent", 0)
+        local yesno = GameMode:SpawnTrap(hero:GetAbsOrigin(), "npc_trapwars_fire_vent", 0)
         --if yesno then print("trap spawned") else print("trap NOT spawned") end
     end
     --------------------
     if keys.id == 2 then
         --print("LUA: "..keys.id)
         local hero = PlayerResource:GetPlayer(0):GetAssignedHero()
-        local yesno = GameMode:SpawnTrap(hero:GetAbsOrigin(), "npc_trapwars_trap_spike", 0)
+        local yesno = GameMode:SpawnTrap(hero:GetAbsOrigin(), "npc_trapwars_floor_spikes", 0)
         --if yesno then print("trap spawned") else print("trap NOT spawned") end
     end
     --------------------

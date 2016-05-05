@@ -1,4 +1,4 @@
-"trap.spiketrap.depressed"
+"trap.floorSpikes.depressed"
 {
     "operator_stacks"
     {
@@ -21,7 +21,7 @@
                             "04"        "sounds/physics/footsteps/hero/rattletrap/foley01.vsnd"
                         }
                     }
-                    "volume"            {   "value"     "0.90000"  }
+                    "volume"            {   "value"     "0.90000"   }
                     "pitch_rand_min"    {   "value"     "-0.05000"  }
                     "pitch_rand_max"    {   "value"     "0.050000"  }
                     "pitch"             {   "value"     "1.000000"  }
@@ -34,7 +34,7 @@
     }
 }
 
-"trap.spiketrap.spikes"
+"trap.floorSpikes.spikes"
 {
     "operator_stacks"
     {
@@ -54,7 +54,7 @@
                             "01"        "sounds/weapons/hero/magnataur/attack02.vsnd"
                         }
                     }
-                    "volume"            {   "value"     "0.80000"  }
+                    "volume"            {   "value"     "0.80000"   }
                     "pitch_rand_min"    {   "value"     "-0.05000"  }
                     "pitch_rand_max"    {   "value"     "0.050000"  }
                     "pitch"             {   "value"     "1.000000"  }

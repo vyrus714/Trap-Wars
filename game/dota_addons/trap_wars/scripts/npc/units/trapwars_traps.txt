@@ -32,7 +32,7 @@
         // Abilities
         //----------------------------------------------------------------
         "AbilityLayout"             "4"         // 4, 5, or 6
-        "Ability1"                  "spiketrap_spikes"    // Ability 1
+        "Ability1"                  "floor_spikes_activate"    // Ability 1
         "Ability2"                  ""          // Ability 2
         "Ability3"                  ""          // Ability 3
         "Ability4"                  ""          // Ability 4
@@ -102,7 +102,7 @@
 
         // LUA AI function
         //----------------------------------------------------------------
-        "vscripts"                  "unit_scripts/spiketrap.lua"
+        "vscripts"                  "unit_scripts/npc_trapwars_floor_spikes.lua"
     }
 
     // a floor trap that shoots spikes out of the ground when walked over
