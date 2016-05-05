@@ -4,38 +4,40 @@
     <scripts>
        <include src="file://{resources}/scripts/custom_game/trapwars_generic.js" />
     </scripts>
-
-    <Panel style="vertical-align:bottom; horizontal-align:center; margin-bottom:184px; margin-left:104px; width:700px; height:80px; flow-children:down;" >
-        <Panel style="height:30px; width:100%; margin-bottom: 2px; flow-children:right;" >
-            <Panel style="width:523px; height:100%; margin-right: 2px; background-color:#333333; border:2px solid #222222; opacity:0.9;" >
-                <TextEntry id="UnitText" style="width:531px; vertical-align:center; color:#FFFFFFFF; opacity:1.0; font-size:18;"/>
+    <Panel style="vertical-align:bottom; horizontal-align:center; margin-bottom:184px; margin-left:104px; width:750px; height:80px; flow-children:right;">
+        <Panel style="width:700px; height:80px; flow-children:down;" id="buttonpanel">
+            <Panel style="height:30px; width:100%; margin-bottom: 2px; flow-children:right;" >
+                <Panel style="width:523px; height:100%; margin-right: 2px; background-color:#333333; border:2px solid #222222; opacity:0.9;" >
+                    <TextEntry id="UnitText" style="width:531px; vertical-align:center; color:#FFFFFFFF; opacity:1.0; font-size:18;"/>
+                </Panel>
+                <Button onactivate="SpawnUnit()" style="width:173px; height:100%; background-color:#333333; border:2px solid #222222; opacity:0.9;" >
+                    <Label text="Spawn Unit" style="vertical-align:center; horizontal-align:center; text-align:center; text-shadow:-2px 2px 2px 1.0 #000000; font-size:18; color:#ffffff;" />
+                </Button>
             </Panel>
-            <Button onactivate="SpawnUnit()" style="width:173px; height:100%; background-color:#333333; border:2px solid #222222; opacity:0.9;" >
-                <Label text="Spawn Unit" style="vertical-align:center; horizontal-align:center; text-align:center; text-shadow:-2px 2px 2px 1.0 #000000; font-size:18; color:#ffffff;" />
-            </Button>
+
+
+            <Panel style="height:40px; width:100%; flow-children:right;" >
+                <Button onactivate="TestButton(1)" style="width:173px; height:100%; margin-right:2px; background-color:#333333; border:2px solid #222222; opacity:0.9;" >
+                    <Label text="Test Button 1" style="vertical-align:center; horizontal-align:center; text-align:center; text-shadow:-2px 2px 2px 1.0 #000000; font-size:18; color:#ffffff;" />
+                </Button>
+
+                <Button onactivate="TestButton(2)" style="width:173px; height:100%; margin-right:2px; background-color:#333333; border:2px solid #222222; opacity:0.9;" >
+                    <Label text="Test Button 2" style="vertical-align:center; horizontal-align:center; text-align:center; text-shadow:-2px 2px 2px 1.0 #000000; font-size:18; color:#ffffff;" />
+                </Button>
+
+                <Button onactivate="TestButton(3)" style="width:173px; height:100%; margin-right:2px; background-color:#333333; border:2px solid #222222; opacity:0.9;" >
+                    <Label text="Test Button 3" style="vertical-align:center; horizontal-align:center; text-align:center; text-shadow:-2px 2px 2px 1.0 #000000; font-size:18; color:#ffffff;" />
+                </Button>
+
+                <Button onactivate="TestButton(4)" style="width:173px; height:100%; margin-right:2px; background-color:#333333; border:2px solid #222222; opacity:0.9;" >
+                    <Label text="Test Button 4" style="vertical-align:center; horizontal-align:center; text-align:center; text-shadow:-2px 2px 2px 1.0 #000000; font-size:18; color:#ffffff;" />
+                </Button>
+            </Panel>
+
+            <!-- for image compiling -->
+            <!--<Image style="width:0px; height:0px;" src="file://{resources}/images/custom_game/..." />-->
         </Panel>
 
-
-        <Panel style="height:40px; width:100%; flow-children:right;" >
-            <Button onactivate="TestButton(1)" style="width:173px; height:100%; margin-right:2px; background-color:#333333; border:2px solid #222222; opacity:0.9;" >
-                <Label text="Test Button 1" style="vertical-align:center; horizontal-align:center; text-align:center; text-shadow:-2px 2px 2px 1.0 #000000; font-size:18; color:#ffffff;" />
-            </Button>
-
-            <Button onactivate="TestButton(2)" style="width:173px; height:100%; margin-right:2px; background-color:#333333; border:2px solid #222222; opacity:0.9;" >
-                <Label text="Test Button 2" style="vertical-align:center; horizontal-align:center; text-align:center; text-shadow:-2px 2px 2px 1.0 #000000; font-size:18; color:#ffffff;" />
-            </Button>
-
-            <Button onactivate="TestButton(3)" style="width:173px; height:100%; margin-right:2px; background-color:#333333; border:2px solid #222222; opacity:0.9;" >
-                <Label text="Test Button 3" style="vertical-align:center; horizontal-align:center; text-align:center; text-shadow:-2px 2px 2px 1.0 #000000; font-size:18; color:#ffffff;" />
-            </Button>
-
-            <Button onactivate="TestButton(4)" style="width:173px; height:100%; margin-right:2px; background-color:#333333; border:2px solid #222222; opacity:0.9;" >
-                <Label text="Test Button 4" style="vertical-align:center; horizontal-align:center; text-align:center; text-shadow:-2px 2px 2px 1.0 #000000; font-size:18; color:#ffffff;" />
-            </Button>
-        </Panel>
-
-        <!-- for image compiling -->
-        <!--<Image style="width:0px; height:0px;" src="file://{resources}/images/custom_game/..." />-->
+        <Button style="margin-left:4px; width:40px; height:72px; horizontal-align:right; background-color:#333333; border:2px solid #222222; opacity:0.9;" onactivate="HidePanel('buttonpanel');" />
     </Panel>
-
 </root>

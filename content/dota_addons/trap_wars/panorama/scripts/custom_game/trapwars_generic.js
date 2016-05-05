@@ -37,3 +37,16 @@ function SpawnUnit() {
 function InspectElement( element_name ) {
     $.Msg(Object.keys($('#'+element_name)))
 }
+
+function HidePanel(panel_name) {
+    var panel = $('#'+panel_name);
+    if(panel.enabled) {
+        panel.enabled = false;
+        panel.style.visibility = "collapse";
+    } else {
+        panel.enabled = true;
+        panel.style.visibility = "visible";
+    }
+
+
+}
