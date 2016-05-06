@@ -17,7 +17,7 @@
     border-right-width: 2px;
     border-left-style: none;
     box-shadow: inset #000000 0px 1px 4px 2px;
-    background-color: #111111de;
+    background-color: #111111df;
 
     transition: position 0.3s ease-in 0s;
     flow-children: down;
