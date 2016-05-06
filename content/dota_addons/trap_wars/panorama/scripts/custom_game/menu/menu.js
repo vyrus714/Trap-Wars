@@ -25,17 +25,8 @@ function GetAllNetTableValues( table_name ) {
 // set up some panels on UI creation
 $.Schedule(0.1, function() {
     // set up trap menu
-    var i=1;
     for(var k in npc_traps) {
-        // create the panel
-        var panel = $.CreatePanel("Button", $("#list1"), k);
-        panel.AddClass("list_trap_item");
-        // if this panel is on the right-hand edge, strip off its margin
-        if(i%5 == 0) { panel.style["margin-right"]="0px"; }
-        // if we have an image for this trap (we should), override the base image
-        if(typeof npc_traps[k].Image === "string") { panel.style["background-image"]="url('"+npc_traps[k].Image+"');"; }
-
-        // info for other panels to display
+        // info about this trap, with fallbacks
         var info = {
             "image": npc_traps[k].Image || "file://{images}/custom_game/empty_slot_avatar.png",
             "title": k || "unknown_item",
@@ -53,6 +44,24 @@ $.Schedule(0.1, function() {
             var ability = npc_traps[k]["Ability"+(j+1)];
             if(typeof ability == "string" && ability.length > 0) {info.abilities.push(ability);}
         }
+
+
+        // find the parent
+        var fake_parent = $("#list1");
+        if(!fake_parent) {continue;}
+
+        if(info.class == "c_damage")        {var real_parent = fake_parent.FindChild("column_1");}
+            else if(info.class == "c_stun") {var real_parent = fake_parent.FindChild("column_2");}
+            else if(info.class == "c_slow") {var real_parent = fake_parent.FindChild("column_3");}
+            else if(info.class == "c_move") {var real_parent = fake_parent.FindChild("column_4");}
+            else                            {var real_parent = fake_parent.FindChild("column_5");}
+        if(!real_parent) {continue;}
+
+        // now create the panel
+        var panel = $.CreatePanel("Button", real_parent, k);
+        panel.AddClass("list_trap_item");
+        // if we have an image for this trap (we should), override the base image
+        if(typeof npc_traps[k].Image === "string") { panel.style["background-image"]="url('"+npc_traps[k].Image+"');"; }
 
         // create tooltips and pass them info
         panel.SetPanelEvent("onmouseover", (function(a, b) {return function() {
@@ -96,9 +105,6 @@ $.Schedule(0.1, function() {
             skill.SetPanelEvent("onmouseover", (function(a, b) {return function(){ $.DispatchEvent("DOTAShowAbilityTooltip", a, b); }})(skill, info.abilities[j]));
             skill.SetPanelEvent("onmouseout", (function(a, b) {return function(){ $.DispatchEvent("DOTAHideAbilityTooltip"); }})());
         }
-
-        // iterator
-        i++;
     }
 
     // Set up creep list

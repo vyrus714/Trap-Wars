@@ -30,7 +30,14 @@
             <!-- The main content of the menu -->
             <Panel class="body">
                 <Panel id="tab1" class="body_tab body_tab_visible">
-                    <Panel id="list1" class="list" />
+                    <Panel id="list1" class="list">
+                        <Panel id="column_1" class="list_column" />
+                        <Panel id="column_2" class="list_column" />
+                        <Panel id="column_3" class="list_column" />
+                        <Panel id="column_4" class="list_column" />
+                        <Panel id="column_5" class="list_column" />                       
+                    </Panel>
+
                     <Panel class="spacer" />
                     <Panel id="display1" class="display" />
                 </Panel>
