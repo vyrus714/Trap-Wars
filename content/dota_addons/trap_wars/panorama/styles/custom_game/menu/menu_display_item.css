@@ -46,7 +46,7 @@
     position: 0px 19px 0px;
     overflow: clip;
 
-    background-color: gradient(linear, 0% 100%, 0% 0%, from(#111188), color-stop(0.3, #004377), color-stop(0.7, #1166cc), color-stop(0.92, #8888bb), to(#ffffff));
+    background-color: gradient(linear, 0% 100%, 0% 0%, from(#111188), color-stop(0.3, #104070), color-stop(0.7, #1050cc), color-stop(0.90, #7070ff), to(#000000));
     border-radius: 4px;
     font-size: 12;
 }
@@ -64,7 +64,7 @@
 }
 
 .display_info_stats {
-    width: 98px;
+    width: 96px;
     height: 92px;
     flow-children: none;
 }
@@ -72,7 +72,7 @@
 .display_info_damage {
     width: 100%;
     height: 50px;
-    position: 0px 0px 0px;
+    position: -2px 0px 0px;
 
     background-image: url('s2r://panorama/images/hud/hudv2_icondamage_png.vtex');
     //background-size: 150px 55px;
@@ -90,18 +90,18 @@
 .display_info_armor {
     width: 44px;
     height: 42px;
-    position: 5px 36px 0px;
+    position: 6px 36px 0px;
 
     background-image: url('s2r://panorama/images/hud/hudv2_iconarmor_png.vtex');
     background-size: 34px 30px;
-    background-position: 50% 0px;
+    background-position: 35% 0px;
     background-repeat: no-repeat;
 }
 
 .display_info_speed {
     width: 40px;
     height: 42px;
-    position: 44px 36px 0px;
+    position: 43px 36px 0px;
 
     background-image: url('s2r://panorama/images/hud/hudv2_iconspeed.png');
     background-size: 34px 30px;

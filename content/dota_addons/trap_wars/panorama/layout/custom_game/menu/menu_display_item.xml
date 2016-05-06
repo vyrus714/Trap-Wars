@@ -16,12 +16,10 @@
             </Panel>
 
             <Panel id="skills" class="display_info_skill_container">
-                <!--
-                <Panel class="display_info_skill"><Label text="1" style="horizontal-align: center; vertical-align: center;" /></Panel>
-                <Panel class="display_info_skill"><Label text="2" style="horizontal-align: center; vertical-align: center;" /></Panel>
-                <Panel class="display_info_skill"><Label text="3" style="horizontal-align: center; vertical-align: center;" /></Panel>
-                <Panel class="display_info_skill"><Label text="4" style="horizontal-align: center; vertical-align: center;" /></Panel>
-                -->
+                <DOTAAbilityImage  id="skill_1" class="display_info_skill" />
+                <DOTAAbilityImage  id="skill_2" class="display_info_skill" />
+                <DOTAAbilityImage  id="skill_3" class="display_info_skill" />
+                <DOTAAbilityImage  id="skill_4" class="display_info_skill" />
             </Panel>
         </Panel>
     </Panel>
