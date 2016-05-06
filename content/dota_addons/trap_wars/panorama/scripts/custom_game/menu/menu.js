@@ -189,28 +189,9 @@ $.Schedule(0.1, function() {
     }
 
 
-    // set some panels as selected at ui startup
-    // tab button
+    // select the trap tab button
     var panel = $("#tab1_btn");
     if(panel != null) { panel.checked=true; }
-    
-    // list_items
-    var parent = $("#list1");
-    if(parent != null) {
-        panel = parent.GetChild(0);
-        if(panel != null) {
-            panel.checked = true;
-            ShowListItem(panel.id);
-        }
-    }
-    parent = $("#list2");
-    if(parent != null) {
-        panel = parent.GetChild(0);
-        if(panel != null) {
-            panel.checked = true;
-            ShowListItem(panel.id);
-        }
-    }
 
     // set the creep slots/info on startup
     OnPlayerCreepChange();
@@ -276,7 +257,7 @@ function SetChildPropAndGreyOutParent(parent, child_id, property_name, property_
 /* UI Functions */
 /****************/
 
-function ShowThisSiblingPanel( panel, visible_class ) {
+function ShowThisSiblingPanel(panel, visible_class) {
     //remove visibility from all tabs
     var parent = panel.GetParent();
     var panels = parent.FindChildrenWithClassTraverse(visible_class);
@@ -287,13 +268,13 @@ function ShowThisSiblingPanel( panel, visible_class ) {
     panel.AddClass(visible_class);
 }
 
-function SwitchToBodyTab( tab_id ) {
+function SwitchToBodyTab(tab_id) {
     var tab = $("#"+tab_id);
     if(tab == null) { return; }
     ShowThisSiblingPanel(tab, "body_tab_visible");
 }
 
-function SwitchToCreepTab( tab_number ) {
+function SwitchToCreepTab(tab_number) {
     // switch to this slot's tab in the upgrade tree
     var creep_tab = $("#creep_tab_"+tab_number);
     if(creep_tab != null) { ShowThisSiblingPanel(creep_tab, "creep_tab_visible"); }
@@ -317,7 +298,7 @@ function SwitchToCreepTab( tab_number ) {
     }
 }
 
-function ShowListItem( item_id ) {
+function ShowListItem(item_id) {
     // get the item
     var item = $("#"+item_id);
     // get the current list
@@ -393,7 +374,7 @@ function ToggleMenu() {
 /****************/
 
 // useful for finding out what is things
-function DeepPrintObject( object, indent ) {
+function DeepPrintObject(object, indent) {
     if(typeof indent === "undefined") { indent="    "; $.Msg("{"); }
 
     for(var k in object) {
