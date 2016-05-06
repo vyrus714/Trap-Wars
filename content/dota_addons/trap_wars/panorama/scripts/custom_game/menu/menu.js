@@ -56,7 +56,7 @@ $.Schedule(0.1, function() {
 
         // create tooltips and pass them info
         panel.SetPanelEvent("onmouseover", (function(a, b) {return function() {
-            GameUI.CustomUIConfig().Events.FireEvent("show_tooltip", {id:a, layout:"file://{resources}/layout/custom_game/tooltips/menu_tooltip.xml", args:b});
+            GameUI.CustomUIConfig().Events.FireEvent("show_tooltip", {id:a, layout:"file://{resources}/layout/custom_game/tooltips/menu_list_item_tooltip.xml", args:b});
         }})(panel.id+"_tooltip", info));
         panel.SetPanelEvent("onmouseout", (function(a) {return function() {
             GameUI.CustomUIConfig().Events.FireEvent("hide_tooltip", {id:a});

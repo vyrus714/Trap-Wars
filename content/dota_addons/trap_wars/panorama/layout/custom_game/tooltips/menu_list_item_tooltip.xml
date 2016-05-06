@@ -1,8 +1,8 @@
 <root>
-    <styles><include src="file://{resources}/styles/custom_game/tooltips/menu_tooltip.css" /></styles>
-    <scripts><include src="file://{resources}/scripts/custom_game/tooltips/menu_tooltip.js" /></scripts>
+    <styles><include src="file://{resources}/styles/custom_game/tooltips/menu_list_item_tooltip.css" /></styles>
+    <scripts><include src="file://{resources}/scripts/custom_game/tooltips/menu_list_item_tooltip.js" /></scripts>
 
-    <Panel class="menu_tooltip" hittest="false">
+    <Panel class="menu_list_item_tooltip" hittest="false">
         <Panel class="menu_header">
             <Panel id="header_image" class="header_image" />
 
