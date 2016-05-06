@@ -57,9 +57,11 @@ $.Schedule(0.1, function() {
         // create tooltips and pass them info
         panel.SetPanelEvent("onmouseover", (function(a, b) {return function() {
             GameUI.CustomUIConfig().Events.FireEvent("show_tooltip", {id:a, layout:"file://{resources}/layout/custom_game/tooltips/menu_list_item_tooltip.xml", args:b});
+            GameUI.CustomUIConfig().Events.FireEvent("show_tooltip", {id:"help_tooltip", layout:"file://{resources}/layout/custom_game/tooltips/item_help_tooltip.xml"});
         }})(panel.id+"_tooltip", info));
         panel.SetPanelEvent("onmouseout", (function(a) {return function() {
             GameUI.CustomUIConfig().Events.FireEvent("hide_tooltip", {id:a});
+            GameUI.CustomUIConfig().Events.FireEvent("hide_tooltip", {id:"help_tooltip"});
         }})(panel.id+"_tooltip"));
         // set the action on left click (onactivate)
         panel.SetPanelEvent("onactivate", (function(a){ return function(){ShowListItem(a);} }(panel.id)) );

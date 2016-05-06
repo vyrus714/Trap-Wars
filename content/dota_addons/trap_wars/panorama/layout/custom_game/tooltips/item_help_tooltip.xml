@@ -1,0 +1,11 @@
+<root>
+    <styles><include src="file://{resources}/styles/custom_game/tooltips/item_help_tooltip.css" /></styles>
+
+    <Panel class="item_help_tooltip" hittest="false">
+        <Image src="file://{resources}/images/custom_game/menu/mouse_illustrations.png" scaling="stretch-to-fit-preserve-aspect" />
+        <Panel id="text_container">
+            <Label id="left_mouse" text="Details" />
+            <Label id="right_mouse" text="Buy Item" />
+        </Panel>
+    </Panel>
+</root>

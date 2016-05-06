@@ -1,0 +1,44 @@
+.item_help_tooltip {
+    width: fit-children;
+    height: 54px;
+    position: 426px 60px 0px;
+    padding: 5px;
+    padding-left: 8px;
+    padding-right: 8px;
+    flow-children: right;
+
+    background-color: #111111de;
+    border: 3px solid #000000cc;
+    border-radius: 4px;
+    opacity: 0.0;
+    transition: opacity 0.5s linear 1.5s;
+}
+
+.item_help_tooltip:enabled {
+    opacity: 1.0;
+    transition: opacity 0s linear 0s;
+}
+
+#text_container {
+    //height: 38px;  // this should be the height
+    width: 72px;
+    //padding-left: 10px;
+    flow-children: none;
+
+    font-size: 18px;
+    //font-weight: bold;
+}
+
+#left_mouse {
+    position: 0px 0px 0px;
+
+    color: #0066ff;
+    text-shadow: 0px 1px 1px 1 black;
+}
+
+#right_mouse {
+    position: 0px 18px 0px;
+
+    color: #ff0000;
+    text-shadow: 0px 1px 1px 1 black;
+}
