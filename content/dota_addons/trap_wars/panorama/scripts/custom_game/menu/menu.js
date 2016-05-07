@@ -307,13 +307,23 @@ function SwitchToCreepTab(tab_number) {
 function ShowListItem(item_id) {
     // get the item
     var item = $("#"+item_id);
+
     // get the current list
-    var list = item.GetParent();
-    if(list.id != "list1" && list.id != "list2") { return; }
+    var list_column = item.GetParent();
+    if(list_column == null) {return false;}
+    var list = list_column.GetParent();
+    if(list == null) {return false;}
 
 
-    // hide highlighting of the other list items in this list
-    var list_items = list.Children();
+    // find the items in this list
+    var list_items;
+    if(list.id == "list1") {
+        list_items = list.FindChildrenWithClassTraverse("list_trap_item");
+    } else if (list.id == "list2") {
+        list_items = list.FindChildrenWithClassTraverse("list_item")
+    } else {return false;}
+
+    // hide highlighting of the other list items
     for(var i in list_items) { list_items[i].checked=false; }
     // show highlighting on this list item
     item.checked = true;
