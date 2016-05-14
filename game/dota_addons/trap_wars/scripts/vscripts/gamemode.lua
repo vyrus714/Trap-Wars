@@ -335,45 +335,45 @@ function GameMode:OnNPCSpawned( keys )
     end
 end
 
--- FIXME: this function should probably be split into OnBuyCreep() and OnBuyTrap(), or something like that
---[[
-function OnBuyItem( keys )  -- <keys.item> <keys.playerID> (keys.position) (keys.slot)
-    -- Is this a valid unit?
-    --if GameRules.npc_herocreeps[keys.item] == nil or GameRules.npc_traps[keys.item] == nil then return end
-    if GameRules.npc_units_custom[keys.item] == nil then return end
-    local unit_info = GameRules.npc_units_custom[keys.item]
-    -- can this person afford said item
-    --unit_info.GoldCost = unit_info.GoldCost or 0
-    if unit_info.GoldCost ~= nil and PlayerResource:GetGold(keys.playerID) < unit_info.GoldCost then return end
-    --if unit_info.CustomResourceCost ~= nil and SomeFunc() < SomeThing() then return end
+function GameMode:OnBuyTrap(keys)
+    -- if the player can't afford the trap, return
+    local cost = GameRules.npc_traps[keys.name].GoldCost
+    if cost and PlayerResource:GetGold(keys.playerid) < cost then return end
 
 
-    -- Attempt to give the player this item
-    if keys.position ~= nil then
-        -- can this item be placed here (in the event of a trap)
-        if keys.position ~= nil and not GameMode:IsInPlayersGrid(keys.position, keys.playerID)
-            and not GameMode:IsInSharedGrid(keys.position, PlayerResource:GetTeam(keys.playerID)) then return end
-        -- try to create trap
-        local istrap = GameMode:SpawnTrap(keys.position, keys.item, keys.playerID)
-        -- play invalid sounds if we can't make it
+    -- attempt to spawn the trap
+    local trap = GameMode:SpawnTrapForPlayer(keys.name, keys.position, keys.playerid)
+
+
+    -- handle success or failure
+    if trap then
+        -- remove gold\resources
+        if cost then PlayerResource:SpendGold(keys.playerid, cost, DOTA_ModifyGold_PurchaseItem) end
+
+        -- play success sound
+        CustomGameEventManager:Send_ServerToPlayer(PlayerResource:GetPlayer(keys.playerid), "trapwars_sound_event", {sound="General.Buy"})
     else
-        -- if there is no slot given, or given a used slot, return
-        if not keys.slot or GameRules.player_creeps[keys.playerID][keys.slot] ~= 0 then return end
-        -- if said slot is out-of-bounds (no cheating!), return
-        if keys.slot < 1 or GameRules.max_player_creeps < keys.slot then return end
-
-        -- add this creep to said slot
-        GameRules.player_creeps[keys.PlayerID][keys.slot] = keys.item
+        -- play failure sound
+        CustomGameEventManager:Send_ServerToPlayer(PlayerResource:GetPlayer(keys.playerid), "trapwars_sound_event", {sound="General.Cancel"})
     end
+end
 
+function GameMode:OnBuyCreep(keys)
+    --[[
+    if GameRules.npc_herocreeps[keys.item]
 
-    -- If we were successful above (we're still here), remove gold/resources for said purchase and inform the client
-    if unit_info.GoldCost ~= nil then PlayerResource:SpendGold(keys.playerID, unit_info.GoldCost, DOTA_ModifyGold_PurchaseItem) end
-    --SomeCustomResourceSpendFunction(playerid/unit_info.blah)
-    -- play gold noise
-    -- update the nettable to let the client know it was successful (otherwise presumes invalid purchase)
+    -- if there is no slot given, or given a used slot, return
+    if not keys.slot or GameRules.player_creeps[keys.playerID][keys.slot] ~= 0 then return end
+    -- if said slot is out-of-bounds (no cheating!), return
+    if keys.slot < 1 or GameRules.max_player_creeps < keys.slot then return end
+
+    -- add this creep to said slot
+    GameRules.player_creeps[keys.PlayerID][keys.slot] = keys.item
+
+    -- update the nettable
     CustomNetTables:SetTableValue("trapwars_player_creeps", ""..pid, GameRules.player_creeps[pid])
-end  ]]
+    ]]
+end
 
 --[[ function GameMode:OnHeroInGame( hero )  FIXME: remove whatever the hell this was
     --grid stuff
@@ -443,16 +443,14 @@ end
 function GameMode:OnTestButton( keys )
     if keys.id == 1 then
         --print("LUA: "..keys.id)
-        local hero = PlayerResource:GetPlayer(0):GetAssignedHero()
-        local yesno = GameMode:SpawnTrap(hero:GetAbsOrigin(), "npc_trapwars_fire_vent", 0)
-        --if yesno then print("trap spawned") else print("trap NOT spawned") end
+        local hero = PlayerResource:GetSelectedHeroEntity(0)
+        GameMode:OnBuyTrap{name="npc_trapwars_fire_vent", position=hero:GetAbsOrigin()+Vector(100, 0, 0), playerid=0}
     end
     --------------------
     if keys.id == 2 then
         --print("LUA: "..keys.id)
-        local hero = PlayerResource:GetPlayer(0):GetAssignedHero()
-        local yesno = GameMode:SpawnTrap(hero:GetAbsOrigin(), "npc_trapwars_floor_spikes", 0)
-        --if yesno then print("trap spawned") else print("trap NOT spawned") end
+        local hero = PlayerResource:GetSelectedHeroEntity(0)
+        GameMode:OnBuyTrap{name="npc_trapwars_floor_spikes", position=hero:GetAbsOrigin()+Vector(100, 0, 0), playerid=0}
     end
     --------------------
     if keys.id == 3 then

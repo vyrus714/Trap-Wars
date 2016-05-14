@@ -119,7 +119,8 @@ function GameMode:SetupGameMode()
     ListenToGameEvent('game_rules_state_change', Dynamic_Wrap(GameMode, 'OnGameRulesStateChange'), self)
     --gamemode file functions
     ListenToGameEvent('npc_spawned', Dynamic_Wrap(GameMode, 'OnNPCSpawned'), self)
-    CustomGameEventManager:RegisterListener("trapwars_buy_item", Dynamic_Wrap(GameMode, 'OnBuyItem'))
+    CustomGameEventManager:RegisterListener("trapwars_buy_trap", Dynamic_Wrap(GameMode, 'OnBuyTrap'))
+    CustomGameEventManager:RegisterListener("trapwars_buy_creep", Dynamic_Wrap(GameMode, 'OnBuyCreep'))    
     --ListenToGameEvent("trapwars_score_update", Dynamic_Wrap(GameMode, 'OnTrapWarsScoreUpdated'), self) FIXME: remove this
     CustomGameEventManager:RegisterListener("test_button", Dynamic_Wrap(GameMode, 'OnTestButton'))  -- FIXME TESTING
 

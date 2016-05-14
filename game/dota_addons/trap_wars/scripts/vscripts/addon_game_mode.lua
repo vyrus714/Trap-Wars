@@ -31,6 +31,7 @@ function Precache( context )
     PrecacheUnitByNameSync("npc_trapwars_creep_kobol_spear", context)
     -- sounds
     PrecacheResource("soundfile", "soundevents/game_sounds_heroes/game_sounds_wisp.vsndevts", context)  -- for portal sounds
+    PrecacheResource("soundfile", "soundevents/game_sounds_ui_imported.vsndevts", context)  -- menu sounds
 
     --[[ Precache examples from baresbones ... so i can stop looking it up every 2 seconds
     -- Particles can be precached individually or by folder
