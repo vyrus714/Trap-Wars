@@ -6,7 +6,7 @@ function GameMode:SpawnTrap(name, position, team, owner)
     -- make sure there's no building here already
     if GameMode:IsBuildingInTile(position) then return nil end
     -- make sure it's a valid team
-    if team < DOTA_TEAM_FIRST or DOTA_TEAM_CUSTOM_MAX < team then return end
+    if team < DOTA_TEAM_FIRST or DOTA_TEAM_CUSTOM_MAX < team then return nil end
 
 
     -- plonk trap
@@ -27,9 +27,9 @@ end
 
 function GameMode:SpawnTrapForPlayer(name, position, playerid)
     -- make sure we were passed a valid player
-    if not PlayerResource:IsValidTeamPlayer(playerid) then return end
+    if not PlayerResource:IsValidTeamPlayer(playerid) then return nil end
     -- make sure the player is allowed to make a trap here
-    if not GameMode:IsInPlayersGrid(position, playerid) and not GameMode:IsInSharedGrid(position, PlayerResource:GetTeam(playerid)) then return end
+    if not GameMode:IsInPlayersGrid(position, playerid) and not GameMode:IsInSharedGrid(position, PlayerResource:GetTeam(playerid)) then return nil end
 
 
     -- create the trap

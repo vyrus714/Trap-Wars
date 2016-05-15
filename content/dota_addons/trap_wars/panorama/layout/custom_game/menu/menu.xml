@@ -5,6 +5,7 @@
     </styles>
     <scripts>
         <include src="file://{resources}/scripts/custom_game/menu/menu.js" />
+        <include src="file://{resources}/scripts/custom_game/menu/ghost.js" />
     </scripts>
 
 

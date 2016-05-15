@@ -24,7 +24,8 @@ function GetAllNetTableValues( table_name ) {
 
 // set up some panels on UI creation
 $.Schedule(0.1, function() {
-    // set up trap menu
+
+    // *** set up trap menu *** //
     for(var k in npc_traps) {
         // info about this trap, with fallbacks
         var info = {
@@ -50,11 +51,11 @@ $.Schedule(0.1, function() {
         var fake_parent = $("#list1");
         if(!fake_parent) {continue;}
 
-        if(info.class == "c_damage")        {var real_parent = fake_parent.FindChild("column_1");}
-            else if(info.class == "c_stun") {var real_parent = fake_parent.FindChild("column_2");}
-            else if(info.class == "c_slow") {var real_parent = fake_parent.FindChild("column_3");}
-            else if(info.class == "c_move") {var real_parent = fake_parent.FindChild("column_4");}
-            else                            {var real_parent = fake_parent.FindChild("column_5");}
+        if     (info.class == "c_damage") {var real_parent = fake_parent.FindChild("column_1");}
+        else if(info.class == "c_stun"  ) {var real_parent = fake_parent.FindChild("column_2");}
+        else if(info.class == "c_slow"  ) {var real_parent = fake_parent.FindChild("column_3");}
+        else if(info.class == "c_move"  ) {var real_parent = fake_parent.FindChild("column_4");}
+        else                              {var real_parent = fake_parent.FindChild("column_5");}
         if(!real_parent) {continue;}
 
         // now create the panel
@@ -72,10 +73,18 @@ $.Schedule(0.1, function() {
             GameUI.CustomUIConfig().Events.FireEvent("hide_tooltip", {id:a});
             GameUI.CustomUIConfig().Events.FireEvent("hide_tooltip", {id:"help_tooltip"});
         }})(panel.id+"_tooltip"));
+
         // set the action on left click (onactivate)
-        panel.SetPanelEvent("onactivate", (function(a){ return function(){ShowListItem(a);} }(panel.id)) );
+        panel.SetPanelEvent("onactivate", (function(a){ return function(){
+            ShowListItem(a);
+        }}(panel.id)));
         // set the action on right click (oncontextmenu)
-        panel.SetPanelEvent("oncontextmenu", (function(a){ return function(){ShowListItem(a);} }(panel.id)) );  // FIXME: buy trap etc etc
+        panel.SetPanelEvent("oncontextmenu", (function(b){ return function(){
+            GameUI.CustomUIConfig().Events.FireEvent("show_ghost", {
+                //entity: a,
+                name: b
+            });
+        }}(k)));  // FIXME: buy trap etc etc
 
 
         // create the display
@@ -107,7 +116,7 @@ $.Schedule(0.1, function() {
         }
     }
 
-    // Set up creep list
+    // *** Set up creep list *** //
     incr=1;
     for(var k in npc_creeps) {
         // create the panel
@@ -335,7 +344,7 @@ function ShowListItem(item_id) {
         display = list.GetParent().FindChild("display1");
     } else if(list.GetParent().FindChild("display2")) {
         display = list.GetParent().FindChild("display2");
-    } else { return; }
+    } else {return;}
 
 
     // hide all of the children of the display panel

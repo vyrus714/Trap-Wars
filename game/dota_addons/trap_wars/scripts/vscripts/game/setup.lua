@@ -22,9 +22,10 @@ function GameMode:SetupGameMode()
     -- Generic Variables --
     -----------------------
     GameRules.default_lives     = 50
-    GameRules.max_player_grids  = 1 -- FIXME: perhaps add some map\player variability to this
-    GameRules.max_player_creeps = 7 -- FIXME: same as ^^
-    GameRules.UserIDPlayerID    = {}  -- for associating userid's and playerid's for event handling; in OnPlayerConnectFull()
+    GameRules.max_player_grids  = 1    -- FIXME: perhaps add some map\player variability to this
+    GameRules.max_player_creeps = 7    -- FIXME: same as ^^
+    GameRules.UserIDPlayerID    = {}   -- for associating userid's and playerid's for event handling; in OnPlayerConnectFull()
+    GameRules.TileSize          = 128  -- in case we ever need to dynamically change this
 
     ---------------------------------------------
     -- Player Specific Values | key = playerid --
@@ -96,7 +97,8 @@ function GameMode:SetupGameMode()
     CustomNetTables:SetTableValue("trapwars_static_info", "generic", {
         default_lives     = GameRules.default_lives,
         max_player_grids  = GameRules.max_player_grids,
-        max_player_creeps = GameRules.max_player_creeps
+        max_player_creeps = GameRules.max_player_creeps,
+        tile_size         = GameRules.TileSize
     })
 
     for unit_name, info in pairs(GameRules.npc_herocreeps) do CustomNetTables:SetTableValue("trapwars_npc_herocreeps", unit_name, info) end

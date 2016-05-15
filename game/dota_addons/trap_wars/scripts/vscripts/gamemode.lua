@@ -340,7 +340,8 @@ function GameMode:OnBuyTrap(keys)
     local cost = GameRules.npc_traps[keys.name].GoldCost
     if cost and PlayerResource:GetGold(keys.playerid) < cost then return end
 
-
+    -- convert the position from a JS array to a Vector()
+    if type(keys.position) == "table" then keys.position = Vector(keys.position["0"], keys.position["1"], keys.position["2"]) end
     -- attempt to spawn the trap
     local trap = GameMode:SpawnTrapForPlayer(keys.name, keys.position, keys.playerid)
 

@@ -289,21 +289,24 @@ end
 ---------------------------------------------------------------------------
 -- Universal Grid Functions -- tile size: 128^2 -- offset so one tile is centered on (0, 0, 0) to match hammer
 ---------------------------------------------------------------------------
-local tile = 128
-local diagonal = math.sqrt(tile*tile*2)  -- corner to corner distance
+-- FIXME: go over the math in these functions and see if we can switch to full vector operations
+-- corner to corner distance
+local function GetDiagonal()
+    return math.sqrt(GameRules.TileSize*GameRules.TileSize*2)
+end
 
 -- the absolute center of the nearest grid tile to _position_
 function GameMode:GetGridCenter( position )
-    return Vector(   math.floor((position.x+tile/2)/tile)*tile,
-                     math.floor((position.y+tile/2)/tile)*tile,
-                    (math.floor(position.z/tile)+0.5)    *tile  )
+    return Vector(   math.floor((position.x+GameRules.TileSize/2)/GameRules.TileSize)*GameRules.TileSize,
+                     math.floor((position.y+GameRules.TileSize/2)/GameRules.TileSize)*GameRules.TileSize,
+                    (math.floor(position.z/GameRules.TileSize)+0.5)                  *GameRules.TileSize  )
 end
 
 -- x and y are centered, z is floored for practicality
 function GameMode:Get2DGridCenter( position )
-    return Vector(  math.floor((position.x+tile/2)/tile)*tile,
-                    math.floor((position.y+tile/2)/tile)*tile,
-                    math.floor(position.z/tile)         *tile  )
+    return Vector(  math.floor((position.x+GameRules.TileSize/2)/GameRules.TileSize)*GameRules.TileSize,
+                    math.floor((position.y+GameRules.TileSize/2)/GameRules.TileSize)*GameRules.TileSize,
+                    math.floor(position.z/GameRules.TileSize)                       *GameRules.TileSize  )
 end
 
 -- find all units whithin a tile
@@ -311,11 +314,11 @@ function GameMode:FindUnitsInTile( position )
     local position = GameMode:Get2DGridCenter(position)
 
     -- filter out non-npc entities, or entities not in the actual tile square
-    local ents = Entities:FindAllInSphere(position, diagonal/2)
+    local ents = Entities:FindAllInSphere(position, GetDiagonal()/2)
     for k, ent in pairs(ents) do
         local pos = ent:GetAbsOrigin()
-        if ent.IsDeniable == nil or pos.x < position.x-tile/2 or pos.x > position.x+tile/2 or
-                                    pos.y < position.y-tile/2 or pos.y > position.y+tile/2 then
+        if ent.IsDeniable == nil or pos.x < position.x-GameRules.TileSize/2 or pos.x > position.x+GameRules.TileSize/2 or
+                                    pos.y < position.y-GameRules.TileSize/2 or pos.y > position.y+GameRules.TileSize/2 then
             ent[k] = nil
         end
     end
@@ -339,7 +342,7 @@ end
 function GameMode:UnstuckUnitsInTile( position )  -- FIXME: this is not an INFORMATION function, gtfo of this file you imposter!
     local position = GameMode:Get2DGridCenter(position)
 
-    local ents = Entities:FindAllInSphere(position, diagonal/2)
+    local ents = Entities:FindAllInSphere(position, GetDiagonal()/2)
     for _, ent in pairs(ents) do
         if ent.IsDeniable ~= nil then FindClearSpaceForUnit(ent, ent:GetAbsOrigin(), true) end
     end
@@ -347,6 +350,6 @@ end
 
 -- is there an "npc_dota_building" in this tile?
 function GameMode:IsBuildingInTile( position )
-    if Entities:FindByClassnameWithin(nil, "npc_dota_building", GameMode:Get2DGridCenter(position), tile/2) == nil then return false end
+    if Entities:FindByClassnameWithin(nil, "npc_dota_building", GameMode:Get2DGridCenter(position), GameRules.TileSize/2) == nil then return false end
     return true
 end
