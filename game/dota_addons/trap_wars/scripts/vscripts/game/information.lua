@@ -348,8 +348,12 @@ function GameMode:UnstuckUnitsInTile( position )  -- FIXME: this is not an INFOR
     end
 end
 
--- is there an "npc_dota_building" in this tile?
-function GameMode:IsBuildingInTile( position )
-    if Entities:FindByClassnameWithin(nil, "npc_dota_building", GameMode:Get2DGridCenter(position), GameRules.TileSize/2) == nil then return false end
-    return true
+-- is there a trap in this tile?
+function GameMode:IsATrapInTile( position )
+    local entities = Entities:FindAllByClassnameWithin("npc_dota_creature", GameMode:Get2DGridCenter(position), GameRules.TileSize/2)
+    for _, ent in pairs(entities) do
+        if GameRules.npc_traps[ent:GetUnitName()] then return true end
+    end
+
+    return false
 end

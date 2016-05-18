@@ -165,35 +165,35 @@
     }
 
     "npc_trapwars_herocreep_test_01"   {
-        "BaseClass"    "npc_dota_building"
+        "BaseClass"    "npc_dota_creature"
         "Image"        "file://{images}/custom_game/test/one.png"
     }
     "npc_trapwars_herocreep_test_02"   {
-        "BaseClass"    "npc_dota_building"
+        "BaseClass"    "npc_dota_creature"
         "Image"        "file://{images}/custom_game/test/two.png"
     }
     "npc_trapwars_herocreep_test_03"   {
-        "BaseClass"    "npc_dota_building"
+        "BaseClass"    "npc_dota_creature"
         "Image"        "file://{images}/custom_game/test/three.png"
     }
     "npc_trapwars_herocreep_test_04"   {
-        "BaseClass"    "npc_dota_building"
+        "BaseClass"    "npc_dota_creature"
         "Image"        "file://{images}/custom_game/test/four.png"
     }
     "npc_trapwars_herocreep_test_05"   {
-        "BaseClass"    "npc_dota_building"
+        "BaseClass"    "npc_dota_creature"
         "Image"        "file://{images}/custom_game/test/five.png"
     }
     "npc_trapwars_herocreep_test_06"   {
-        "BaseClass"    "npc_dota_building"
+        "BaseClass"    "npc_dota_creature"
         "Image"        "file://{images}/custom_game/test/six.png"
     }
     "npc_trapwars_herocreep_test_07"   {
-        "BaseClass"    "npc_dota_building"
+        "BaseClass"    "npc_dota_creature"
         "Image"        "file://{images}/custom_game/test/seven.png"
     }
     "npc_trapwars_herocreep_test_08"   {
-        "BaseClass"    "npc_dota_building"
+        "BaseClass"    "npc_dota_creature"
         "Image"        "file://{images}/custom_game/test/eight.png"
     }
 

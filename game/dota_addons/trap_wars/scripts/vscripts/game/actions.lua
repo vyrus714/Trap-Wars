@@ -4,7 +4,7 @@ function GameMode:SpawnTrap(name, position, team, owner)
     -- make sure this is a valid trap
     if not GameRules.npc_traps[name] then return nil end
     -- make sure there's no building here already
-    if GameMode:IsBuildingInTile(position) then return nil end
+    if GameMode:IsATrapInTile(position) then return nil end
     -- make sure it's a valid team
     if team < DOTA_TEAM_FIRST or DOTA_TEAM_CUSTOM_MAX < team then return nil end
 

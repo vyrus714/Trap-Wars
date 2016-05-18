@@ -9,7 +9,7 @@
     {
         // General
         //----------------------------------------------------------------
-        "BaseClass"                 "npc_dota_building"
+        "BaseClass"                 "npc_dota_creature"
         "UnitLabel"                 "npc_trapwars_floor_spikes"
         "Model"                     "models/traps/spiketrap/spiketrap.vmdl"
         "ModelScale"                "0.46"
@@ -110,7 +110,7 @@
     {
         // General
         //----------------------------------------------------------------
-        "BaseClass"                 "npc_dota_building"
+        "BaseClass"                 "npc_dota_creature"
         "UnitLabel"                 "npc_trapwars_fire_vent"
         "Model"                     "models/props_structures/grate001.vmdl"
         "ModelScale"                "0.6"
@@ -207,41 +207,41 @@
     }
 
     "npc_trapwars_trap_test_01"   {
-        "BaseClass"    "npc_dota_building"
+        "BaseClass"    "npc_dota_creature"
         "Image"        "file://{images}/custom_game/test/one.png"
     }
     "npc_trapwars_trap_test_02"   {
-        "BaseClass"    "npc_dota_building"
+        "BaseClass"    "npc_dota_creature"
         "Image"        "file://{images}/custom_game/test/two.png"
         "Class"        "c_damage"
     }
     "npc_trapwars_trap_test_03"   {
-        "BaseClass"    "npc_dota_building"
+        "BaseClass"    "npc_dota_creature"
         "Image"        "file://{images}/custom_game/test/three.png"
         "Class"        "c_heal"
     }
     "npc_trapwars_trap_test_04"   {
-        "BaseClass"    "npc_dota_building"
+        "BaseClass"    "npc_dota_creature"
         "Image"        "file://{images}/custom_game/test/four.png"
         "Class"        "c_stun"
     }
     "npc_trapwars_trap_test_05"   {
-        "BaseClass"    "npc_dota_building"
+        "BaseClass"    "npc_dota_creature"
         "Image"        "file://{images}/custom_game/test/five.png"
         "Class"        "c_slow"
     }
     "npc_trapwars_trap_test_06"   {
-        "BaseClass"    "npc_dota_building"
+        "BaseClass"    "npc_dota_creature"
         "Image"        "file://{images}/custom_game/test/six.png"
         "Class"        "c_move"
     }
     "npc_trapwars_trap_test_07"   {
-        "BaseClass"    "npc_dota_building"
+        "BaseClass"    "npc_dota_creature"
         "Image"        "file://{images}/custom_game/test/seven.png"
         "Class"        "c_heavy"
     }
     "npc_trapwars_trap_test_08"   {
-        "BaseClass"    "npc_dota_building"
+        "BaseClass"    "npc_dota_creature"
         "Image"        "file://{images}/custom_game/test/eight.png"
         "Class"        "c_rush"
     }
