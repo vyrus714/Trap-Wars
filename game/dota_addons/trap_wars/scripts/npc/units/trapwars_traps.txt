@@ -91,7 +91,7 @@
 
         // TrapWars Creep Info
         //----------------------------------------------------------------
-        "Image"                     "file://{images}/custom_game/traps/spiketrap_spikes.png"
+        "Image"                     "file://{images}/custom_game/traps/floor_spikes.png"
         "Class"                     "c_damage"
         "GoldCost"                  "8216"
         "modifiers"
@@ -204,6 +204,60 @@
         // LUA AI function
         //----------------------------------------------------------------
         "vscripts"                  "unit_scripts/firevent.lua"
+    }
+
+    "npc_trapwars_barricade"
+    {
+        // General
+        //----------------------------------------------------------------
+        "BaseClass"                 "npc_dota_creature"
+        "UnitLabel"                 "npc_trapwars_barricade"
+        "Model"                     "models/props_debris/wood_fence001g.vmdl"
+        "ModelScale"                "1.0"
+        "Level"                     "1"
+        "HasInventory"              "1"
+
+        // Armor
+        //----------------------------------------------------------------
+        "ArmorPhysical"             "1"         // Physical protection.
+        "MagicalResistance"         "20"        // Magical protection.
+
+
+        // Abilities
+        //----------------------------------------------------------------
+        "Ability1"                  "barricade_add_sides"
+
+        // Bounds
+        //----------------------------------------------------------------
+        "BoundsHullName"            "DOTA_HULL_SIZE_SMALL"
+        "RingRadius"                "64"
+        "HealthBarOffset"           "200"        // -1 means use the models
+
+        // Movement
+        //----------------------------------------------------------------
+        "MovementCapabilities"      "DOTA_UNIT_CAP_MOVE_NONE"
+        "MovementSpeed"             "0"         // Speed
+        "MovementTurnRate"          "0"         // Turning rate.
+
+        // Status
+        //----------------------------------------------------------------
+        "StatusHealth"              "400"       // Base health.
+        "StatusHealthRegen"         "8"         // Health regeneration rate.
+        
+        // Vision
+        //----------------------------------------------------------------
+        "VisionDaytimeRange"        "384"       // Range of vision during day light.
+        "VisionNighttimeRange"      "384"       // Range of vision at night time.
+
+        // Team
+        //----------------------------------------------------------------
+        "CombatClassDefend"         "DOTA_COMBAT_CLASS_DEFEND_STRUCTURE"
+
+        // TrapWars Creep Info
+        //----------------------------------------------------------------
+        "Image"                     "file://{images}/custom_game/traps/barricade.png"
+        "Class"                     "c_move"
+        "GoldCost"                  "100"
     }
 
     "npc_trapwars_trap_test_01"   {

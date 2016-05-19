@@ -247,4 +247,39 @@
         }
 
     }
+
+    "barricade_add_sides"
+    {
+        "BaseClass"              "ability_datadriven"
+        "AbilityBehavior"        "DOTA_ABILITY_BEHAVIOR_HIDDEN"
+        "MaxLevel"               "1"
+        "RequiredLevel"          "-1"
+
+        "Modifiers"
+        {
+            "barricade_builder"
+            {
+                "Passive"          "1"
+                "IsHidden"         "1"
+
+                "OnCreated"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"        "ability_scripts/barricade_add_sides.lua"
+                        "Function"          "OnCreated"
+                    }
+                }
+
+                "OnDestroy"
+                {
+                    "RunScript"
+                    {
+                        "ScriptFile"        "ability_scripts/barricade_add_sides.lua"
+                        "Function"          "OnDestroy"
+                    }
+                }
+            }
+        }
+    }
 }
