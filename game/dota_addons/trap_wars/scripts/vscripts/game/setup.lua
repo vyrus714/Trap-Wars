@@ -6,8 +6,6 @@ function GameMode:SetupGameMode()
     ---------------------------
     -- Unit and Ability Data --
     ---------------------------
-    GameRules.npc_units_custom = {}  --FIXME: in process of removationationating
-
     GameRules.npc_herocreeps = LoadKeyValues("scripts/npc/units/trapwars_hero_creeps.txt")
     GameRules.npc_lanecreeps = LoadKeyValues("scripts/npc/units/trapwars_lane_creeps.txt")
     GameRules.npc_traps      = LoadKeyValues("scripts/npc/units/trapwars_traps.txt")

@@ -243,75 +243,32 @@ function GameMode:OnGameInProgress()
     ----------------------------------------------
     --               Creep Waves                --
     ----------------------------------------------
-    --[[local level, pool, wave = 0, {}, {1}
+    local CreepLevel = 1
+    local SpawnDelay = 8
+    local DelaySpacer = 0
+
     Timers:CreateTimer(function()
-        local gameTime = math.floor(GameRules:GetDOTATime(false, false))
+        -- get a random delay time between 0.55 - 1.45 times the current SpawnDelay
+        local actual_delay = SpawnDelay * RandomFloat(0.55, 1.45)
+        local left_over_time = SpawnDelay - actual_delay
+        actual_delay = actual_delay + DelaySpacer
+        DelaySpacer = left_over_time
 
-        -- every 2 minutes
-        if gameTime % 240 == 0 then
-            -- add a new slot to the creep wave
-            wave[#wave+1] = true
+        -- over 30 minutes scale the creep level and delay between creep spawns
+        local GameTime = math.floor(GameRules:GetDOTATime(false, false))
+        if GameTime < 1800 then
+            CreepLevel = math.floor(GameTime/120) + 1
+            SpawnDelay = 8 - (6/1800)*GameTime
+        else
+            if CreepLevel ~= 16 then CreepLevel=16 end
+            if SpawnDelay ~= 2 then SpawnDelay=2 end
         end
 
-        -- every minute
-        if gameTime % 60 == 0 then
-            -- increase the creep level by 1 (cap at 18)
-            if level < 18 then level=level+1 end
-            -- recalculate the creep pool to include the current level + 5 levels under it
-            pool = {}
-            for i=0, 5 do
-                if GameRules.npc_lanecreeps[level-i] ~= nil then
-                    for _, name in pairs(GameRules.npc_lanecreeps[level-i]) do
-                        table.insert(pool, name)
-                    end
-                end
-            end
-        end
+        -- spawn the creeps
+        GameMode:SpawnLaneCreeps(CreepLevel-5, CreepLevel)
 
-        -- every 20 seconds
-        if gameTime % 20 == 0 then
-            -- get new random creep wave
-            for key, _ in pairs(wave) do
-                -- add a random creep from the available pool to the creep wave
-                wave[key] = pool[RandomInt(1, #pool)]
-            end
-
-            -- spawn creepwaves
-            for team, spawners in pairs(GameRules.team_spawners) do
-                for _, eid in pairs(spawners) do
-
-                    local spawner = EntIndexToHScript(eid)
-                    for _, name in pairs(wave) do
-                        -- create the creep
-                        local creep = CreateUnitByName(name, spawner:GetAbsOrigin(), true, nil, nil, team)
-                        -- precache the unit (if it hasn't been already)
-                        if GameRules.npc_units_custom[name]._IsPrecached == nil then
-                            GameRules.npc_units_custom[name]._IsPrecached = true
-                            PrecacheUnitByNameAsync(name, function()end)
-                        end
-                        -- add attachments
-                        if GameRules.npc_units_custom[name].Attachments ~= nil then
-                            creep.attachments = {}
-                            for attach_point, models in pairs(GameRules.npc_units_custom[name].Attachments) do
-                                for model, properties in pairs(models) do
-                                    local prop = Attachments:AttachProp(creep, attach_point, model, properties.scale, properties)
-                                    table.insert(creep.attachments, prop)
-                                end
-                            end
-                        end
-                        -- execute attack move order  FIXME, needs waypoints unfortunatley
-                        ExecuteOrderFromTable{
-                            UnitIndex = creep:entindex(),
-                            OrderType = DOTA_UNIT_ORDER_ATTACK_MOVE,
-                            Position  = spawner:GetRootMoveParent():GetAbsOrigin(),
-                            Queue     = true }
-                    end
-                end
-            end
-        end
-
-        return 1  -- check every second, just to be sure
-    end)]]
+        return actual_delay
+    end)
 
     ----------------------------------------------
     --              Creep Heroes                --
