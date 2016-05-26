@@ -3,6 +3,13 @@
 {
 	"Version"		"1"
 
+    // an ability with a transparent icon, so i can use it as the default DOTAAbilityImage ability param
+    "transparent_ability_icon"
+    {
+        "BaseClass"              "ability_datadriven"
+        "AbilityTextureName"     "transparent_ability_icon"
+    }
+
     "floor_spikes_activate"
     {
         // General  

@@ -16,10 +16,10 @@
             </Panel>
 
             <Panel id="skills" class="display_info_skill_container">
-                <DOTAAbilityImage  id="skill_1" class="display_info_skill" />
-                <DOTAAbilityImage  id="skill_2" class="display_info_skill" />
-                <DOTAAbilityImage  id="skill_3" class="display_info_skill" />
-                <DOTAAbilityImage  id="skill_4" class="display_info_skill" />
+                <DOTAAbilityImage  id="skill_1" class="display_info_skill" abilityname="transparent_ability_icon" />
+                <DOTAAbilityImage  id="skill_2" class="display_info_skill" abilityname="transparent_ability_icon" />
+                <DOTAAbilityImage  id="skill_3" class="display_info_skill" abilityname="transparent_ability_icon" />
+                <DOTAAbilityImage  id="skill_4" class="display_info_skill" abilityname="transparent_ability_icon" />
             </Panel>
         </Panel>
     </Panel>
