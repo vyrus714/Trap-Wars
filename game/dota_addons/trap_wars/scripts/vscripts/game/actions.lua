@@ -1,6 +1,9 @@
 local GameMode = GameRules.GameMode
 
 function GameMode:SpawnTrap(name, position, team, owner)
+    -- clamp the position to the ground   FIXME: if i plan on doing multi-story high traps, needs changing
+    position = GetGroundPosition(position, nil)
+
     -- make sure this is a valid trap
     if not GameRules.npc_traps[name] then return nil end
     -- make sure there's no building here already
