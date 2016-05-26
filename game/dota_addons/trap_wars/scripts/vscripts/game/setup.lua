@@ -25,10 +25,11 @@ function GameMode:SetupGameMode()
     -- Generic Variables --
     -----------------------
     GameRules.default_lives     = 50
+    GameRules.TileSize          = 128  -- in case we ever need to dynamically change this
+    GameRules.build_distance    = 512  -- minimum distance between the player and the desired tile to be able to build on said tile
     GameRules.max_player_grids  = 1    -- FIXME: perhaps add some map\player variability to this
     GameRules.max_player_creeps = 7    -- FIXME: same as ^^
     GameRules.UserIDPlayerID    = {}   -- for associating userid's and playerid's for event handling; in OnPlayerConnectFull()
-    GameRules.TileSize          = 128  -- in case we ever need to dynamically change this
 
     ---------------------------------------------
     -- Player Specific Values | key = playerid --
@@ -99,9 +100,10 @@ function GameMode:SetupGameMode()
     CustomNetTables:SetTableValue("trapwars_static_info", "valid_teams", GameRules.valid_teams)
     CustomNetTables:SetTableValue("trapwars_static_info", "generic", {
         default_lives     = GameRules.default_lives,
+        tile_size         = GameRules.TileSize,
+        build_distance    = GameRules.build_distance,
         max_player_grids  = GameRules.max_player_grids,
-        max_player_creeps = GameRules.max_player_creeps,
-        tile_size         = GameRules.TileSize
+        max_player_creeps = GameRules.max_player_creeps
     })
 
     for unit_name, info in pairs(GameRules.npc_herocreeps) do CustomNetTables:SetTableValue("trapwars_npc_herocreeps", unit_name, info) end

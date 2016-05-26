@@ -309,27 +309,44 @@ function GameMode:OnEntityKilled(keys)
 end
 
 function GameMode:OnBuyTrap(keys)
-    -- if the player can't afford the trap, return
-    local cost = GameRules.npc_traps[keys.name].GoldCost
-    if cost and PlayerResource:GetGold(keys.playerid) < cost then return end
-
-    -- convert the position from a JS array to a Vector()
+    -- if the position is a JS array, convert to a Vector()
     if type(keys.position) == "table" then keys.position = Vector(keys.position["0"], keys.position["1"], keys.position["2"]) end
-    -- attempt to spawn the trap
-    local trap = GameMode:SpawnTrapForPlayer(keys.name, keys.position, keys.playerid)
+
+    -- success value
+    local green_light = true
 
 
-    -- handle success or failure
-    if trap then
-        -- remove gold\resources
-        if cost then PlayerResource:SpendGold(keys.playerid, cost, DOTA_ModifyGold_PurchaseItem) end
+    -- only allow trap buying when the player is alive
+    if not PlayerResource:GetSelectedHeroEntity(keys.playerid):IsAlive() then green_light=false end
 
-        -- play success sound
-        CustomGameEventManager:Send_ServerToPlayer(PlayerResource:GetPlayer(keys.playerid), "trapwars_sound_event", {sound="General.Buy"})
-    else
-        -- play failure sound
-        CustomGameEventManager:Send_ServerToPlayer(PlayerResource:GetPlayer(keys.playerid), "trapwars_sound_event", {sound="General.Cancel"})
+    -- make sure the player can afford this trap
+    local cost = GameRules.npc_traps[keys.name].GoldCost
+    if cost and PlayerResource:GetGold(keys.playerid) < cost then green_light=false end
+
+    -- check to make sure the player is within range of the tile they are trying to build on
+    local length = (GameMode:Get2DGridCenter(keys.position) - PlayerResource:GetSelectedHeroEntity(keys.playerid):GetAbsOrigin()):Length2D()
+    if GameRules.build_distance < length then green_light=false end
+
+
+
+    -- if we're allowed to make the trap
+    if green_light then
+        -- attempt to spawn the trap
+        local trap = GameMode:SpawnTrapForPlayer(keys.name, keys.position, keys.playerid)
+
+        -- if (and only if) we made the trap, spend the gold and return
+        if trap then
+            -- remove gold
+            if cost then PlayerResource:SpendGold(keys.playerid, cost, DOTA_ModifyGold_PurchaseItem) end
+            -- play success sound
+            CustomGameEventManager:Send_ServerToPlayer(PlayerResource:GetPlayer(keys.playerid), "trapwars_sound_event", {sound="General.Buy"})
+            -- exit
+            return
+        end
     end
+
+    -- we're not allowed, or trap creation failed  -  play failure sound
+    CustomGameEventManager:Send_ServerToPlayer(PlayerResource:GetPlayer(keys.playerid), "trapwars_sound_event", {sound="General.Cancel"})
 end
 
 function GameMode:OnBuyCreep(keys)
