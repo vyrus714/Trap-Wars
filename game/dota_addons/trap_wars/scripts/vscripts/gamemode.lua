@@ -279,7 +279,7 @@ function GameMode:OnGameInProgress()
     FireGameEvent( "show_center_message", {message="Begin!", duration=3} )
 end
 
-function GameMode:OnNPCSpawned( keys )
+function GameMode:OnNPCSpawned(keys)
     local npc = EntIndexToHScript(keys.entindex)
 
     -- when a hero first spawns
@@ -289,6 +289,22 @@ function GameMode:OnNPCSpawned( keys )
         npc:AddItemByName("item_force_staff")
         npc:AddItemByName("item_blink")
         npc:AddItemByName("item_ultimate_scepter")
+    end
+end
+
+function GameMode:OnEntityKilled(keys)
+    local entity = EntIndexToHScript(keys.entindex_killed)
+
+    -- if it is a derivative of CDOTA_BaseNPC
+    if entity.GetUnitName then
+        -- if it's a trap
+        if GameRules.npc_traps[entity:GetUnitName()] then
+            -- traps will mostly be removed via the ui, so they need to be removed faster than normal
+            -- for traps that do have health, particles will be used in place of death animations anyway
+            Timers:CreateTimer(1, function()  -- give any other functions 1 second to refer to this, then remove it
+                entity:RemoveSelf()
+            end)
+        end
     end
 end
 
@@ -355,7 +371,7 @@ end
 end  ]]
 
 -- this updates the score and determines win/loss
-function GameMode:OnTrapWarsScoreUpdated( keys )  --FIXME: remove this as well
+function GameMode:OnTrapWarsScoreUpdated(keys)  --FIXME: remove this as well
     if true then return end  -- FIXME disabled the win condition for testing
     -- keys.team           team id #
     -- keys.delta_score    desired change in score
@@ -381,7 +397,7 @@ function GameMode:OnTrapWarsScoreUpdated( keys )  --FIXME: remove this as well
 end
 
 -- modify some player's dummy unit
-function GameMode:OnTrapWarsModifyDummy( keys )  --FIXME: remove, not using (probably)
+function GameMode:OnTrapWarsModifyDummy(keys)  --FIXME: remove, not using (probably)
     if not keys.entid then return end             -- no entity id, no deal
     
     local entity = EntIndexToHScript(keys.entid)  -- no entity BY that id? also no deal!
@@ -398,7 +414,7 @@ function GameMode:OnTrapWarsModifyDummy( keys )  --FIXME: remove, not using (pro
 end
 
 -- FIXME test function when test panel buttons are pressed
-function GameMode:OnTestButton( keys )
+function GameMode:OnTestButton(keys)
     if keys.id == 1 then
         --print("LUA: "..keys.id)
         local hero = PlayerResource:GetSelectedHeroEntity(0)
