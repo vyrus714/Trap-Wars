@@ -26,7 +26,7 @@ function GameMode:SetupGameMode()
     -----------------------
     GameRules.default_lives     = 50
     GameRules.TileSize          = 128  -- in case we ever need to dynamically change this
-    GameRules.build_distance    = 512  -- minimum distance between the player and the desired tile to be able to build on said tile
+    GameRules.build_distance    = 768  -- minimum distance between the player and the desired tile to be able to build on said tile
     GameRules.max_player_grids  = 1    -- FIXME: perhaps add some map\player variability to this
     GameRules.max_player_creeps = 7    -- FIXME: same as ^^
     GameRules.UserIDPlayerID    = {}   -- for associating userid's and playerid's for event handling; in OnPlayerConnectFull()

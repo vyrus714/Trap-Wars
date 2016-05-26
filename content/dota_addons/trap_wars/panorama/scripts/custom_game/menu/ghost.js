@@ -46,9 +46,10 @@ function UpdateGhost() {
         // get the mouse world coordinates
         var position = GameUI.GetScreenWorldPosition(GameUI.GetCursorPosition());
         // align this position to the grid
-        position = [ Math.floor((position[0]+tile_size/2)/tile_size)*tile_size,
-                     Math.floor((position[1]+tile_size/2)/tile_size)*tile_size,
-                     Math.floor(position[2]/tile_size)              *tile_size  ];
+        //position = [ Math.floor((position[0]+tile_size/2)/tile_size)*tile_size,
+        //             Math.floor((position[1]+tile_size/2)/tile_size)*tile_size,
+        //             Math.floor(position[2]/tile_size)              *tile_size  ];
+        position = GetTileCenter(position);
 
         // move the particle to this position
         Particles.SetParticleControl(GameUI.CustomUIConfig().Ghost, 0, position);
@@ -64,14 +65,7 @@ function UpdateGhost() {
 GameUI.SetMouseCallback(OnMouseEvent);
 function OnMouseEvent(type, key_id) {
     if(type == "pressed" && GameUI.CustomUIConfig().Ghost) {
-        if(key_id == 1) {
-            // hide the ghost
-            GameUI.CustomUIConfig().Events.FireEvent("hide_ghost", {});
-
-            // consume the mouse event
-            return true;
-        }
-
+        // left click
         if(key_id == 0) {
             // send the purchase event to the server
             GameEvents.SendCustomGameEventToServer("trapwars_buy_trap", {
@@ -80,10 +74,50 @@ function OnMouseEvent(type, key_id) {
                 position : GameUI.GetScreenWorldPosition(GameUI.GetCursorPosition())
             });
 
+            // begin a mouse drag event
+            $.Schedule(1/60, function() { DragEvent(GetTileCenter(GameUI.GetScreenWorldPosition(GameUI.GetCursorPosition()))); });
+
+            // consume the mouse event
+            return true;
+        }
+
+        // right click
+        if(key_id == 1) {
+            // hide the ghost
+            GameUI.CustomUIConfig().Events.FireEvent("hide_ghost", {});
+
             // consume the mouse event
             return true;
         }
     }
+}
+
+function DragEvent(last_tile_position) {
+    if(!GameUI.IsMouseDown(0)) { return; }
+
+    // current tile the mouse is hovering over
+    var current_tile_position = GetTileCenter(GameUI.GetScreenWorldPosition(GameUI.GetCursorPosition()));
+
+    // if last_position and our current mouse world position are in different tiles, send a new buy event
+    if(last_tile_position[0] != current_tile_position[0] || last_tile_position[1] != current_tile_position[1]) {
+        // send the purchase event to the server
+        GameEvents.SendCustomGameEventToServer("trapwars_buy_trap", {
+            name     : current_item_name,
+            playerid : Players.GetLocalPlayer(),
+            position : current_tile_position
+        });
+    }
+
+    // keep on chugging
+    $.Schedule(1/60, (function(a) {  return function(){DragEvent(a);}  })(current_tile_position));
+}
+
+function GetTileCenter(position) {
+    return [
+        Math.floor((position[0]+tile_size/2)/tile_size)*tile_size,
+        Math.floor((position[1]+tile_size/2)/tile_size)*tile_size,
+        Math.floor(position[2]/tile_size)              *tile_size
+    ];
 }
 
 

@@ -320,7 +320,8 @@ function GameMode:OnBuyTrap(keys)
     if not PlayerResource:GetSelectedHeroEntity(keys.playerid):IsAlive() then green_light=false end
 
     -- make sure the player can afford this trap
-    local cost = GameRules.npc_traps[keys.name].GoldCost
+    local cost
+    if GameRules.npc_traps[keys.name] then cost=GameRules.npc_traps[keys.name].GoldCost end
     if cost and PlayerResource:GetGold(keys.playerid) < cost then green_light=false end
 
     -- check to make sure the player is within range of the tile they are trying to build on
