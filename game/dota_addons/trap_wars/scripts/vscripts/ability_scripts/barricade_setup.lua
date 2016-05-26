@@ -1,38 +1,93 @@
 function OnCreated(keys)
     Timers:CreateTimer(1/30, function()
         local tilesize = GameRules.TileSize or 128
-        local e1p = keys.caster:GetAbsOrigin()
+        --local caster_pos = keys.caster:GetAbsOrigin()
+        local caster_pos = GameRules.GameMode:Get2DGridCenter(keys.caster:GetAbsOrigin())
         local offset = Vector(0, 0, 60) -- offset for the fence posts
 
         -- add the gridnav blocker
-        local blocker = SpawnEntityFromTableSynchronous("point_simple_obstruction", {origin=e1p})
+        local blocker = SpawnEntityFromTableSynchronous("point_simple_obstruction", {origin=caster_pos})
         keys.caster.blocker = blocker:GetEntityIndex()
         -- reset the entity's position after the blocker is placed  (and slide it down, since the model is a bit tall)
-        keys.caster:SetAbsOrigin(e1p - offset)
+        keys.caster:SetAbsOrigin(caster_pos - offset)
 
         -- give our fence post a random yaw
         keys.caster:SetForwardVector(RandomVector(1))
 
+        -- do a precursory removal of any diagonal fencing around this tile (very annoying that it had to come to this)
+        local diagonal_spots = {
+            caster_pos + Vector(tilesize/2, tilesize/2, 0),
+            caster_pos + Vector(tilesize/2, -tilesize/2, 0),
+            caster_pos + Vector(-tilesize/2, tilesize/2, 0),
+            caster_pos + Vector(-tilesize/2, -tilesize/2, 0)
+        }
+        for _, pos in pairs(diagonal_spots) do
+            for _, ent in pairs(Entities:FindAllByClassnameWithin("prop_dynamic", pos, tilesize/4)) do
+                if ent:GetModelName() == "models/props_debris/wood_fence002.vmdl" then ent:Kill() end
+            end
+        end
 
-        -- find other fence posts in the adjacent tiles and add fencing between them
-        for _, entity in pairs(Entities:FindAllByClassnameWithin("npc_dota_creature", keys.caster:GetAbsOrigin(), tilesize+1)) do
-            if entity.GetUnitName and entity:GetUnitName() == "npc_trapwars_barricade" and entity ~= keys.caster and entity:IsAlive() then
-                -- new entity position
-                local e2p = entity:GetAbsOrigin() + offset
+        -- very specifically ordered list of positions to check around this entity
+        local check_positions = {
+            caster_pos + Vector(         0,   tilesize+1, 0),
+            caster_pos + Vector(tilesize+1,   tilesize+1, 0),
+            caster_pos + Vector(tilesize+1,            0, 0),
+            caster_pos + Vector(tilesize+1,  -tilesize-1, 0),
+            caster_pos + Vector(          0, -tilesize-1, 0),
+            caster_pos + Vector(-tilesize-1, -tilesize-1, 0),
+            caster_pos + Vector(-tilesize-1,           0, 0),
+            caster_pos + Vector(-tilesize-1,  tilesize+1, 0)
+        }
 
-                -- find the middle of the two fence posts
-                local midpoint = e1p - (e1p-e2p)/2
+        -- find other barricades around this one at said positions
+        local found_entities = {}
+        for i, pos in pairs(check_positions) do
+            for _, ent in pairs(Entities:FindAllByClassnameWithin("npc_dota_creature", pos, tilesize/2)) do
+                if ent.GetUnitName and ent:GetUnitName() == "npc_trapwars_barricade" and ent:IsAlive() then
+                    found_entities[i] = ent
+                    break;
+                end
+            end
+        end
 
-                -- add in the fencing between them
-                local fencing = Entities:CreateByClassname("prop_dynamic")
-                fencing:SetAbsOrigin(midpoint)
-                fencing:SetModel("models/props_debris/wood_fence002.vmdl")
-                fencing:SetModelScale(0.8)
+        -- add the fencing between them (odd=horizontal\vertical, even=diagonal)
+        for i=1, 8 do
+            if found_entities[i] then
+                local add_fencing = false
 
-                -- align the fencing
-                local randDir = 1
-                if RandomInt(0, 1) > 0 then randDir = -1 end
-                fencing:SetForwardVector(randDir*(e1p-e2p))
+                -- if it's an odd tile (horizontal\vertical), always add
+                if (i+1)%2 == 0 then
+                    add_fencing = true
+
+                -- if it's an even tile (diagonal), add only if there isn't any even tiles next to it
+                else
+                    if i == 1 then
+                        if not found_entities[8] and not found_entities[i+1] then add_fencing=true end
+                    elseif i == 8 then
+                        if not found_entities[i-1] and not found_entities[1] then add_fencing=true end
+                    elseif not found_entities[i-1] and not found_entities[i+1] then add_fencing=true end
+                end
+
+
+                if add_fencing then
+                    Timers:CreateTimer(1/15, function()
+                        -- new entity position
+                        local ent_pos = found_entities[i]:GetAbsOrigin() + offset
+
+                        -- add in the fencing between them
+                        local fencing = Entities:CreateByClassname("prop_dynamic")
+                        fencing:SetAbsOrigin(caster_pos - (caster_pos-ent_pos)/2)
+
+                        -- set the fencing model
+                        fencing:SetModel("models/props_debris/wood_fence002.vmdl")
+                        fencing:SetModelScale(0.8)
+
+                        -- align the fencing
+                        local rand = 1
+                        if RandomInt(0, 1) > 0 then rand = -1 end
+                        fencing:SetForwardVector(rand*(caster_pos-ent_pos))
+                    end)
+                end
             end
         end
     end)
@@ -42,11 +97,11 @@ function OnDestroy(keys)
     local tilesize = GameRules.TileSize or 128
 
     -- remove the gridnav blocker
-    local blocker = EntIndexToHScript(keys.caster.blocker)
+    local blocker = EntIndexToHScript(keys.caster.blocker or -1)
     if blocker then blocker:RemoveSelf() end
 
     -- find and remove all of the fencing around this fence post
-    for _, ent in pairs(Entities:FindAllByClassnameWithin("prop_dynamic", keys.caster:GetAbsOrigin(), tilesize/2+1)) do
+    for _, ent in pairs(Entities:FindAllByClassnameWithin("prop_dynamic", keys.caster:GetAbsOrigin(), math.sqrt(2*(tilesize*tilesize))/2+1)) do
         if ent:GetModelName() == "models/props_debris/wood_fence002.vmdl" then ent:Kill() end
     end
 
