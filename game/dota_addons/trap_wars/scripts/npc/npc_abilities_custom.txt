@@ -255,7 +255,7 @@
 
     }
 
-    "barricade_add_sides"
+    "barricade_setup"
     {
         "BaseClass"              "ability_datadriven"
         "AbilityBehavior"        "DOTA_ABILITY_BEHAVIOR_HIDDEN"
@@ -264,16 +264,22 @@
 
         "Modifiers"
         {
-            "barricade_builder"
+            "barricade_setup_modifier"
             {
                 "Passive"          "1"
                 "IsHidden"         "1"
 
                 "OnCreated"
                 {
+                    "ApplyModifier"
+                    {
+                        "Target"            "CASTER"
+                        "ModifierName"      "modifier_hide_healthbar_when_damaged"
+                    }
+
                     "RunScript"
                     {
-                        "ScriptFile"        "ability_scripts/barricade_add_sides.lua"
+                        "ScriptFile"        "ability_scripts/barricade_setup.lua"
                         "Function"          "OnCreated"
                     }
                 }
@@ -282,11 +288,13 @@
                 {
                     "RunScript"
                     {
-                        "ScriptFile"        "ability_scripts/barricade_add_sides.lua"
+                        "ScriptFile"        "ability_scripts/barricade_setup.lua"
                         "Function"          "OnDestroy"
                     }
                 }
             }
         }
     }
+
+
 }

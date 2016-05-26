@@ -4,6 +4,11 @@ function GameMode:SetupGameMode()
     print('[Trap Wars] Setting up Game Mode ...')
 
     ---------------------------
+    -- Include Lua Modifiers --
+    ---------------------------
+    require("modifier_scripts/modifier_hide_healthbar_when_damaged")
+
+    ---------------------------
     -- Unit and Ability Data --
     ---------------------------
     GameRules.npc_herocreeps = LoadKeyValues("scripts/npc/units/trapwars_hero_creeps.txt")

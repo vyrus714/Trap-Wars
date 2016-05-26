@@ -225,13 +225,13 @@
 
         // Abilities
         //----------------------------------------------------------------
-        "Ability1"                  "barricade_add_sides"
+        "Ability1"                  "barricade_setup"
 
         // Bounds
         //----------------------------------------------------------------
         "BoundsHullName"            "DOTA_HULL_SIZE_SMALL"
         "RingRadius"                "64"
-        "HealthBarOffset"           "200"        // -1 means use the models
+        "HealthBarOffset"           "160"        // -1 means use the models
 
         // Movement
         //----------------------------------------------------------------
