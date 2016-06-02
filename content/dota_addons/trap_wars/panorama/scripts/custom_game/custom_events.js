@@ -28,7 +28,7 @@ GameUI.CustomUIConfig().Events.SubscribeEvent = function(eventName, callbackFunc
 
     // return the index in case we want to look up said function and remove it
     return i;
-}
+};
 
 GameUI.CustomUIConfig().Events.UnSubscribeEvent = function(eventName, eventIndex) {
     var Events = GameUI.CustomUIConfig().Events;
@@ -39,7 +39,7 @@ GameUI.CustomUIConfig().Events.UnSubscribeEvent = function(eventName, eventIndex
     Events[eventName][eventIndex] = undefined;
 
     return true;
-}
+};
 
 GameUI.CustomUIConfig().Events.FireEvent = function(eventName, args) {
     var Events = GameUI.CustomUIConfig().Events;
@@ -52,4 +52,4 @@ GameUI.CustomUIConfig().Events.FireEvent = function(eventName, args) {
     }
 
     return true;
-}
+};
