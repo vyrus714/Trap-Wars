@@ -3,16 +3,16 @@
 
     <Panel class="display_item">
         <Panel class="display_bar_container">
-            <Panel class="display_info_health"><Label id="health" class="display_info_bar_text" /></Panel>
+            <Panel class="display_info_health dim_panel"><Label id="health" class="display_info_bar_text" /></Panel>
             <Panel class="bar_spacer" />
-            <Panel class="display_info_mana"><Label id="mana" class="display_info_bar_text" /></Panel>
+            <Panel class="display_info_mana   dim_panel"><Label id="mana"   class="display_info_bar_text" /></Panel>
         </Panel>
 
         <Panel class="display_info">
             <Panel class="display_info_stats">
-                <Panel class="display_info_damage"><Label id="damage" class="display_info_damage_text" /></Panel>
-                <Panel class="display_info_armor"><Label id="armor" class="display_info_armorspeed_text" /></Panel>
-                <Panel class="display_info_speed"><Label id="speed" class="display_info_armorspeed_text" /></Panel>
+                <Panel class="display_info_damage dim_panel"><Label id="damage" class="display_info_damage_text"     /></Panel>
+                <Panel class="display_info_armor  dim_panel"><Label id="armor"  class="display_info_armorspeed_text" /></Panel>
+                <Panel class="display_info_speed  dim_panel"><Label id="speed"  class="display_info_armorspeed_text" /></Panel>
             </Panel>
 
             <Panel id="skills" class="display_info_skill_container">

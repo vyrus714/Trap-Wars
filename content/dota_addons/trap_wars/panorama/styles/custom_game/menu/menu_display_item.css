@@ -132,3 +132,9 @@
     border-radius: 4px;
     box-shadow: inset #000000dd 1px 1px 2px 2px;
 }
+
+.dim_panel {
+    opacity:    0.8;
+    brightness: 0.2;
+    saturation: 0.0;
+}
