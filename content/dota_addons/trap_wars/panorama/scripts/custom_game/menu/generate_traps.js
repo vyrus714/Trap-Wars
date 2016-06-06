@@ -43,11 +43,11 @@ var Config = GameUI.CustomUIConfig();
 
 
         // now create the panel
-        var panel = $.CreatePanel("Button", column, k);
-        panel.AddClass("list_item");
+        var panel = $.CreatePanel("RadioButton", column, k);
+        panel.BLoadLayoutFromString("<root><Panel class='list_item' group='traps' /></root>", false, false);
 
         // if we have an image for this trap (we should), override the base image
-        if(typeof trap.Image === "string") { panel.style["background-image"]="url('"+trap.Image+"');"; }
+        panel.style["background-image"] = "url('"+info.image+"');";
 
         // create tooltips and pass them info
         panel.SetPanelEvent("onmouseover", (function(a, b) {return function() {
@@ -61,7 +61,7 @@ var Config = GameUI.CustomUIConfig();
 
         // set the left-click action
         panel.SetPanelEvent("onactivate", (function(a){ return function(){
-            ShowListItem(a);
+            $("#"+a+"_display").checked = true;
         }}(panel.id)));
 
         // set the right-click action
@@ -74,7 +74,7 @@ var Config = GameUI.CustomUIConfig();
 
 
         // create the "display" info panel
-        var display_item = $.CreatePanel("Panel", $("#trap_display"), k+"_display");
+        var display_item = $.CreatePanel("RadioButton", $("#trap_display"), k+"_display");
         display_item.BLoadLayout("file://{resources}/layout/custom_game/menu/menu_display_item.xml", false, false);
 
         // fill it with info

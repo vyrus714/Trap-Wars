@@ -79,9 +79,9 @@ Config.PrintObject = function(object) {
 
     for(var k in object) {
         if(typeof object[k] == "function") {
-            $.Msg("    "+k+": "+typeof object[k]);
+            $.Msg("    ",k,": ",typeof object[k]);
         } else {
-            $.Msg("    "+k+": "+object[k]);
+            $.Msg("    ",k,": ",object[k]);
         }
     }
 

@@ -45,15 +45,11 @@ var Config = GameUI.CustomUIConfig();
 
 
         // now create the panel
-        var panel = $.CreatePanel("Button", column, k);
-        panel.AddClass("list_item");
-        // create the panel
-        //var panel = $.CreatePanel("Button", $("#creep_list"), k);
-        //panel.AddClass("list_item");
+        var panel = $.CreatePanel("RadioButton", column, k);
+        panel.BLoadLayoutFromString("<root><Panel class='list_item' group='creeps' /></root>", false, false);
 
         // if we have an image for this creep (we should), override the base image
         panel.style["background-image"] = "url('"+info.image+"');";
-        //if(typeof creep.Image === "string") { panel.style["background-image"]="url('"+creep.Image+"');"; }
 
         // create tooltips and pass them info
         panel.SetPanelEvent("onmouseover", (function(a, b) {return function() {
@@ -67,7 +63,7 @@ var Config = GameUI.CustomUIConfig();
 
         // set the left-click action
         panel.SetPanelEvent("onactivate", (function(a){ return function(){
-            ShowListItem(a);
+            $("#"+a+"_display").checked = true;
         }}(panel.id)));
 
         // set the right-click action
@@ -77,7 +73,7 @@ var Config = GameUI.CustomUIConfig();
 
 
         // create the "display" info panel
-        var display_item = $.CreatePanel("Panel", $("#creep_display"), k+"_display");
+        var display_item = $.CreatePanel("RadioButton", $("#creep_display"), k+"_display");
         display_item.BLoadLayout("file://{resources}/layout/custom_game/menu/menu_display_item.xml", false, false);
 
         // fill it with info
