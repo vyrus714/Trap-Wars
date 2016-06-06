@@ -55,12 +55,12 @@ function ShowListItem(item_id) {
 
 
     // find the items in this list
-    var list_items;
-    if(list.id == "list1") {
+    var list_items = list.FindChildrenWithClassTraverse("list_item");
+    /*if(list.id == "list1") {
         list_items = list.FindChildrenWithClassTraverse("list_trap_item");
-    } else if (list.id == "list2") {
+    } else if (list.id == "creep_list") {
         list_items = list.FindChildrenWithClassTraverse("list_item")
-    } else {return false;}
+    } else {return false;}*/
 
     // hide highlighting of the other list items
     for(var i in list_items) { list_items[i].checked=false; }
@@ -69,41 +69,39 @@ function ShowListItem(item_id) {
 
 
     // get this item's display panel, if we can't find it, then we're done here i guess
-    var display;
-    if(list.GetParent().FindChild("display1")) {
-        display = list.GetParent().FindChild("display1");
+    var display = list.GetParent().FindChild("trap_display") || list.GetParent().FindChild("creep_display") || null;
+    if(!display) {return false;}
+    /*
+    if(list.GetParent().FindChild("trap_display")) {
+        display = list.GetParent().FindChild("trap_display");
     } else if(list.GetParent().FindChild("display2")) {
         display = list.GetParent().FindChild("display2");
-    } else {return;}
+    } else {return;}*/
 
 
     // hide all of the children of the display panel
     var display_items = display.Children();
-    for(var i in display_items) {
-        display_items[i].RemoveClass("display_item_visible");
-    }
+    for(var i in display_items) {display_items[i].RemoveClass("display_item_visible");}
 
     // un-hide the desired child
     var current_item = display.FindChild(item_id+"_display");
-    if(current_item != null) {
-        current_item.AddClass("display_item_visible");
-    }
+    if(current_item) {current_item.AddClass("display_item_visible");}
 }
 
 function ShowUpgrades() {
-    $("#list2").AddClass("list_hidden");
+    $("#creep_list").AddClass("list_hidden");
     $("#upgrades").AddClass("creep_upgrades_visible");
     $("#upgrades_btn").AddClass("creep_upgrades_button_toggled");
 }
 
 function HideUpgrades() {
-    $("#list2").RemoveClass("list_hidden");
+    $("#creep_list").RemoveClass("list_hidden");
     $("#upgrades").RemoveClass("creep_upgrades_visible");
     $("#upgrades_btn").RemoveClass("creep_upgrades_button_toggled");
 }
 
 function ToggleUpgrades() {
-    $("#list2").ToggleClass("list_hidden");
+    $("#creep_list").ToggleClass("list_hidden");
     $("#upgrades").ToggleClass("creep_upgrades_visible");
     $("#upgrades_btn").ToggleClass("creep_upgrades_button_toggled");
 }

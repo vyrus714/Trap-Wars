@@ -20,6 +20,7 @@
 
         // Abilities
         //----------------------------------------------------------------
+        "AbilityLayout"             "4"         // 4, 5, or 6
         "Ability1"                  ""          // Ability 1
         "Ability2"                  ""          // Ability 2
         "Ability3"                  ""          // Ability 3
@@ -78,7 +79,7 @@
         // TrapWars Creep Info
         //----------------------------------------------------------------
         "Image"                     "file://{images}/custom_game/test/potato.png"  //FIXME: this is ... not right ... well this whole creep is a test creep anyway
-        //"Class"                     ""  FIXME
+        "Class"                     "c_heavy"
         "GoldCost"                  "322"
     }       
 
@@ -98,6 +99,7 @@
 
         // Abilities
         //----------------------------------------------------------------
+        "AbilityLayout"             "4"         // 4, 5, or 6
         "Ability1"                  "polar_furbolg_ursa_warrior_thunder_clap"           // Ability 1
         "Ability2"                  "centaur_khan_endurance_aura"           // Ability 2
         "Ability3"                  ""          // Ability 3
@@ -156,7 +158,7 @@
         // TrapWars Creep Info
         //----------------------------------------------------------------
         "Image"                     "file://{images}/custom_game/test/tomato.png"  //FIXME same as teh spud creep
-        //"Class"                     ""  FIXME
+        "Class"                     "c_heavy"
         "GoldCost"                  "420"
 
         // LUA AI function
@@ -167,26 +169,32 @@
     "npc_trapwars_herocreep_test_01"   {
         "BaseClass"    "npc_dota_creature"
         "Image"        "file://{images}/custom_game/test/one.png"
+        "Class"                     "c_damage"
     }
     "npc_trapwars_herocreep_test_02"   {
         "BaseClass"    "npc_dota_creature"
         "Image"        "file://{images}/custom_game/test/two.png"
+        "Class"                     "c_heal"
     }
     "npc_trapwars_herocreep_test_03"   {
         "BaseClass"    "npc_dota_creature"
         "Image"        "file://{images}/custom_game/test/three.png"
+        "Class"                     "c_stun"
     }
     "npc_trapwars_herocreep_test_04"   {
         "BaseClass"    "npc_dota_creature"
         "Image"        "file://{images}/custom_game/test/four.png"
+        "Class"                     "c_slow"
     }
     "npc_trapwars_herocreep_test_05"   {
         "BaseClass"    "npc_dota_creature"
         "Image"        "file://{images}/custom_game/test/five.png"
+        "Class"                     "c_rush"
     }
     "npc_trapwars_herocreep_test_06"   {
         "BaseClass"    "npc_dota_creature"
         "Image"        "file://{images}/custom_game/test/six.png"
+        "Class"                     "c_move"
     }
     "npc_trapwars_herocreep_test_07"   {
         "BaseClass"    "npc_dota_creature"

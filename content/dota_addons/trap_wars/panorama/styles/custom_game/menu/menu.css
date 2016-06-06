@@ -117,7 +117,7 @@
     margin-right: 0px;
 }
 
-.list_trap_item {
+.list_item {
     width: 72px;
     height: 72px;
     //margin-right: 10px;
@@ -135,12 +135,12 @@
     tooltip-arrow-position: 0px 36px;
 }
 
-.list_trap_item:selected {
+.list_item:selected {
     border: 2px solid teal;
     box-shadow: teal 0px 0px 8px 1px;
 }
 
-.list_trap_item:hover, .list_trap_item:selected:hover {
+.list_item:hover, .list_item:selected:hover {
     border: 2px solid white;
     box-shadow: white 0px 0px 8px 1px;
 }
@@ -283,15 +283,6 @@
 
     //border: 1px solid #00000066;
     //background-color: #000000aa;
-}
-
-.display_creeps {
-    opacity: 0.0;
-}
-
-.display_creeps_visible {
-    opacity: 1.0;
-    z-index: 1;
 }
 
 .toggle_button {

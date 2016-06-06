@@ -8,6 +8,7 @@
         <include src="file://{resources}/scripts/custom_game/menu/button_functions.js" />
         <include src="file://{resources}/scripts/custom_game/menu/ghost.js" />
         <include src="file://{resources}/scripts/custom_game/menu/generate_traps.js" />
+        <include src="file://{resources}/scripts/custom_game/menu/generate_creeps.js" />
     </scripts>
 
 
@@ -33,28 +34,33 @@
             <!-- The main content of the menu -->
             <Panel class="body">
                 <Panel id="tab1" class="body_tab body_tab_visible">
-                    <Panel id="list1" class="list">
+                    <Panel id="trap_list" class="list">
                         <Panel id="column_1" class="list_column" />
                         <Panel id="column_2" class="list_column" />
                         <Panel id="column_3" class="list_column" />
                         <Panel id="column_4" class="list_column" />
-                        <Panel id="column_5" class="list_column" />                       
+                        <Panel id="column_5" class="list_column" />
                     </Panel>
 
                     <Panel class="spacer" />
-                    <Panel id="display1" class="display" />
+                    <Panel id="trap_display" class="display" />
                 </Panel>
 
                 <Panel id="tab2" class="body_tab">
-                    <Panel id="list2" class="list" />
+                    <Panel id="creep_list" class="list" >
+                        <Panel id="column_1" class="list_column" />
+                        <Panel id="column_2" class="list_column" />
+                        <Panel id="column_3" class="list_column" />
+                        <Panel id="column_4" class="list_column" />
+                        <Panel id="column_5" class="list_column" />
+                    </Panel>
 
                     <Panel id="upgrades" class="creep_upgrades">
                         <Button id="upgrades_btn" class="creep_upgrades_button" onactivate="ToggleUpgrades()" />
                     </Panel>
                     <Panel id="slot_container" class="creep_slot_container" />
             
-                    <Panel id="display2" class="display display_creeps display_creeps_visible" />
-                    <Panel id="display3" class="display display_creeps" />
+                    <Panel id="creep_display" class="display" />
                 </Panel>
 
             </Panel>

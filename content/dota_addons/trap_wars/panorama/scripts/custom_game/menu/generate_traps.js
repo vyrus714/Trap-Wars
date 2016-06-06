@@ -23,14 +23,14 @@ var Config = GameUI.CustomUIConfig();
 
         // any abilities that this trap might have
         info.abilities = [];
-        for(var j=0; j<trap.AbilityLayout; j++) {
+        for(var j=0; j<(trap.AbilityLayout || 16); j++) {
             var ability = trap["Ability"+(j+1)];
             if(typeof ability == "string" && ability.length > 0) {info.abilities.push(ability);}
         }
 
 
         // find the list panel
-        var list = $("#list1");
+        var list = $("#trap_list");
         if(!list) {continue;}
 
         // get the column panel for this class of trap  FIXME: removme colums and use (x, Y) floating positions directly under the list panel
@@ -44,7 +44,7 @@ var Config = GameUI.CustomUIConfig();
 
         // now create the panel
         var panel = $.CreatePanel("Button", column, k);
-        panel.AddClass("list_trap_item");
+        panel.AddClass("list_item");
 
         // if we have an image for this trap (we should), override the base image
         if(typeof trap.Image === "string") { panel.style["background-image"]="url('"+trap.Image+"');"; }
@@ -74,7 +74,7 @@ var Config = GameUI.CustomUIConfig();
 
 
         // create the "display" info panel
-        var display_item = $.CreatePanel("Panel", $("#display1"), k+"_display");
+        var display_item = $.CreatePanel("Panel", $("#trap_display"), k+"_display");
         display_item.BLoadLayout("file://{resources}/layout/custom_game/menu/menu_display_item.xml", false, false);
 
         // fill it with info
