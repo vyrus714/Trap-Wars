@@ -18,13 +18,13 @@
             <!-- Tab Bar at the top of the menu -->
             <Panel class="tab_container">
                 <Panel class="tab">
-                    <RadioButton id="tab1_btn" class="tab_button tb_left" group="tab_btns" onactivate="SwitchToBodyTab('tab1')" checked="checked">
+                    <RadioButton id="tab1_btn" class="tab_button tb_left" group="tab_btns" onactivate="$('#tab1').checked = true;" onload="SetPanelSelected(true)">
                         <Label class="button_text" text="Traps"  />
                     </RadioButton>
                 </Panel>
 
                 <Panel class="tab">
-                    <RadioButton id="tab2_btn" class="tab_button tb_right" group="tab_btns" onactivate="SwitchToBodyTab('tab2')">
+                    <RadioButton id="tab2_btn" class="tab_button tb_right" group="tab_btns" onactivate="$('#tab2').checked = true;">
                         <Label class="button_text" text="Creeps" />
                     </RadioButton>
                 </Panel>
@@ -33,7 +33,7 @@
 
             <!-- The main content of the menu -->
             <Panel class="body">
-                <Panel id="tab1" class="body_tab body_tab_visible">
+                <RadioButton id="tab1" class="body_tab" group="tabs" onload="SetPanelSelected(true)">
                     <Panel id="trap_list" class="list">
                         <Panel id="column_1" class="list_column" />
                         <Panel id="column_2" class="list_column" />
@@ -44,9 +44,9 @@
 
                     <Panel class="spacer" />
                     <Panel id="trap_display" class="display" />
-                </Panel>
+                </RadioButton>
 
-                <Panel id="tab2" class="body_tab">
+                <RadioButton id="tab2" class="body_tab" group="tabs">
                     <Panel id="creep_list" class="list" >
                         <Panel id="column_1" class="list_column" />
                         <Panel id="column_2" class="list_column" />
@@ -61,7 +61,7 @@
                     <Panel id="slot_container" class="creep_slot_container" />
             
                     <Panel id="creep_display" class="display" />
-                </Panel>
+                </RadioButton>
 
             </Panel>
         </Panel>

@@ -2,23 +2,6 @@
 /* UI Functions */
 /****************/
 
-function ShowThisSiblingPanel(panel, visible_class) {
-    //remove visibility from all tabs
-    var parent = panel.GetParent();
-    var panels = parent.FindChildrenWithClassTraverse(visible_class);
-    for(var i in panels) {
-        panels[i].RemoveClass(visible_class);
-    }
-    // set the given tab as visible
-    panel.AddClass(visible_class);
-}
-
-function SwitchToBodyTab(tab_id) {
-    var tab = $("#"+tab_id);
-    if(tab == null) { return; }
-    ShowThisSiblingPanel(tab, "body_tab_visible");
-}
-
 function SwitchToCreepTab(tab_number) {
     // switch to this slot's tab in the upgrade tree
     var creep_tab = $("#creep_tab_"+tab_number);

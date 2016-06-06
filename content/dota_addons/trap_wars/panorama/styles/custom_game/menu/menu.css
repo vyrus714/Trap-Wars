@@ -89,7 +89,7 @@
     flow-children: none;
 }
 
-.body_tab_visible {
+.body_tab:selected {
     opacity: 1.0;
     z-index: 1;
 }
