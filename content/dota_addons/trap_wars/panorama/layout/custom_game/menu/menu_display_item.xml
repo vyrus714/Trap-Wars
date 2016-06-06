@@ -1,7 +1,7 @@
 <root>
     <styles><include src="file://{resources}/styles/custom_game/menu/menu_display_item.css" /></styles>
 
-    <RadioButton class="display_item" group="display_items">
+    <Panel class="display_wrapper">
         <Panel class="display_bar_container">
             <Panel class="display_info_health dim_panel"><Label id="health" class="display_info_bar_text" /></Panel>
             <Panel class="bar_spacer" />
@@ -22,6 +22,6 @@
                 <DOTAAbilityImage  id="skill_4" class="display_info_skill" abilityname="transparent_ability_icon" />
             </Panel>
         </Panel>
-    </RadioButton>
+    </Panel>
 
 </root>

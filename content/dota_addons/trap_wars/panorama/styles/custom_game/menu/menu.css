@@ -111,6 +111,15 @@
     //overflow: clip scroll;
 }
 
+.list_hidden {
+    opacity: 0.0;
+}
+
+#creep_list {
+    height: 334px;
+    margin-bottom: 0px;
+}
+
 .list_column {
     width: 72px;
     height: fit-children;
@@ -148,16 +157,6 @@
 .list_item:hover, .list_item:selected:hover {
     border: 2px solid white;
     box-shadow: white 0px 0px 8px 1px;
-}
-
-#list2 {
-    height: 334px;
-    margin-bottom: 0px;
-    border-bottom: 0px solid red;
-}
-
-.list_hidden {
-    opacity: 0.0;
 }
 
 .spacer {
@@ -227,15 +226,14 @@
     height: 100%;
     margin-top: 10px;
     margin-bottom: 10px;
+
     opacity: 0.0;
     z-index: 0;
     transition: opacity 0.4s linear 0.0s;
     flow-children: down;
-
-    border: 1px solid red;
 }
 
-.creep_tab_visible {
+.creep_tab:selected {
     opacity: 1.0;
     z-index: 3;
 }
@@ -251,6 +249,7 @@
     padding-top: 10px;
     padding-bottom: 10px;
     position: 0px 354px 0px;
+
     border-top: 1px solid #000000de;
     border-bottom: 1px solid #000000de;
     flow-children: right;
@@ -260,25 +259,28 @@
 .creep_slot {
     width: 67px;
     height: 67px;
-    margin-left: 8px;
-    margin-right: 8px;
+    //margin-left: 8px;
+    //margin-right: 8px;
     vertical-align: center;
-    border: 1px solid #00000066;
-    background-color: #000000aa;
-    background-size: 100% 100%;
+
+    border-radius: 4px;
+    box-shadow: inset #000000dd 1px 1px 2px 2px;
+    background-size: 100%;
 }
 
 .creep_slot:selected {
-    border: 1px solid teal;
+    border: 2px solid teal;
     box-shadow: teal 0px 0px 4px 0px;
 }
 
-.creep_slot_first {
-    margin-left: 0px;
+.creep_slot:hover, .creep_slot:selected:hover {
+    border: 2px solid white;
+    box-shadow: white 0px 0px 4px 0px;
 }
 
-.creep_slot_last {
-    margin-right: 0px;
+.creep_slot_spacer {
+    width: 16px;
+    height: 100%;
 }
 
 .display {
@@ -288,6 +290,19 @@
 
     //border: 1px solid #00000066;
     //background-color: #000000aa;
+}
+
+.display_item {
+    width: 100%;
+    height: 100%;
+
+    opacity: 0.0;
+    transition: opacity 0.4s linear 0.0s;
+}
+
+.display_item:selected {
+    opacity: 1.0;
+    z-index: 2;
 }
 
 .toggle_button {

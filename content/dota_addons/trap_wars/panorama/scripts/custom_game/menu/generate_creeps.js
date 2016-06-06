@@ -2,6 +2,7 @@ var Config = GameUI.CustomUIConfig();
 
 
 (function() {
+    // generate panels for each creep
     for(var k in Config.GetAllNetTableValues("trapwars_npc_herocreeps")) {
         var creep = CustomNetTables.GetTableValue("trapwars_npc_herocreeps", k);
         if(!creep) {continue;}
@@ -62,19 +63,21 @@ var Config = GameUI.CustomUIConfig();
         }})(panel.id+"_tooltip"));
 
         // set the left-click action
-        panel.SetPanelEvent("onactivate", (function(a){ return function(){
+        panel.SetPanelEvent("onactivate", (function(a) {return function() {
             $("#"+a+"_display").checked = true;
         }}(panel.id)));
 
         // set the right-click action
-        panel.SetPanelEvent("oncontextmenu", (function(b){ return function(){
+        panel.SetPanelEvent("oncontextmenu", (function(b) {return function() {
             // FIXME: buy creep (not written yet)
         }}()));
 
 
         // create the "display" info panel
         var display_item = $.CreatePanel("RadioButton", $("#creep_display"), k+"_display");
-        display_item.BLoadLayout("file://{resources}/layout/custom_game/menu/menu_display_item.xml", false, false);
+        display_item.BLoadLayoutFromString("<root><Panel class='display_item' group='creep_display_items' /></root>", false, false);
+        var display_item_child = $.CreatePanel("Panel", display_item, "");
+        display_item_child.BLoadLayout("file://{resources}/layout/custom_game/menu/menu_display_item.xml", false, false);
 
         // fill it with info
         Config.SetChildTextTraverse(display_item, "health", info.health);
@@ -105,65 +108,47 @@ var Config = GameUI.CustomUIConfig();
             skill.abilityname = info.abilities[j];
 
             // add the tooltips
-            skill.SetPanelEvent("onmouseover", (function(a, b) {return function(){ $.DispatchEvent("DOTAShowAbilityTooltip", a, b); }})(skill, info.abilities[j]));
-            skill.SetPanelEvent("onmouseout", (function(a, b) {return function(){ $.DispatchEvent("DOTAHideAbilityTooltip"); }})());
-        }
+            skill.SetPanelEvent("onmouseover", (function(a, b) {return function() {$.DispatchEvent("DOTAShowAbilityTooltip", a, b);}})(skill, info.abilities[j]));
+            skill.SetPanelEvent("onmouseout", (function(a, b) {return function() {$.DispatchEvent("DOTAHideAbilityTooltip");}})());
+        } 
     }
 
 
-/*
-    // generate creep slots based on nettable values
-    for(var i=0; i<game_values.max_player_creeps; i++) {
-        // creep slot
-        var creep_slot = $.CreatePanel("RadioButton", $("#slot_container"), "slot_"+(i+1));
-        creep_slot.AddClass("creep_slot");
-        creep_slot.group = "slots";
-        creep_slot.style["background-image"] = "url('file://{images}/custom_game/empty_slot_avatar.png')";
+    // generate panels for the creep slots
+    var upgrade_panel = $("#upgrades");
 
-        // set the action to perform when someone clicks on this list item
-        creep_slot.SetPanelEvent("onactivate", (function(j){return function(){ SwitchToCreepTab(j+1); }}(i)) );
+    for(var i=0; i<(CustomNetTables.GetTableValue("trapwars_static_info", "generic").max_player_creeps || 6); i++) {
+        // create the slot
+        var slot = $.CreatePanel("RadioButton", $("#slot_container"), "slot_"+(i+1));
+        slot.BLoadLayoutFromString("<root><Panel class='creep_slot' group='creeps' /></root>", false, false);
+        // set the background image  FIXME: move entirely to creep_slot class; it's here for no reason
+        slot.style["background-image"] = "url('file://{images}/custom_game/empty_slot_avatar.png')";
+        // set the left click action
+        //onactivate='$(\"#slot_"+(i+1)+"\").checked = true; $(\"#upgrade_"+(i+1)+"\").checked = true;'
+        slot.SetPanelEvent("onactivate", (function(a) {return function() {
+            $("#upgrade_"+a).checked = true;
+            $("#slot_"+a+"_display").checked = true;
+        }}(i+1)));
+
+        // if it's not the last slot, add a spacer
+        var spacer = $.CreatePanel("Panel", $("#slot_container"), "spacer");
+        spacer.AddClass("creep_slot_spacer");
 
 
-        // creep_tab for this creep slot
-        var creep_tab = $.CreatePanel("Panel", $("#upgrades"), "creep_tab_"+(i+1));
-        creep_tab.AddClass("creep_tab");
+        // create the upgrade tab for this slot
+        var upgrade = $.CreatePanel("RadioButton", $("#upgrades"), "upgrade_"+(i+1));
+        upgrade.BLoadLayoutFromString("<root><Panel class='creep_tab' group='upgrades' /></root>", false, false);
+        //FIXME: this is for testing only
+        var testpanel = $.CreatePanel("Label", upgrade, "testpanel");
+        testpanel.AddClass("button_text");
+        testpanel.text = "Upgrade Tab #"+(i+1);
 
-        // display_item for this creep slot
-        var display_item = $.CreatePanel("Panel", $("#display3"), "tree_item_"+(i+1));
-        display_item.BLoadLayout("file://{resources}/layout/custom_game/menu/menu_display_item.xml", false, false);
-
-
-        // set the initial panels to visible:
-        if(i==0) {
-            creep_slot.AddClass("creep_slot_first");
-            creep_slot.checked = true;
-            creep_tab.AddClass("creep_tab_visible");
-            display_item.AddClass("display_item_visible");
-        }
-        if(i == game_values.max_player_creeps-1) { creep_slot.AddClass("creep_slot_last"); }
-
-        // FIXME: remove this, debug code only
-        var test = $.CreatePanel("Label", creep_slot, "");
-        test.AddClass("button_text");
-        test.text = i+1;
-        test = $.CreatePanel("Label", creep_tab, "");
-        test.AddClass("button_text");
-        test.text = i+1;
-        test = display_item.FindChildTraverse("button_text");
-        if(test != null) { test.text=i+1; }
+        // create the display panel for this slot
+        var display_item = $.CreatePanel("RadioButton", $("#creep_display"), "slot_"+(i+1)+"_display");
+        display_item.BLoadLayoutFromString("<root><Panel class='display_item' group='creep_display_items' /></root>", false, false);
+        var display_item_child = $.CreatePanel("Panel", display_item, "");
+        display_item_child.BLoadLayout("file://{resources}/layout/custom_game/menu/menu_display_item.xml", false, false);
     }
-
-
-    // select the trap tab button
-    var panel = $("#tab1_btn");
-    if(panel != null) { panel.checked=true; }
-
-    // set the creep slots/info on startup
-    OnPlayerCreepChange();
-
-    // more stuff! (when i get to it)
-    */
-
 }());
 
 /**********************/

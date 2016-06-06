@@ -2,6 +2,7 @@ var Config = GameUI.CustomUIConfig();
 
 
 (function() {
+    // generate panels for each trap
     for(var k in Config.GetAllNetTableValues("trapwars_npc_traps")) {
         var trap = CustomNetTables.GetTableValue("trapwars_npc_traps", k);
         if(!trap) {continue;}
@@ -75,7 +76,9 @@ var Config = GameUI.CustomUIConfig();
 
         // create the "display" info panel
         var display_item = $.CreatePanel("RadioButton", $("#trap_display"), k+"_display");
-        display_item.BLoadLayout("file://{resources}/layout/custom_game/menu/menu_display_item.xml", false, false);
+        display_item.BLoadLayoutFromString("<root><Panel class='display_item' group='trap_display_items' /></root>", false, false);
+        var display_item_child = $.CreatePanel("Panel", display_item, "");
+        display_item_child.BLoadLayout("file://{resources}/layout/custom_game/menu/menu_display_item.xml", false, false);
 
         // fill it with info
         Config.SetChildTextTraverse(display_item, "health", info.health);

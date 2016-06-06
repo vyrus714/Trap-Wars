@@ -47,7 +47,7 @@
                 </RadioButton>
 
                 <RadioButton id="tab2" class="body_tab" group="tabs">
-                    <Panel id="creep_list" class="list" >
+                    <Panel id="creep_list" class="list">
                         <Panel id="column_1" class="list_column" />
                         <Panel id="column_2" class="list_column" />
                         <Panel id="column_3" class="list_column" />
@@ -56,7 +56,11 @@
                     </Panel>
 
                     <Panel id="upgrades" class="creep_upgrades">
-                        <Button id="upgrades_btn" class="creep_upgrades_button" onactivate="ToggleUpgrades()" />
+                        <Button id="upgrades_btn" class="creep_upgrades_button" onactivate="
+                            $('#creep_list'  ).ToggleClass('list_hidden'                  );
+                            $('#upgrades'    ).ToggleClass('creep_upgrades_visible'       );
+                            $('#upgrades_btn').ToggleClass('creep_upgrades_button_toggled');
+                        " />
                     </Panel>
                     <Panel id="slot_container" class="creep_slot_container" />
             
