@@ -43,16 +43,3 @@ function ToggleUpgrades() {
     $("#upgrades").ToggleClass("creep_upgrades_visible");
     $("#upgrades_btn").ToggleClass("creep_upgrades_button_toggled");
 }
-
-function ToggleMenu() {
-    var menu = $('#menu');
-    var toggle = $('#menu_toggle');
-
-    if(toggle.checked) {
-        toggle.checked = false;
-        menu.style.position = "0px 0px 0px";
-    } else {
-        toggle.checked = true;
-        menu.style.position = "419px 0px 0px";
-    }
-}

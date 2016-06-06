@@ -67,7 +67,7 @@
         </Panel>
 
 
-        <Button id="menu_toggle" class="toggle_button" onactivate="ToggleMenu()">
+        <Button id="menu_toggle" class="toggle_button" onactivate="TogglePanelSelected(); ToggleStyle(menu, menu_visible)">
             <Label class="button_text" text="Upgrades" />
         </Button>
 

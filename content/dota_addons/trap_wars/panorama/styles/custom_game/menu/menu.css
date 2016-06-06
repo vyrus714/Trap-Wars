@@ -19,8 +19,13 @@
     box-shadow: inset #000000 0px 1px 4px 2px;
     background-color: #111111df;
 
+    position: 0px 0px 0px;
     transition: position 0.3s ease-in 0s;
     flow-children: down;
+}
+
+.menu_visible {
+    position: 419px 0px 0px;
 }
 
 .tab_container {
