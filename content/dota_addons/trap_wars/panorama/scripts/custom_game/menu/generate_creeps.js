@@ -35,22 +35,22 @@ var Config = GameUI.CustomUIConfig();
         var list = $("#creep_list");
         if(!list) {continue;}
 
-
-        // get the column panel for this class of creep  FIXME: removme colums and use (x, Y) floating positions directly under the list panel
-        if     (info.class == "c_damage" || info.class == "c_heal") {var column = list.FindChild("column_1");}
-        else if(info.class == "c_stun"  ) {var column = list.FindChild("column_2");}
-        else if(info.class == "c_heavy" ) {var column = list.FindChild("column_3");}
-        else if(info.class == "c_rush"  ) {var column = list.FindChild("column_4");}
-        else                              {var column = list.FindChild("column_5");}
-        if(!column) {continue;}
-
-
         // now create the panel
-        var panel = $.CreatePanel("RadioButton", column, k);
+        var panel = $.CreatePanel("RadioButton", list, k);
         panel.BLoadLayoutFromString("<root><Panel class='list_item' group='creeps' /></root>", false, false);
 
         // if we have an image for this creep (we should), override the base image
         panel.style["background-image"] = "url('"+info.image+"');";
+
+        // set the position based on KV, if not given a position, slap it somewhere on the bottom
+        var x = -100, y = -100;
+        if(typeof creep.MenuX == "number" && typeof creep.MenuY == "number") {
+            // SIMPLE HARDCODED VARS, ACTULALY SET IN CSS FILE!  ( box dimensions: 59px^2, padded by 10px )
+            x = Math.floor(creep.MenuX*59 + creep.MenuX*9);  // FIXME: should be 10 ... but 9 looks 'better' - have to see when more shit is added
+            y = Math.floor(creep.MenuY*59 + creep.MenuY*9);
+        }
+        panel.style["position"] = x+"px "+y+"px 0px;";
+
 
         // create tooltips and pass them info
         panel.SetPanelEvent("onmouseover", (function(a, b) {return function() {

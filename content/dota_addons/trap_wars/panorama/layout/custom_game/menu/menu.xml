@@ -34,27 +34,15 @@
             <!-- The main content of the menu -->
             <Panel class="body">
                 <RadioButton id="tab1" class="body_tab" group="tabs" onload="SetPanelSelected(true)">
-                    <Panel id="trap_list" class="list">
-                        <Panel id="column_1" class="list_column" />
-                        <Panel id="column_2" class="list_column" />
-                        <Panel id="column_3" class="list_column" />
-                        <Panel id="column_4" class="list_column" />
-                        <Panel id="column_5" class="list_column" />
-                    </Panel>
-
+                    <Panel id="trap_list" class="list" />
                     <Panel class="spacer" />
+
                     <Panel id="trap_display" class="display" />
                 </RadioButton>
 
                 <RadioButton id="tab2" class="body_tab" group="tabs">
-                    <Panel id="creep_list" class="list">
-                        <Panel id="column_1" class="list_column" />
-                        <Panel id="column_2" class="list_column" />
-                        <Panel id="column_3" class="list_column" />
-                        <Panel id="column_4" class="list_column" />
-                        <Panel id="column_5" class="list_column" />
-                    </Panel>
-
+                    <Panel id="creep_list" class="list" />
+                    
                     <Panel id="upgrades" class="creep_upgrades">
                         <Button id="upgrades_btn" class="creep_upgrades_button" onactivate="
                             $('#creep_list'  ).ToggleClass('list_hidden'                  );

@@ -91,6 +91,8 @@
 
         // TrapWars Creep Info
         //----------------------------------------------------------------
+        "MenuX"                     "0"
+        "MenuY"                     "0"
         "Image"                     "file://{images}/custom_game/traps/floor_spikes.png"
         "Class"                     "c_damage"
         "GoldCost"                  "8216"
@@ -192,6 +194,8 @@
 
         // TrapWars Creep Info
         //----------------------------------------------------------------
+        "MenuX"                     "0"
+        "MenuY"                     "1"
         //"Image"                     ""  FIXME
         "Class"                     "c_damage"
         "GoldCost"                  "250"
@@ -255,6 +259,8 @@
 
         // TrapWars Creep Info
         //----------------------------------------------------------------
+        "MenuX"                     "1"
+        "MenuY"                     "0"
         "Image"                     "file://{images}/custom_game/traps/barricade.png"
         "Class"                     "c_move"
         "GoldCost"                  "100"
@@ -262,35 +268,49 @@
 
     "npc_trapwars_trap_test_01"   {
         "BaseClass"    "npc_dota_creature"
+        "MenuX"                     "0"
+        "MenuY"                     "4"
         "Image"        "file://{images}/custom_game/test/one.png"
     }
     "npc_trapwars_trap_test_02"   {
         "BaseClass"    "npc_dota_creature"
+        "MenuX"                     "1"
+        "MenuY"                     "4"
         "Image"        "file://{images}/custom_game/test/two.png"
         "Class"        "c_damage"
     }
     "npc_trapwars_trap_test_03"   {
         "BaseClass"    "npc_dota_creature"
+        "MenuX"                     "2"
+        "MenuY"                     "4"
         "Image"        "file://{images}/custom_game/test/three.png"
         "Class"        "c_heal"
     }
     "npc_trapwars_trap_test_04"   {
         "BaseClass"    "npc_dota_creature"
+        "MenuX"                     "3"
+        "MenuY"                     "4"
         "Image"        "file://{images}/custom_game/test/four.png"
         "Class"        "c_stun"
     }
     "npc_trapwars_trap_test_05"   {
         "BaseClass"    "npc_dota_creature"
+        "MenuX"                     "4"
+        "MenuY"                     "4"
         "Image"        "file://{images}/custom_game/test/five.png"
         "Class"        "c_slow"
     }
     "npc_trapwars_trap_test_06"   {
         "BaseClass"    "npc_dota_creature"
+        "MenuX"                     "5"
+        "MenuY"                     "4"
         "Image"        "file://{images}/custom_game/test/six.png"
         "Class"        "c_move"
     }
     "npc_trapwars_trap_test_07"   {
         "BaseClass"    "npc_dota_creature"
+        "MenuX"                     "2"
+        "MenuY"                     "5"
         "Image"        "file://{images}/custom_game/test/seven.png"
         "Class"        "c_heavy"
     }
