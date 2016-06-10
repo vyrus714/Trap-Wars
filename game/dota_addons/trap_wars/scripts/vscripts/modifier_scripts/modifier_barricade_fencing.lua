@@ -1,18 +1,26 @@
-function OnCreated(keys)
+LinkLuaModifier("modifier_barricade_fencing", "modifier_scripts/modifier_barricade_fencing.lua", LUA_MODIFIER_MOTION_NONE)
+modifier_barricade_fencing = class({})
+
+function modifier_barricade_fencing:OnCreated()
+    if not IsServer() then return end
+
+    local barricade = self:GetParent()
+    if not barricade then return end
+
+
     Timers:CreateTimer(1/30, function()
         local tilesize = GameRules.TileSize or 128
-        --local caster_pos = keys.caster:GetAbsOrigin()
-        local caster_pos = GameRules.GameMode:Get2DGridCenter(keys.caster:GetAbsOrigin())
+        local caster_pos = GameRules.GameMode:Get2DGridCenter(barricade:GetAbsOrigin())
         local offset = Vector(0, 0, 60) -- offset for the fence posts
 
         -- add the gridnav blocker
         local blocker = SpawnEntityFromTableSynchronous("point_simple_obstruction", {origin=caster_pos})
-        keys.caster.blocker = blocker:GetEntityIndex()
+        barricade.blocker = blocker:GetEntityIndex()
         -- reset the entity's position after the blocker is placed  (and slide it down, since the model is a bit tall)
-        keys.caster:SetAbsOrigin(caster_pos - offset)
+        barricade:SetAbsOrigin(caster_pos - offset)
 
         -- give our fence post a random yaw
-        keys.caster:SetForwardVector(RandomVector(1))
+        barricade:SetForwardVector(RandomVector(1))
 
         -- do a precursory removal of any diagonal fencing around this tile (very annoying that it had to come to this)
         local diagonal_spots = {
@@ -93,26 +101,36 @@ function OnCreated(keys)
     end)
 end
 
-function OnDestroy(keys)
+function modifier_barricade_fencing:OnDestroy()
+    if not IsServer() then return end
+
+    local barricade = self:GetParent()
+    if not barricade then return end
+
     local tilesize = GameRules.TileSize or 128
 
+
     -- remove the gridnav blocker
-    local blocker = EntIndexToHScript(keys.caster.blocker or -1)
+    local blocker = EntIndexToHScript(barricade.blocker or -1)
     if blocker then blocker:RemoveSelf() end
 
     -- find and remove all of the fencing around this fence post
-    for _, ent in pairs(Entities:FindAllByClassnameWithin("prop_dynamic", keys.caster:GetAbsOrigin(), math.sqrt(2*(tilesize*tilesize))/2+1)) do
+    for _, ent in pairs(Entities:FindAllByClassnameWithin("prop_dynamic", barricade:GetAbsOrigin(), math.sqrt(2*(tilesize*tilesize))/2+1)) do
         if ent:GetModelName() == "models/props_debris/wood_fence002.vmdl" then ent:Kill() end
     end
 
     -- hide the fence post
-    keys.caster:AddEffects(EF_NODRAW)
+    barricade:AddEffects(EF_NODRAW)
 
     -- add destruction particles
-    local part = ParticleManager:CreateParticle("particles/traps/barricade/barricade_destroyed.vpcf", PATTACH_ABSORIGIN, keys.caster)
-    ParticleManager:SetParticleControlEnt(part, 0, keys.caster, PATTACH_ABSORIGIN, "attach_origin", keys.caster:GetAbsOrigin(), true)
+    local part = ParticleManager:CreateParticle("particles/traps/barricade/barricade_destroyed.vpcf", PATTACH_ABSORIGIN, barricade)
+    ParticleManager:SetParticleControlEnt(part, 0, barricade, PATTACH_ABSORIGIN, "attach_origin", barricade:GetAbsOrigin(), true)
     Timers:CreateTimer(2, function()
         ParticleManager:DestroyParticle(part, false)
         ParticleManager:ReleaseParticleIndex(part)
     end)
 end
+
+function modifier_barricade_fencing:IsHidden()
+    return true
+end 

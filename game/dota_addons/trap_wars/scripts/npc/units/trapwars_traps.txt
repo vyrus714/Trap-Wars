@@ -226,11 +226,6 @@
         "ArmorPhysical"             "1"         // Physical protection.
         "MagicalResistance"         "20"        // Magical protection.
 
-
-        // Abilities
-        //----------------------------------------------------------------
-        "Ability1"                  "barricade_setup"
-
         // Bounds
         //----------------------------------------------------------------
         "BoundsHullName"            "DOTA_HULL_SIZE_SMALL"
@@ -264,6 +259,11 @@
         "Image"                     "file://{images}/custom_game/traps/barricade.png"
         "Class"                     "c_move"
         "GoldCost"                  "100"
+        "modifiers"
+        {
+            "1"                     "modifier_barricade_fencing"
+            "2"                     "modifier_hide_healthbar_when_damaged"
+        }
     }
 
     "npc_trapwars_trap_test_01"   {

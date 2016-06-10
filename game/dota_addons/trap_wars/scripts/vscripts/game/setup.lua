@@ -7,6 +7,7 @@ function GameMode:SetupGameMode()
     -- Include Lua Modifiers --
     ---------------------------
     require("modifier_scripts/modifier_hide_healthbar_when_damaged")
+    require("modifier_scripts/modifier_barricade_fencing")
 
     ---------------------------
     -- Unit and Ability Data --

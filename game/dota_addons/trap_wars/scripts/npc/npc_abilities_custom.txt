@@ -3,7 +3,7 @@
 {
 	"Version"		"1"
 
-    // an ability with a transparent icon, so i can use it as the default DOTAAbilityImage ability param
+    // an ability with a transparent icon, for DOTAAbilityImage panels
     "transparent_ability_icon"
     {
         "BaseClass"              "ability_datadriven"
@@ -253,47 +253,6 @@
             }            
         }
 
-    }
-
-    "barricade_setup"
-    {
-        "BaseClass"              "ability_datadriven"
-        "AbilityBehavior"        "DOTA_ABILITY_BEHAVIOR_HIDDEN"
-        "MaxLevel"               "1"
-        "RequiredLevel"          "-1"
-
-        "Modifiers"
-        {
-            "barricade_setup_modifier"
-            {
-                "Passive"          "1"
-                "IsHidden"         "1"
-
-                "OnCreated"
-                {
-                    "ApplyModifier"
-                    {
-                        "Target"            "CASTER"
-                        "ModifierName"      "modifier_hide_healthbar_when_damaged"
-                    }
-
-                    "RunScript"
-                    {
-                        "ScriptFile"        "ability_scripts/barricade_setup.lua"
-                        "Function"          "OnCreated"
-                    }
-                }
-
-                "OnDestroy"
-                {
-                    "RunScript"
-                    {
-                        "ScriptFile"        "ability_scripts/barricade_setup.lua"
-                        "Function"          "OnDestroy"
-                    }
-                }
-            }
-        }
     }
 
 
