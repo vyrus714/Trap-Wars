@@ -2,6 +2,15 @@
     <styles><include src="file://{resources}/styles/custom_game/menu/menu_display_item.css" /></styles>
 
     <Panel class="display_wrapper">
+        <Panel class="display_title_container" >
+            <Label id="title" class="display_title_text" text="#unknown_item" />
+            <Panel class="display_title_info_container">
+                <Label id="gold" class="display_title_info_gold_text" text="0" />
+                <Panel class="display_title_info_gold_icon" />
+                <Label id="class" class="display_title_info_class_text" />
+            </Panel>
+        </Panel>
+
         <Panel class="display_bar_container">
             <Panel class="display_info_health dim_panel"><Label id="health" class="display_info_bar_text" /></Panel>
             <Panel class="bar_spacer" />

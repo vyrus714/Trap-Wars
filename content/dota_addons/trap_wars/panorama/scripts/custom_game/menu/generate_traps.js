@@ -82,6 +82,10 @@ var Config = GameUI.CustomUIConfig();
         display_item_child.BLoadLayout("file://{resources}/layout/custom_game/menu/menu_display_item.xml", false, false);
 
         // fill it with info
+        Config.SetChildTextTraverse(display_item, "title",  $.Localize(info.title));
+        Config.SetChildTextTraverse(display_item, "class",  $.Localize(info.class));
+        Config.SetChildStyleTraverse(display_item, "class", "color", $.Localize(info.class+"_color"));
+        Config.SetChildTextTraverse(display_item, "gold",   info.gold  );
         Config.SetChildTextTraverse(display_item, "health", info.health);
         Config.SetChildTextTraverse(display_item, "mana",   info.mana  );
         Config.SetChildTextTraverse(display_item, "damage", info.damage);

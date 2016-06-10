@@ -59,6 +59,15 @@ Config.SetChildTextTraverse = function(panel, child_name, text) {
     return true;
 }
 
+// set a style property of a child panel
+Config.SetChildStyleTraverse = function(panel, child_name, style_name, value) {
+    var child = panel.FindChildTraverse(child_name);
+    if(!child) {return false;}
+
+    child.style[style_name] = value;
+    return true;
+}
+
 // if a panel's text meets certain criteria, remove the dimming from it and its parent
 Config.RemoveDimming = function(panel) {
     if(panel.text && 0 < panel.text && panel.text != "" && panel.text != "-") {

@@ -1,13 +1,13 @@
 .root {
     width: 840px;
     height: 746px;
-    position: -420px 60px 0px;
+    position: -420px 70px 0px;
     flow-children: none;
 }
 
 .menu {
     width: 420px;
-    height: 680px;
+    height: 660px;
     padding: 8px;
     padding-top: 12px;
 
