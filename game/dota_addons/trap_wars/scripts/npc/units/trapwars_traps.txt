@@ -210,13 +210,13 @@
         "vscripts"                  "unit_scripts/firevent.lua"
     }
 
-    "npc_trapwars_barricade"
+    "npc_trapwars_wood_fence"
     {
         // General
         //----------------------------------------------------------------
         "BaseClass"                 "npc_dota_creature"
-        "UnitLabel"                 "npc_trapwars_barricade"
-        "Model"                     "models/props_debris/wood_fence001g.vmdl"
+        "UnitLabel"                 "npc_trapwars_wood_fence"
+        "Model"                     "models/traps/wood_fence/post.vmdl"
         "ModelScale"                "1.0"
         "Level"                     "1"
         "HasInventory"              "1"

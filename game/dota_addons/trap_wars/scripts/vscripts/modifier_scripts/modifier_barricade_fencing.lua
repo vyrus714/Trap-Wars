@@ -3,8 +3,7 @@ modifier_barricade_fencing = class({})
 
 -- the valid unit names, and the fencing model for each
 local fencing_models = {
-    npc_trapwars_barricade  = "models/props_debris/wood_fence002.vmdl",
-    npc_trapwars_wood_fence = "models/props_debris/wood_fence002.vmdl",
+    npc_trapwars_wood_fence = "models/traps/wood_fence/fencing.vmdl",
     npc_trapwars_stone_wall = ""
 }
 
