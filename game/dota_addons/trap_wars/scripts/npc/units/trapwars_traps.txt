@@ -219,7 +219,6 @@
         "Model"                     "models/traps/wood_fence/post.vmdl"
         "ModelScale"                "1.0"
         "Level"                     "1"
-        "HasInventory"              "1"
 
         // Armor
         //----------------------------------------------------------------
@@ -258,11 +257,56 @@
         "MenuY"                     "0"
         "Image"                     "file://{images}/custom_game/traps/barricade.png"
         "Class"                     "c_move"
-        "GoldCost"                  "100"
+        "GoldCost"                  "80"
         "modifiers"
         {
             "1"                     "modifier_barricade_fencing"
             "2"                     "modifier_hide_healthbar_when_damaged"
+        }
+    }
+
+    "npc_trapwars_stone_wall"
+    {
+        // General
+        //----------------------------------------------------------------
+        "BaseClass"                 "npc_dota_creature"
+        "UnitLabel"                 "npc_trapwars_stone_wall"
+        "Model"                     "models/traps/stone_wall/pillar.vmdl"
+        "ModelScale"                "1.0"
+        "Level"                     "1"
+
+        // Bounds
+        //----------------------------------------------------------------
+        "BoundsHullName"            "DOTA_HULL_SIZE_SMALL"
+        "RingRadius"                "64"
+        "HealthBarOffset"           "160"        // -1 means use the models
+
+        // Movement
+        //----------------------------------------------------------------
+        "MovementCapabilities"      "DOTA_UNIT_CAP_MOVE_NONE"
+        "MovementSpeed"             "0"         // Speed
+        "MovementTurnRate"          "0"         // Turning rate.
+
+        // Status
+        //----------------------------------------------------------------
+        "StatusHealth"              "1"       // Base health.
+        
+        // Vision
+        //----------------------------------------------------------------
+        "VisionDaytimeRange"        "384"       // Range of vision during day light.
+        "VisionNighttimeRange"      "384"       // Range of vision at night time.
+
+        // TrapWars Creep Info
+        //----------------------------------------------------------------
+        "MenuX"                     "1"
+        "MenuY"                     "1"
+        //"Image"                     ""
+        "Class"                     "c_move"
+        "GoldCost"                  "240"
+        "modifiers"
+        {
+            "1"                     "modifier_point_simple_obstruction"
+            "2"                     "modifier_invulnerable"
         }
     }
 

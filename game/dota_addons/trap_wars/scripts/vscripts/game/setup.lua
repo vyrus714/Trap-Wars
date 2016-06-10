@@ -8,6 +8,7 @@ function GameMode:SetupGameMode()
     ---------------------------
     require("modifier_scripts/modifier_hide_healthbar_when_damaged")
     require("modifier_scripts/modifier_barricade_fencing")
+    require("modifier_scripts/modifier_point_simple_obstruction")
 
     ---------------------------
     -- Unit and Ability Data --
