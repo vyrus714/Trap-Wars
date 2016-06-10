@@ -29,11 +29,8 @@ function modifier_barricade_fencing:OnCreated()
         barricade:SetAbsOrigin(caster_pos)
 
         -- set the post's yaw to one of four directions 0->2pi
-        local unit_vector = Vector(1, 0, 0)
-        for i=0, RandomInt(0, 3) do
-            unit_vector = RotatePosition(unit_vector, VectorToAngles(Vector(0, 1, 0)), unit_vector)
-        end
-        barricade:SetForwardVector(RandomVector(1))
+        local angle = RandomInt(0,3) * math.pi/2
+        barricade:SetForwardVector(Vector(math.cos(angle), math.sin(angle), 0))
 
         -- do a precursory removal of any diagonal fencing around this tile (would have preferred a simple radius check, however it was glitchy as hell)
         local diagonal_spots = {
@@ -50,7 +47,7 @@ function modifier_barricade_fencing:OnCreated()
             end
         end
 
-        -- very specifically ordered list of positions to check around this entity
+        -- ordered list of positions to check around this entity
         local check_positions = {
             caster_pos + Vector(         0,   tilesize+1, 0),
             caster_pos + Vector(tilesize+1,   tilesize+1, 0),
@@ -80,21 +77,17 @@ function modifier_barricade_fencing:OnCreated()
         end
 
         -- add the fencing between them (odd=horizontal\vertical, even=diagonal)
+        found_entities[0] = found_entities[8]
+        found_entities[9] = found_entities[1]
         for i=1, 8 do
             if found_entities[i] then
                 local add_fencing = false
 
-                -- if it's an odd tile (horizontal\vertical), always add
+                -- if it's an odd tile (horizontal\vertical), always add, otherwise add only if it has no adjacent tiles
                 if (i+1)%2 == 0 then
                     add_fencing = true
-
-                -- if it's an even tile (diagonal), add only if there isn't any even tiles next to it
-                else
-                    if i == 1 then
-                        if not found_entities[8] and not found_entities[i+1] then add_fencing=true end
-                    elseif i == 8 then
-                        if not found_entities[i-1] and not found_entities[1] then add_fencing=true end
-                    elseif not found_entities[i-1] and not found_entities[i+1] then add_fencing=true end
+                elseif not found_entities[i-1] and not found_entities[i+1] then
+                    add_fencing = true
                 end
 
                 -- finally, if it's not the same unit type when we searched above, ignore these checks and don't add (still used for checks on surrounding like-types though)
@@ -141,6 +134,12 @@ function modifier_barricade_fencing:OnDestroy()
     -- find and remove all of the fencing around this fence post
     for _, ent in pairs(Entities:FindAllByClassnameWithin("prop_dynamic", barricade:GetAbsOrigin(), math.sqrt(2*(tilesize*tilesize))/2+1)) do
         if ent:GetModelName() == "models/props_debris/wood_fence002.vmdl" then ent:Kill() end
+        for _, model in pairs(fencing_models) do
+            if ent:GetModelName() == model then
+                ent:Kill()
+                break;
+            end
+        end
     end
 
 
@@ -148,11 +147,16 @@ function modifier_barricade_fencing:OnDestroy()
     local caster_pos = GameRules.GameMode:Get2DGridCenter(barricade:GetAbsOrigin())
     local caster_unit_name = barricade:GetUnitName()
     Timers:CreateTimer(1/30, function()
+        -- ordered list of positions to check around this entity
         local check_positions = {
             caster_pos + Vector(         0,   tilesize+1, 0),
+            caster_pos + Vector(tilesize+1,   tilesize+1, 0),
             caster_pos + Vector(tilesize+1,            0, 0),
+            caster_pos + Vector(tilesize+1,  -tilesize-1, 0),
             caster_pos + Vector(          0, -tilesize-1, 0),
+            caster_pos + Vector(-tilesize-1, -tilesize-1, 0),
             caster_pos + Vector(-tilesize-1,           0, 0),
+            caster_pos + Vector(-tilesize-1,  tilesize+1, 0)
         }
 
         -- find other barricades around this one at said positions
@@ -169,14 +173,14 @@ function modifier_barricade_fencing:OnDestroy()
         end
 
         -- add the fencing between if they're connected diagonally and are the same type
-        found_entities[5] = found_entities[1]
-        for i=1, 4 do
-            if found_entities[i] and found_entities[i+1] then
+        found_entities[9] = found_entities[1]
+        for i=1, 7, 2 do
+            if found_entities[i] and found_entities[i+2] then
                 -- positions
                 local ent1_pos = found_entities[i]:GetAbsOrigin()
-                local ent2_pos = found_entities[i+1]:GetAbsOrigin()
+                local ent2_pos = found_entities[i+2]:GetAbsOrigin()
 
-                if ent1_pos and ent2_pos then
+                if ent1_pos and ent2_pos and not found_entities[i+1] then
                     -- add in the fencing between them
                     local fencing = Entities:CreateByClassname("prop_dynamic")
                     fencing:SetAbsOrigin(ent1_pos - (ent1_pos-ent2_pos)/2)
