@@ -1,0 +1,32 @@
+<root>
+    <Panel>
+        <!--<Image src="file://{images}/custom_game/my_image.png" />-->
+
+        <!-- Test Images -->
+        <Image src="file://{images}/custom_game/test/one.png" />
+        <Image src="file://{images}/custom_game/test/two.png" />
+        <Image src="file://{images}/custom_game/test/three.png" />
+        <Image src="file://{images}/custom_game/test/four.png" />
+        <Image src="file://{images}/custom_game/test/five.png" />
+        <Image src="file://{images}/custom_game/test/six.png" />
+        <Image src="file://{images}/custom_game/test/seven.png" />
+        <Image src="file://{images}/custom_game/test/eight.png" />
+        <Image src="file://{images}/custom_game/test/tomato.png" />
+        <Image src="file://{images}/custom_game/test/potato.png" />
+        <Image src="file://{images}/custom_game/test/tooltip_arrow_left.png" />
+
+        <!-- Menu Images -->
+        <!--<Image src="file://{images}/custom_game/menu/bar_horizontal.png" />-->
+        <!--<Image src="file://{images}/custom_game/menu/bar_vertical.png" />-->
+        <!--<Image src="file://{images}/custom_game/menu/mouse.png" />-->
+        <Image src="file://{images}/custom_game/menu/mouse_illustrations.png" />
+
+        <!-- Traps -->
+        <Image src="file://{images}/custom_game/traps/floor_spikes.png" />
+        <Image src="file://{images}/custom_game/traps/wood_fence.png" />
+        <Image src="file://{images}/custom_game/traps/stone_wall.png" />
+
+        <!-- Creeps -->
+        <!--<Image src="file://{images}/custom_game/creeps/.png" />-->
+    </Panel>
+</root>
