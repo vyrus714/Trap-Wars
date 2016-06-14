@@ -2,22 +2,27 @@
     <styles><include src="file://{resources}/styles/custom_game/tooltips/menu_list_item_tooltip.css" /></styles>
     <scripts><include src="file://{resources}/scripts/custom_game/tooltips/menu_list_item_tooltip.js" /></scripts>
 
-    <Panel class="menu_list_item_tooltip" hittest="false">
-        <Panel class="menu_header">
-            <Panel id="header_image" class="header_image" />
+    <Panel class="arrow_container">
+        <Panel class="arrow_fake" />
+        <Panel class="arrow_fake" id="border" />
 
-            <Panel class="header_info">
-                <Label id="title_text" class="title_text" />
+        <Panel class="menu_list_item_tooltip" hittest="false">
+            <Panel class="menu_header">
+                <Panel id="header_image" class="header_image" />
 
-                <Panel class="info_container">
-                    <Panel class="gold_icon" />
-                    <Label id="gold_text" class="gold_text" />
-                    <Label id="class_text" class="class_text" />
+                <Panel class="header_info">
+                    <Label id="title_text" class="title_text" />
+
+                    <Panel class="info_container">
+                        <Panel class="gold_icon" />
+                        <Label id="gold_text" class="gold_text" />
+                        <Label id="class_text" class="class_text" />
+                    </Panel>
+
                 </Panel>
-
             </Panel>
-        </Panel>
 
-        <Label id="menu_description" class="menu_description" />
+            <Label id="menu_description" class="menu_description" />
+        </Panel>
     </Panel>
 </root>

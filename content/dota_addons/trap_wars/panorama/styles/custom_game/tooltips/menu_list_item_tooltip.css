@@ -1,16 +1,62 @@
 /* Menu Tooltip */
 
+.arrow_container {
+    width: fit-children;
+    height: fit-children;
+
+    flow-children: none;
+}
+
+.arrow {
+    //width: 33px;
+    //height: 38px;
+    width: 24px;
+    height: 100%;
+
+    //background-image: url("file://{images}/custom_game/menu/tooltip_arrow_left.png");
+    background-image: url("s2r://panorama/images/tooltip_arrow_left_png.vtex");
+    background-repeat: no-repeat;
+    background-position: 0px 10px;
+    background-size: 24px 28px;
+
+    z-index: 2;
+}
+
+.arrow_fake {
+    width: 24px;
+    height: 34px;
+    margin-top: 10px;
+    //x: -25px;
+    x: 4px;
+    z-index: 2;
+
+    background-color: gradient( linear, 0% 0%, 0% 100%, from( #2d2d2dfd ), to( #1d1d1dfd ) );
+    clip: radial(0% 50%, 68deg, 44deg);
+}
+
+#border {
+    x: 0px;
+    z-index: -1;
+
+    background-color: #000000fd;
+}
+
 .menu_list_item_tooltip {
     width: 300px;
     min-height: 60px;
-    position: 426px 125px 0px;
+    //position: 426px 125px 0px;
+    //position: 31px 0px 0px;
+    //x: 22px;
+    x: 22px;
     padding: 10px;
     padding-right: 4px;
     flow-children: down;
 
-    background-color: #111111df;
-    border: 1px solid #000000de;
-    border-radius: 4px;
+    //background-color: #111111df;
+    background-color: gradient( linear, 0% 0%, 0% 100%, from( #2d2d2dfd ), to( #000000fd ) );
+    //border: 1px solid #000000de;
+    border: 2px solid black;
+    //border-radius: 4px;
     box-shadow: inset black 1px 1px 2px 2px;
 
     font-size: 16px;
@@ -18,7 +64,7 @@
 }
 
 .menu_header {
-    width: 210px;
+    width: 100%;
     height: 56px;
     margin-bottom: 6px;
     flow-children: right;
@@ -34,20 +80,27 @@
 }
 
 .header_info {
-    //height: 100%;
     width: 100%;
-    height: 45px;
+    //height: 45px;
+    //height: 100%;
     vertical-align: center;
+    //padding-top: 2px;
     margin-left: 12px;
+
     flow-children: down;
+    //overflow: clip;
 }
 
 .title_text {
-    font-size: 22;
+    padding-top: 2px;
+
+    font-size: 24;
+    //text-transform: uppercase;
 }
 
 .info_container {
     width: 100%;
+    padding-top: 3px;
     flow-children: right;
 }
 
@@ -62,12 +115,15 @@
 }
 
 .gold_text {
+    width: 32px;
+
+    text-align: left;
     color: gold;
 }
 
 .class_text {
-    horizontal-align: right;
-    color: red;
+    padding-left: 50px;
+    //color: red;
 }
 
 .menu_description {

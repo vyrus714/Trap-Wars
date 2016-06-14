@@ -52,6 +52,7 @@ var Config = GameUI.CustomUIConfig();
 
 
         // create tooltips and pass them info
+        info.reference = panel;
         panel.SetPanelEvent("onmouseover", (function(a, b) {return function() {
             Config.Events.FireEvent("show_tooltip", {id:a, layout:"file://{resources}/layout/custom_game/tooltips/menu_list_item_tooltip.xml", args:b});
             Config.Events.FireEvent("show_tooltip", {id:"help_tooltip", layout:"file://{resources}/layout/custom_game/tooltips/item_help_tooltip.xml"});
