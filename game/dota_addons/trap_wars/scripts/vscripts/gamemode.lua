@@ -312,26 +312,25 @@ function GameMode:OnBuyTrap(keys)
     -- if the position is a JS array, convert to a Vector()
     if type(keys.position) == "table" then keys.position = Vector(keys.position["0"], keys.position["1"], keys.position["2"]) end
 
-    -- success value
-    local green_light = true
+    -- run some tests to make sure we can buy this trap
+    local success = true
+    local hero = PlayerResource:GetSelectedHeroEntity(keys.playerid)
 
 
     -- only allow trap buying when the player is alive
-    if not PlayerResource:GetSelectedHeroEntity(keys.playerid):IsAlive() then green_light=false end
+    if not hero:IsAlive() then success=false end
+
+    -- check if the player is within range of the tile they're trying to sell on
+    if GameRules.build_distance < (GameMode:Get2DGridCenter(keys.position) - hero:GetAbsOrigin()):Length2D() then success=false end
 
     -- make sure the player can afford this trap
     local cost
     if GameRules.npc_traps[keys.name] then cost=GameRules.npc_traps[keys.name].GoldCost end
-    if cost and PlayerResource:GetGold(keys.playerid) < cost then green_light=false end
-
-    -- check to make sure the player is within range of the tile they are trying to build on
-    local length = (GameMode:Get2DGridCenter(keys.position) - PlayerResource:GetSelectedHeroEntity(keys.playerid):GetAbsOrigin()):Length2D()
-    if GameRules.build_distance < length then green_light=false end
-
+    if cost and PlayerResource:GetGold(keys.playerid) < cost then success=false end
 
 
     -- if we're allowed to make the trap
-    if green_light then
+    if success then
         -- attempt to spawn the trap
         local trap = GameMode:SpawnTrapForPlayer(keys.name, keys.position, keys.playerid)
 
@@ -348,6 +347,51 @@ function GameMode:OnBuyTrap(keys)
 
     -- we're not allowed, or trap creation failed  -  play failure sound
     CustomGameEventManager:Send_ServerToPlayer(PlayerResource:GetPlayer(keys.playerid), "trapwars_sound_event", {sound="General.Cancel"})
+end
+
+function GameMode:OnSellTrap(keys)    -- FIXME: perhaps find the trap id in JS, then send a table of entity ids, that way it can be extended to multiple-sell events
+    -- get the trap
+    local trap = EntIndexToHScript(keys.entindex)
+    local hero = PlayerResource:GetSelectedHeroEntity(keys.playerid)
+    local success = true
+
+
+    -- only allow trap selling when the player is alive
+    if not hero:IsAlive() then success=false end
+
+    -- make sure we actually got an entity at all
+    if not trap then
+        success=false
+    else
+        -- make sure it's on the right team
+        if trap:GetTeam() ~= PlayerResource:GetTeam(keys.playerid) then success=false end
+
+        -- if it has an owner that isn't this player, don't sell the other person's shit
+        if trap:GetPlayerOwner() and trap:GetPlayerOwnerID() ~= keys.playerid then success=false end
+
+        -- check if the player is within range of the tile they're trying to sell on
+        if GameRules.build_distance < (trap:GetAbsOrigin() - hero:GetAbsOrigin()):Length2D() then success=false end
+    end
+
+
+    -- if all our tests were successful, and we have a trap on that tile, initiate sellback
+    if success then
+        -- give the player back 50% of the gold (FIXME: create a 10-second long sell-back)  -- FIXME: if\when upgrades are added, factor that in here as well
+        PlayerResource:ModifyGold(keys.playerid, (GameRules.npc_traps[trap:GetUnitName()].GoldCost or 0)/2, false, DOTA_ModifyGold_SellItem)
+
+        -- hide the trap
+        trap:AddNoDraw()
+        -- remove the trap
+        trap:Kill(nil, nil)
+
+        -- play the sound effect
+        CustomGameEventManager:Send_ServerToPlayer(PlayerResource:GetPlayer(keys.playerid), "trapwars_sound_event", {sound="General.Sell"})
+        -- once extended to multiple trap sell events, use this if the table is >1
+        --CustomGameEventManager:Send_ServerToPlayer(PlayerResource:GetPlayer(keys.playerid), "trapwars_sound_event", {sound="General.CoinsBig"})
+    else
+        -- we're not allowed, or didn't find the trap  -  play failure sound
+        CustomGameEventManager:Send_ServerToPlayer(PlayerResource:GetPlayer(keys.playerid), "trapwars_sound_event", {sound="General.Cancel"})
+    end
 end
 
 function GameMode:OnBuyCreep(keys)

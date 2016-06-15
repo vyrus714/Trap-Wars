@@ -69,7 +69,7 @@ var Config = GameUI.CustomUIConfig();
 
         // set the right-click action
         panel.SetPanelEvent("oncontextmenu", (function(b){ return function(){
-            Config.Events.FireEvent("show_ghost", {
+            Config.Events.FireEvent("buy_ghost", {
                 //entity: a,
                 name: b
             });
@@ -118,5 +118,51 @@ var Config = GameUI.CustomUIConfig();
             skill.SetPanelEvent("onmouseover", (function(a, b) {return function(){ $.DispatchEvent("DOTAShowAbilityTooltip", a, b); }})(skill, info.abilities[j]));
             skill.SetPanelEvent("onmouseout", (function(a, b) {return function(){ $.DispatchEvent("DOTAHideAbilityTooltip"); }})());
         }
+    }
+
+
+    // Create a button for selling traps   FIXME: see if i can weasle this into the code above somehow, or add to xml, idk
+
+    // find the list panel
+    var list = $("#trap_list");
+    if(list) {
+        // now create the panel
+        var panel = $.CreatePanel("Button", list, "sell_button");
+        panel.AddClass("list_item");
+        panel.style["background-image"] = "url('s2r://materials/models/items/rubick/force_staff/rubick_immortal_gold_motion_detail_psd_2028423c.vtex');";  // FIXME!
+        panel.style["wash-color"] = "gold";
+
+        // set the position (see above)
+        var x = Math.floor(5*59 + 5*9);
+        var y = Math.floor(5*59 + 5*9);
+        panel.style["position"] = x+"px "+y+"px 0px;";
+
+        // throw a label with '$' on there  FIXME!!
+        var child = $.CreatePanel("Label", panel, "");
+        child.style["horizontal-align"] = "center";
+        child.style["vertical-align"] = "center";
+        child.style.color = "white";
+        child.style["text-shadow"] = "1px 2px 3px 2.0 black";
+        child.style["font-size"] = 40;
+        child.text = "$";
+
+        /* create tooltips and pass them info
+        panel.SetPanelEvent("onmouseover", (function(a, b) {return function() {
+            Config.Events.FireEvent("show_tooltip", {id:"help_tooltip", layout:"file://{resources}/layout/custom_game/tooltips/item_help_tooltip.xml"});
+        }})(panel.id+"_tooltip", {}));
+        panel.SetPanelEvent("onmouseout", (function(a) {return function() {
+            Config.Events.FireEvent("hide_tooltip", {id:"help_tooltip"});
+        }})(panel.id+"_tooltip"));*/
+
+        // set the left-click action
+        panel.SetPanelEvent("onactivate"   , function() {Config.Events.FireEvent("sell_ghost", {name: "sell"});});
+        panel.SetPanelEvent("oncontextmenu", function() {Config.Events.FireEvent("sell_ghost", {name: "sell"});});
+        /*
+        panel.SetPanelEvent("onactivate", (function(){ return function(){
+            Config.Events.FireEvent("buy_ghost", {
+                //entity: a,
+                name: "sell"
+            });
+        }}()));*/
     }
 }());
