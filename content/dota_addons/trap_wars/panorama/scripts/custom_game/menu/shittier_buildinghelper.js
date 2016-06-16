@@ -139,7 +139,12 @@ function OnMouseEvent(type, key_id) {
 }
 
 function DragSell() {
-    if(!GameUI.IsMouseDown(0)) {return;}
+    if(!GameUI.IsMouseDown(0)) {
+        if(!GameUI.IsShiftDown()) {
+            GameUI.CustomUIConfig().Events.FireEvent("hide_ghost", {});
+        }
+        return;
+    }
 
     // get the entity under the cursor
     var ent_array = GameUI.FindScreenEntities(GameUI.GetCursorPosition());
@@ -155,7 +160,12 @@ function DragSell() {
 }
 
 function DragBuy(last_tile_position) {
-    if(!GameUI.IsMouseDown(0)) {return;}
+    if(!GameUI.IsMouseDown(0)) {
+        if(!GameUI.IsShiftDown()) {
+            GameUI.CustomUIConfig().Events.FireEvent("hide_ghost", {});
+        }
+        return;
+    }
 
     // when called with no params (expected behavior), we don't want a starting position
     last_tile_position = last_tile_position || [null, null, null];
