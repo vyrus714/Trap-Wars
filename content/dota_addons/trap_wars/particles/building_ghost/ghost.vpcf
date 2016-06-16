@@ -9,6 +9,23 @@
 		{
 			_class = "C_OP_MovementPlaceOnGround"
 		},
+		{
+			_class = "C_OP_RemapCPtoVector"
+			m_nCPInput = 2
+			m_nFieldOutput = 6
+			m_vInputMax =
+			[
+				255.000000,
+				255.000000,
+				255.000000,
+			]
+			m_vOutputMax =
+			[
+				1.000000,
+				1.000000,
+				1.000000,
+			]
+		},
 	]
 	m_Renderers =
 	[
@@ -54,6 +71,7 @@
 				0,
 			]
 			m_flTintPerc = 1.000000
+			m_bDisableOperator = true
 		},
 	]
 	m_Emitters =

@@ -27,12 +27,27 @@ function OnBuyGhost(keys) {
 
 
     // create the particle(s)  FIXME: prepped for multiple particles here, not handled yet though
-    Config.BuildingGhost.particles = [
-        Particles.CreateParticle("particles/ghost.vpcf", ParticleAttachment_t.PATTACH_CUSTOMORIGIN, -1)
-    ];
-    // if there's an entity passed, set it as the particle control entity  FIXME
+    //Config.BuildingGhost.particles = [
+    //    Particles.CreateParticle("particles/building_ghost/ghost.vpcf", ParticleAttachment_t.PATTACH_CUSTOMORIGIN, -1)
+    //];
+    Config.BuildingGhost.particles = [];
+    for(i=0; i<9; i++) {
+        if(i == 4) {
+            // building ghost
+            Config.BuildingGhost.particles[i] = Particles.CreateParticle("particles/building_ghost/ghost.vpcf", ParticleAttachment_t.PATTACH_CUSTOMORIGIN, -1);
+        } else {
+            // tile ghost
+            Config.BuildingGhost.particles[i] = Particles.CreateParticle("particles/building_ghost/square.vpcf", ParticleAttachment_t.PATTACH_CUSTOMORIGIN, -1);
+        }
+
+        // set alpha and color
+        Particles.SetParticleControl(Config.BuildingGhost.particles[i], 1, [0.2, 0, 0]);
+        Particles.SetParticleControl(Config.BuildingGhost.particles[i], 2, [0, 216, 0]);
+    }
+
+    // if there's an entity passed, set it as the particle control entity for the ghost particle   FIXME
     if(keys.entity) {
-        Particles.SetParticleControlEnt(Config.BuildingGhost.particles[0], 1, keys.entity, ParticleAttachment_t.PATTACH_ABSORIGIN_FOLLOW, "follow_origin", keys.entity.GetAbsOrigin(), true);
+        Particles.SetParticleControlEnt(Config.BuildingGhost.particles[4], 1, keys.entity, ParticleAttachment_t.PATTACH_ABSORIGIN_FOLLOW, "follow_origin", keys.entity.GetAbsOrigin(), true);
         //(modelParticle, 1, entindex, ParticleAttachment_t.PATTACH_ABSORIGIN_FOLLOW, "follow_origin", Entities.GetAbsOrigin(entindex), true)
     }
 
@@ -43,8 +58,24 @@ function OnBuyGhost(keys) {
 function UpdateGhost() {
     // if the particles still exist
     if(Config.BuildingGhost.draw_ghost) {
-        // move the particle to the grid position of the cursor    FIXME: multiple particles
-        Particles.SetParticleControl(Config.BuildingGhost.particles[0], 0, MousePosToTilePos());
+        // move the particle to the grid position of the cursor
+        var tile_size = CustomNetTables.GetTableValue("trapwars_static_info", "generic") ? CustomNetTables.GetTableValue("trapwars_static_info", "generic").tile_size : 128;
+
+        var offset_position = MousePosToTilePos();
+        offset_position = [offset_position[0]-tile_size, offset_position[1]-tile_size, offset_position[2]];
+
+        for(i=0; i<9; i++) {
+            var pos = [offset_position[0] + tile_size*(i%3), offset_position[1] + tile_size*Math.floor(i/3), offset_position[2]];
+            Particles.SetParticleControl(Config.BuildingGhost.particles[i], 0, pos);
+
+            var traps = FindTrapsInRadius(pos, tile_size/2)
+            if(traps.length > 0) {
+                Particles.SetParticleControl(Config.BuildingGhost.particles[i], 2, [216, 0, 0]);
+            } else {
+                Particles.SetParticleControl(Config.BuildingGhost.particles[i], 2, [0, 216, 0]);
+            }
+        }
+        //Particles.SetParticleControl(Config.BuildingGhost.particles[0], 0, MousePosToTilePos());
 
         // do it all again in 1/60 seconds
         $.Schedule(1/60, UpdateGhost);
@@ -102,8 +133,10 @@ function OnHideGhost() {
 
 
         // remove the particles
-        Particles.DestroyParticleEffect(Config.BuildingGhost.particles[0], true);
-        Particles.ReleaseParticleIndex(Config.BuildingGhost.particles[0]);
+        for(var i in Config.BuildingGhost.particles) {
+            Particles.DestroyParticleEffect(Config.BuildingGhost.particles[i], true);
+            Particles.ReleaseParticleIndex(Config.BuildingGhost.particles[i]);
+        }
         Config.BuildingGhost.particles = [];
     }
 }
@@ -213,6 +246,44 @@ function SellTrap(entity_index) {  // FIXME: change this to entity index rather 
         playerid : Players.GetLocalPlayer(),
         entindex : entity_index
     });
+}
+
+function Distance2D(pos1, pos2) {
+    return Math.sqrt(Math.pow(pos1[0]-pos2[0], 2) + Math.pow(pos1[1]-pos2[1], 2));
+}
+
+// apparently this is more cpu friendly
+function Distance2DSquared(pos1, pos2) {
+    return Math.pow(pos1[0]-pos2[0], 2) + Math.pow(pos1[1]-pos2[1], 2);
+}
+
+function FindCreaturesInRadius(position, radius) {
+    var found_creatures = [];
+
+    var creatures = Entities.GetAllEntitiesByClassname("npc_dota_creature");
+    for(var i in creatures) {
+        //if(Distance2D(Entities.GetAbsOrigin(creatures[i]), position) < radius) {
+        if(Distance2DSquared(Entities.GetAbsOrigin(creatures[i]), position) < (radius*radius)) {
+            found_creatures.push(creatures[i]);
+        }
+    }
+
+    return found_creatures;
+}
+
+function FindTrapsInRadius(position, radius) {
+    var traps = [];
+
+    //var creatures = FindCreaturesInRadius(position, radius);
+    var creatures = Entities.GetAllEntitiesByClassname("npc_dota_creature");
+    for(var i in creatures) {
+        //if(CustomNetTables.GetTableValue("trapwars_npc_traps", Entities.GetUnitName(creatures[i]))) {
+        if(CustomNetTables.GetTableValue("trapwars_npc_traps", Entities.GetUnitName(creatures[i])) && Distance2DSquared(Entities.GetAbsOrigin(creatures[i]), position) < (radius*radius)) {
+            traps.push(creatures[i]);
+        }
+    }
+
+    return traps;
 }
 
 
