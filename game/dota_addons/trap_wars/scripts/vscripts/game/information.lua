@@ -31,7 +31,7 @@ function GameMode:GetValidTeams()
 
     -- if valid_teams is out of bounds, use default radiant/dire
     if Util:TableCount(valid_teams) < 1 or 10 < Util:TableCount(valid_teams) then
-        valid_teams = { DOTA_TEAM_GOODGUYS=true, DOTA_TEAM_BADGUYS=true }
+        valid_teams = {[DOTA_TEAM_GOODGUYS]=true, [DOTA_TEAM_BADGUYS]=true}
     end
 
     return valid_teams
