@@ -12,6 +12,76 @@ require('game/actions')
 function GameMode:InitGameMode()
     -- load settings from the setup file
     GameMode:SetupGameMode()
+                
+    -- new grid claims
+    Timers:CreateTimer(2/30, function()
+        for index, info in pairs(GameRules.GroundGrid) do
+            if type(index) == "number" and info.plot then
+                -- check to see if someone's already claimed this grid plot  FIXME: turn this into an info function
+                local claimed = nil
+                for playerid, claims in pairs(GameRules.player_plots) do
+                    -- make sure the player is on the right team
+                    if PlayerResource:GetTeam(playerid) == info.team then
+                        for _, claim in pairs(claims) do
+                            if claim == info.plot then claimed = playerid end  -- FIXME: just use bool, this was for debug
+                        end
+                    end
+                end
+
+                if claimed == nil then
+                    local grid_pos = GameMode:GetGridPosition(index)
+                    for playerid, _ in pairs(GameRules.valid_players) do
+                        if PlayerResource:GetTeam(playerid) == info.team then
+                            local hero = PlayerResource:GetSelectedHeroEntity(playerid)
+                            if hero then
+                                local player_pos = hero:GetAbsOrigin()
+
+                                if (grid_pos - player_pos):Length2D() < 45 then
+                                    -- claim the grid plot
+                                    if not GameRules.player_plots[playerid] then GameRules.player_plots[playerid] = {} end
+                                    table.insert(GameRules.player_plots[playerid], info.plot)
+
+                                    break;
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+
+        return 1/30
+    end)
+
+
+    -- light up the grids  FIXME: update to particles, and only do the ones that can be claimed
+    Timers:CreateTimer(2/30, function()
+        for index, info in pairs(GameRules.GroundGrid) do
+            if type(index) == "number" then
+                -- check to see if someone's already claimed this grid plot  FIXME: turn this into an info function
+                local claimed = nil
+                for playerid, claims in pairs(GameRules.player_plots) do
+                    -- make sure the player is on the right team
+                    if PlayerResource:GetTeam(playerid) == info.team then
+                        for _, claim in pairs(claims) do
+                            if claim == info.plot then claimed = playerid end  -- FIXME: just use bool, this was for debug
+                        end
+                    end
+                end
+                
+                if info.team then
+                    local color
+                    if info.team == DOTA_TEAM_GOODGUYS then color = Vector(0, 255, 0) end
+                    if info.team == DOTA_TEAM_BADGUYS  then color = Vector(255, 0, 0) end
+                    if claimed ~= nil then color = GameRules.player_colors[claimed] end
+                    DebugDrawBoxDirection(GameMode:GetGridPosition(index), Vector(-30, -30, 0), Vector(30, 30, 1), Vector(0, 0, 0), color or Vector(64, 64, 64), 0.4, 4/30)
+                end
+            end
+        end
+
+        return 4/30
+    end)
+
 
     -------------------------------------------------------------------
     -- Claiming / Drawing unclaimed grid areas
@@ -225,11 +295,19 @@ function GameMode:OnGameInProgress()
                 local position = hero:GetAbsOrigin()
                 if position ~= nil then
                     -- draw some chmansy debug lines
-                    DebugDrawBox(GameMode:Get2DGridCenter(position), Vector(-64, -64, 0), Vector(64, 64, 0), 0, 128, 0, 0.75, 1/10)
-                    DebugDrawSphere(GameMode:GetGridCenter(position), Vector(0, 0, 128), 0.75, 20, true, 1/10)
+                    DebugDrawBox(GameMode:SnapToGrid2D(position), Vector(-32, -32, 0), Vector(32, 32, 0), 0, 128, 0, 0.75, 1/10)
+                    --DebugDrawSphere(GameMode:SnapToGrid2D(position)+Vector(0, 0, 32), Vector(0, 0, 128), 0.75, 20, true, 1/10)
                     -- if in one of this player's grids, draw a schmansy sphere
                     if GameRules.player_grids[pid] ~= nil and GameMode:IsInPlayersGrid(position, pid) then
-                        DebugDrawSphere(GameMode:GetGridCenter(position), Vector(128, 0, 0), 0.75, 24, true, 1/10)
+                        --DebugDrawSphere(GameMode:SnapToGrid2D(position)+Vector(0, 0, 32), Vector(128, 0, 0), 0.75, 24, true, 1/10)
+                    end
+
+                    local length = 2
+                    local width  = 2
+                    if GameMode:CanTrapGoHere(position, length, width) then
+                        DebugDrawBox(GameMode:SnapBoxToGrid2D(position, length, width), Vector(-length*32, -width*32, 0), Vector(length*32, width*32, 0), 0, 255, 0, 0.75, 1/10)
+                    else
+                        DebugDrawBox(GameMode:SnapBoxToGrid2D(position, length, width), Vector(-length*32, -width*32, 0), Vector(length*32, width*32, 0), 255, 0, 0, 0.75, 1/10)
                     end
                 end
             end
@@ -299,6 +377,9 @@ function GameMode:OnEntityKilled(keys)
     if entity.GetUnitName then
         -- if it's a trap
         if GameRules.npc_traps[entity:GetUnitName()] then
+            -- remove the trap from the grid
+            GameMode:RemoveTrapFromGrid(keys.entindex_killed)
+
             -- traps will mostly be removed via the ui, so they need to be removed faster than normal
             -- for traps that do have health, particles will be used in place of death animations anyway
             Timers:CreateTimer(1, function()  -- give any other functions 1 second to refer to this, then remove it
@@ -318,15 +399,15 @@ function GameMode:OnBuyTrap(keys)
 
 
     -- only allow trap buying when the player is alive
-    if not hero:IsAlive() then success=false end
+    if not hero:IsAlive() then success = false end
 
     -- check if the player is within range of the tile they're trying to sell on
-    if GameRules.build_distance < (GameMode:Get2DGridCenter(keys.position) - hero:GetAbsOrigin()):Length2D() then success=false end
+    if GameRules.build_distance < (GameMode:SnapToGrid2D(keys.position) - hero:GetAbsOrigin()):Length2D() then success = false end
 
     -- make sure the player can afford this trap
     local cost
-    if GameRules.npc_traps[keys.name] then cost=GameRules.npc_traps[keys.name].GoldCost end
-    if cost and PlayerResource:GetGold(keys.playerid) < cost then success=false end
+    if GameRules.npc_traps[keys.name] then cost = GameRules.npc_traps[keys.name].GoldCost end
+    if cost and PlayerResource:GetGold(keys.playerid) < cost then success = false end
 
 
     -- if we're allowed to make the trap
@@ -480,13 +561,13 @@ function GameMode:OnTestButton(keys)
     if keys.id == 1 then
         --print("LUA: "..keys.id)
         local hero = PlayerResource:GetSelectedHeroEntity(0)
-        GameMode:OnBuyTrap{name="npc_trapwars_fire_vent", position=hero:GetAbsOrigin()+Vector(100, 0, 0), playerid=0}
+        GameMode:OnBuyTrap{name="npc_trapwars_fire_vent", position=hero:GetAbsOrigin(), playerid=0}
     end
     --------------------
     if keys.id == 2 then
         --print("LUA: "..keys.id)
         local hero = PlayerResource:GetSelectedHeroEntity(0)
-        GameMode:OnBuyTrap{name="npc_trapwars_floor_spikes", position=hero:GetAbsOrigin()+Vector(100, 0, 0), playerid=0}
+        GameMode:OnBuyTrap{name="npc_trapwars_wood_fence", position=hero:GetAbsOrigin(), playerid=0}
     end
     --------------------
     if keys.id == 3 then

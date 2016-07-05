@@ -357,3 +357,150 @@ function GameMode:IsATrapInTile( position )
 
     return false
 end
+
+
+------------------------
+-- New Grid Functions --GameRules.GroundGrid
+------------------------
+function GameMode:SnapToGrid2D(position)
+    --return Vector(math.floor(position.x/64)*64+32, math.floor(position.y/64)*64+32, position.z)
+    return Vector(position.x-(position.x%64)+32, position.y-(position.y%64)+32, position.z)
+end
+
+function GameMode:SnapToGround(position)
+    position = GameMode:SnapToGrid2D(position)
+    position.z = GetGroundHeight(position, nil)
+    return position
+end
+
+function GameMode:SnapToAir(position)
+    position = GameMode:SnapToGrid2D(position)
+    position.z = GetGroundHeight(position, nil) + 128
+    return position
+end
+
+function GameMode:SnapBoxToGrid2D(position, length, width)
+    -- make sure we have a useable length and width (any overlap is counted as taking up that whole tile)
+    length, width = math.ceil(length) or 1, math.ceil(width) or 1
+
+
+    -- align the position of the center to the grid
+    if length%2 ~= 0 then
+        position.x = position.x-position.x%64+32
+    else
+        if position.x%64 > 32 then
+            position.x = position.x-position.x%64+64
+        else
+            position.x = position.x-position.x%64
+        end
+    end
+
+    if width%2 ~= 0 then
+        position.y = position.y-position.y%64+32
+    else
+        if position.y%64 > 32 then
+            position.y = position.y-position.y%64+64
+        else
+            position.y = position.y-position.y%64
+        end
+    end
+
+
+    return position
+end
+
+function GameMode:GetGridArray()
+    local gridnav = {}
+
+    -- find all the pathable gridnav tiles (counting trees as unpathable\non-viable tiles)
+    for i=0, GameRules.grid_length*GameRules.grid_width-1 do
+        local pos = GameRules.grid_start + Vector(64*(i%GameRules.grid_length), 64*math.floor(i/GameRules.grid_width))
+        pos = Vector(pos.x, pos.y, GetGroundHeight(pos, nil))
+
+        if GridNav:IsTraversable(pos) and not GridNav:IsNearbyTree(pos, 1, true) then
+            local info = {}
+            
+            -- get the markers from the map and extract their info. after that's done, remove them
+            for _, marker in pairs(Entities:FindAllByNameWithin("plot_marker", pos, 32)) do
+                info.team = marker:Attribute_GetIntValue("team", -1)
+                info.plot = marker:Attribute_GetIntValue("plot", -1)
+
+                for key, value in pairs(info) do
+                    if value < 0 then info[key] = nil end
+                end
+
+                -- remove the marker
+                marker:Kill()
+            end
+            -- FIXME: potentially add in the ground height of this tile, since javascript can't get it
+            --info.height = pos.z
+
+            -- push this info into the gridnav tile
+            gridnav[i] = info
+        end
+    end
+
+    return gridnav
+end
+
+function GameMode:GetGridPosition(index)
+    local pos = GameRules.grid_start + Vector(64*(index%GameRules.grid_length), 64*math.floor(index/GameRules.grid_width))
+    return Vector(pos.x, pos.y, GetGroundHeight(pos, nil))
+end
+
+function GameMode:GetGridIndex(position)
+    local delta = Vector(position.x-(GameRules.grid_start.x-32), position.y-(GameRules.grid_start.y-32))
+
+    -- if the passed position is below our min position, or above our max position (it's outside the map)
+    if delta.x < 0 or delta.y < 0 or delta.x/64 > GameRules.grid_length or delta.y/64 > GameRules.grid_width then return nil end
+
+    return math.floor(delta.x/64) + math.floor(delta.y/64)*GameRules.grid_length
+end
+
+function GameMode:CanTrapGoHere(position, length, width)
+    length, width = math.ceil(length), math.ceil(width)
+    position = GameMode:SnapBoxToGrid2D(position, length, width)
+    local start_index = GameMode:GetGridIndex(position - Vector(length*32, width*32, 0) + Vector(32, 32, 0))
+
+    -- starting at the lower left corner, iterate through the grid tiles in this box
+    for i=0, length*width-1 do
+        local index = start_index + i%length + math.floor(i/width)*GameRules.grid_length
+        local tile = GameRules.GroundGrid[index]
+
+        -- make sure there's no other trap here
+        if not tile or (tile.trap and IsValidEntity(EntIndexToHScript(tile.trap))) then return false end  
+    end
+
+    return true
+end
+
+-- not really that accurate, since different teams can all have a plot of the same #, however i'm checking for teams separately anyway
+function GameMode:DoesPlayerHavePlot(playerid, plot_number)
+    if not GameRules.player_plots[playerid] then return false end
+
+    for _, plot in pairs(GameRules.player_plots[playerid]) do
+        if plot_number == plot then return true end
+    end
+
+    return false
+end
+
+function GameMode:CanPlayerBuildHere(playerid, position, length, width)
+    length, width = math.ceil(length), math.ceil(width)
+    position = GameMode:SnapBoxToGrid2D(position, length, width)
+    local team = PlayerResource:GetTeam(playerid)
+    local start_index = GameMode:GetGridIndex(position - Vector(length*32, width*32, 0) + Vector(32, 32, 0))
+
+    -- starting at the lower left corner, iterate through the grid tiles in this box
+    for i=0, length*width-1 do
+        local index = start_index + i%length + math.floor(i/width)*GameRules.grid_length
+        local tile = GameRules.GroundGrid[index]
+
+        -- if we don't have a tile here, OR the tile's team doesn't match our player's, OR we have a plot # that isn't claimed by our player, then return
+        if not tile or tile.team ~= team or (tile.plot and not GameMode:DoesPlayerHavePlot(playerid, tile.plot)) then
+            return false
+        end
+    end
+
+    return true
+end

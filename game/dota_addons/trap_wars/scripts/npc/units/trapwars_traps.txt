@@ -96,6 +96,8 @@
         "Image"                     "file://{images}/custom_game/traps/floor_spikes.png"
         "Class"                     "c_damage"
         "GoldCost"                  "8216"
+        "Length"                    "2"
+        "Width"                     "2"
         "modifiers"
         {
             "1"                     "modifier_phased"
@@ -199,6 +201,8 @@
         //"Image"                     ""  FIXME
         "Class"                     "c_damage"
         "GoldCost"                  "250"
+        "Length"                    "2"
+        "Width"                     "2"
         "modifiers"
         {
             "1"                     "modifier_phased"
@@ -258,6 +262,8 @@
         "Image"                     "file://{images}/custom_game/traps/wood_fence.png"
         "Class"                     "c_move"
         "GoldCost"                  "80"
+        "Length"                    "2"
+        "Width"                     "2"
         "modifiers"
         {
             "1"                     "modifier_barricade_fencing"
@@ -303,6 +309,8 @@
         "Image"                     "file://{images}/custom_game/traps/stone_wall.png"
         "Class"                     "c_move"
         "GoldCost"                  "240"
+        "Length"                    "2"
+        "Width"                     "2"
         "modifiers"
         {
             "1"                     "modifier_point_simple_obstruction"

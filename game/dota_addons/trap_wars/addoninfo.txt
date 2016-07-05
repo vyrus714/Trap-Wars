@@ -4,4 +4,8 @@
 	{
 		"MaxPlayers"		"6"
 	}
+    "test_map"
+    {
+        "MaxPlayers"        "4"
+    }
 }

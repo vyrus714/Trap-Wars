@@ -33,6 +33,14 @@ function GameMode:SetupGameMode()
     GameRules.max_player_creeps = 7    -- FIXME: same as ^^
     GameRules.UserIDPlayerID    = {}   -- for associating userid's and playerid's for event handling; in OnPlayerConnectFull()
 
+    GameRules.grid_start  = Vector(GetWorldMinX(), GetWorldMinY())
+    GameRules.grid_length = math.abs(GetWorldMaxX()-GetWorldMinX())/64+1
+    GameRules.grid_width  = math.abs(GetWorldMaxY()-GetWorldMinY())/64+1
+
+    GameRules.GroundGrid = {}
+    GameRules.AirGrid    = {}  -- starts empty
+    Timers:CreateTimer(1/30, function() GameRules.GroundGrid = GameMode:GetGridArray() end)
+
     ---------------------------------------------
     -- Player Specific Values | key = playerid --
     ---------------------------------------------
@@ -40,6 +48,7 @@ function GameMode:SetupGameMode()
     GameRules.player_colors = {}  -- filled when players first connect in OnPlayerConnectFull()
     GameRules.player_grids  = {}  -- store grids per-player ala vvvv  FIXME
     GameRules.player_creeps = {}  -- store creeps per-player, rather than a jumbled mess per team  FIXME
+    GameRules.player_plots  = {}
 
     ----------------------------------------------
     -- Team Specific Values | key = team number --

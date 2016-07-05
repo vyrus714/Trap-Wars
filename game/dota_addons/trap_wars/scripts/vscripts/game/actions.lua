@@ -1,29 +1,41 @@
 local GameMode = GameRules.GameMode
 
 function GameMode:SpawnTrap(name, position, team, owner)
-    -- clamp the position to the ground   FIXME: if i plan on doing multi-story high traps, needs changing
-    position = GetGroundPosition(position, nil)
+    -- get the length and width
+    local length = GameRules.npc_traps[name].Length
+    local width  = GameRules.npc_traps[name].Width
+
+    -- snap the position to the grid, based on our trap's length and width
+    position = GameMode:SnapBoxToGrid2D(position, length, width)
+
 
     -- make sure this is a valid trap
     if not GameRules.npc_traps[name] then return nil end
-    -- make sure there's no building here already
-    if GameMode:IsATrapInTile(position) then return nil end
+
+    -- make sure a trap can go here
+    if not GameMode:CanTrapGoHere(position, length, width) then return nil end
+
     -- make sure it's a valid team
     if team < DOTA_TEAM_FIRST or DOTA_TEAM_CUSTOM_MAX < team then return nil end
 
 
     -- plonk trap
-    local trap = CreateUnitByName(name, GameMode:Get2DGridCenter(position), false, nil, owner, team)
+    local trap = CreateUnitByName(name, position, false, nil, owner, team)
 
-    -- add modifiers to the trap (if it has them)
-    if GameRules.npc_traps[name].modifiers then
-        for _, modifier in pairs(GameRules.npc_traps[name].modifiers) do
-            trap:AddNewModifier(nil, nil, modifier, {}) 
+    if trap then
+        -- add this trap's entity index to the grid
+        GameMode:AddTrapToGrid(position, length, width, trap:GetEntityIndex())
+
+        -- add modifiers to the trap (if it has them)
+        if GameRules.npc_traps[name].modifiers then
+            for _, modifier in pairs(GameRules.npc_traps[name].modifiers) do
+                trap:AddNewModifier(nil, nil, modifier, {}) 
+            end
         end
-    end
-    -- if this trap isn't phased, move any units out of it
-    if not trap:HasModifier("modifier_phased") then GameMode:UnstuckUnitsInTile(position) end
 
+        -- if this trap isn't phased, move any units out of it
+        if not trap:HasModifier("modifier_phased") then GameMode:UnstuckUnitsInTile(position) end
+    end
 
     return trap
 end
@@ -31,12 +43,19 @@ end
 function GameMode:SpawnTrapForPlayer(name, position, playerid)
     -- make sure we were passed a valid player
     if not PlayerResource:IsValidTeamPlayer(playerid) then return nil end
+
+
     -- make sure the player is allowed to make a trap here
-    if not GameMode:IsInPlayersGrid(position, playerid) and not GameMode:IsInSharedGrid(position, PlayerResource:GetTeam(playerid)) then return nil end
+    --if not GameMode:IsInPlayersGrid(position, playerid) and not GameMode:IsInSharedGrid(position, PlayerResource:GetTeam(playerid)) then return nil end
+
+    -- get the length and width
+    local length = GameRules.npc_traps[name].Length or 1
+    local width  = GameRules.npc_traps[name].Width  or 1
+    if not GameMode:CanPlayerBuildHere(playerid, position, length, width) then return nil end
 
 
     -- create the trap
-    return GameMode:SpawnTrap(name, position, PlayerResource:GetTeam(playerid), PlayerResource:GetSelectedHeroEntity(playerid))
+    return GameMode:SpawnTrap(name, position, PlayerResource:GetTeam(playerid), PlayerResource:GetSelectedHeroEntity(playerid))  -- FIXME: use the hero or player?
 end
 
 
@@ -91,5 +110,30 @@ function GameMode:SpawnLaneCreeps(min_level, max_level)
                     Queue     = true }
             end
         end
+    end
+end
+
+
+----------------------------------------------
+--                   Grid                   --
+----------------------------------------------
+function GameMode:AddTrapToGrid(position, length, width, entity_index)
+    length, width = math.ceil(length), math.ceil(width)
+    position = GameMode:SnapBoxToGrid2D(position, length, width)
+    local start_index = GameMode:GetGridIndex(position - Vector(length*32, width*32, 0) + Vector(32, 32, 0))
+
+    -- starting at the lower left corner, iterate through the grid tiles in this box
+    for i=0, length*width-1 do
+        local index = start_index + i%length + math.floor(i/width)*GameRules.grid_length
+        local tile = GameRules.GroundGrid[index]
+
+        if tile then tile.trap = entity_index end
+    end
+end
+
+function GameMode:RemoveTrapFromGrid(entity_index)
+    for _, info in pairs(GameRules.GroundGrid) do
+        --if IsNumber(index) and info.trap == entity_index then info.trap = nil end
+        if info.trap == entity_index then info.trap = nil end
     end
 end
