@@ -2,8 +2,8 @@ local GameMode = GameRules.GameMode
 
 function GameMode:SpawnTrap(name, position, team, owner)
     -- get the length and width
-    local length = GameRules.npc_traps[name].Length
-    local width  = GameRules.npc_traps[name].Width
+    local length = GameRules.npc_traps[name].Length or 1
+    local width  = GameRules.npc_traps[name].Width  or 1
 
     -- snap the position to the grid, based on our trap's length and width
     position = GameMode:SnapBoxToGrid2D(position, length, width)
@@ -34,7 +34,7 @@ function GameMode:SpawnTrap(name, position, team, owner)
         end
 
         -- if this trap isn't phased, move any units out of it
-        if not trap:HasModifier("modifier_phased") then GameMode:UnstuckUnitsInTile(position) end
+        if not trap:HasModifier("modifier_phased") then GameMode:UnstickUnitsInBox(position, length, width) end
     end
 
     return trap
@@ -44,22 +44,14 @@ function GameMode:SpawnTrapForPlayer(name, position, playerid)
     -- make sure we were passed a valid player
     if not PlayerResource:IsValidTeamPlayer(playerid) then return nil end
 
-
     -- make sure the player is allowed to make a trap here
-    --if not GameMode:IsInPlayersGrid(position, playerid) and not GameMode:IsInSharedGrid(position, PlayerResource:GetTeam(playerid)) then return nil end
-
-    -- get the length and width
     local length = GameRules.npc_traps[name].Length or 1
     local width  = GameRules.npc_traps[name].Width  or 1
     if not GameMode:CanPlayerBuildHere(playerid, position, length, width) then return nil end
 
-
     -- create the trap
     return GameMode:SpawnTrap(name, position, PlayerResource:GetTeam(playerid), PlayerResource:GetSelectedHeroEntity(playerid))  -- FIXME: use the hero or player?
 end
-
-
-
 
 
 ----------------------------------------------
@@ -135,5 +127,22 @@ function GameMode:RemoveTrapFromGrid(entity_index)
     for _, info in pairs(GameRules.GroundGrid) do
         --if IsNumber(index) and info.trap == entity_index then info.trap = nil end
         if info.trap == entity_index then info.trap = nil end
+    end
+end
+
+-- find clear space for units in a box
+function GameMode:UnstickUnitsInBox(position, length, width)
+    length, width = math.ceil(length), math.ceil(width)
+    position = GameMode:SnapBoxToGrid2D(position, length, width)
+    local start_index = GameMode:GetGridIndex(position - Vector(length*32, width*32, 0) + Vector(32, 32, 0))
+
+    -- starting at the lower left corner, find clear space for any units in each tile of the box
+    for i=0, length*width-1 do
+        local tile_pos = GameMode:GetGridPosition(start_index + i%length + math.floor(i/width)*GameRules.grid_length)
+
+        local ents = Entities:FindAllInSphere(tile_pos, 45.3)  -- 45.3 being the diagonal of a 64x64 sized tile
+        for _, ent in pairs(ents) do
+            if ent.IsDeniable ~= nil then FindClearSpaceForUnit(ent, ent:GetAbsOrigin(), true) end
+        end
     end
 end

@@ -27,7 +27,6 @@ function GameMode:SetupGameMode()
     -- Generic Variables --
     -----------------------
     GameRules.default_lives     = 50
-    GameRules.TileSize          = 128  -- in case we ever need to dynamically change this
     GameRules.build_distance    = 768  -- minimum distance between the player and the desired tile to be able to build on said tile
     GameRules.max_player_grids  = 1    -- FIXME: perhaps add some map\player variability to this
     GameRules.max_player_creeps = 7    -- FIXME: same as ^^
@@ -46,7 +45,6 @@ function GameMode:SetupGameMode()
     ---------------------------------------------
     GameRules.valid_players = {}  -- filled when players join teams in OnPlayerTeam()
     GameRules.player_colors = {}  -- filled when players first connect in OnPlayerConnectFull()
-    GameRules.player_grids  = {}  -- store grids per-player ala vvvv  FIXME
     GameRules.player_creeps = {}  -- store creeps per-player, rather than a jumbled mess per team  FIXME
     GameRules.player_plots  = {}
 
@@ -57,19 +55,14 @@ function GameMode:SetupGameMode()
     GameRules.team_lives       = {}
     GameRules.team_spawners    = {}
     GameRules.team_portals     = {}
-    GameRules.team_shared_grid = {}
-    GameRules.team_open_grids  = {}
 
     -- fill up those tables with info
     for team, _ in pairs(GameRules.valid_teams) do
         GameRules.team_lives      [team] = GameRules.default_lives
         GameRules.team_spawners   [team] = GameMode:GetSpawners(team)
         Timers:CreateTimer(1, function() GameRules.team_portals[team] = GameMode:GetPortals(team) end) -- doesn't like making particles so early FIXME
-        GameRules.team_shared_grid[team] = GameMode:GetSharedGrid(team)
-        GameRules.team_open_grids [team] = GameMode:GetUnclaimedGrids(team)  -- FIXME: give this a nettable\move drawing clientside?
 
-        -- set net table initial values for the stuff we're using above here
-        CustomNetTables:SetTableValue("trapwars_team_shared_grid", ""..team, GameRules.team_shared_grid[team]) -- FIXME: sending full unit handle, bad!
+        -- set net-table initial values
         CustomNetTables:SetTableValue("trapwars_team_scores", ""..team, {GameRules.team_lives[team]})
     end
 
@@ -111,7 +104,6 @@ function GameMode:SetupGameMode()
     CustomNetTables:SetTableValue("trapwars_static_info", "valid_teams", GameRules.valid_teams)
     CustomNetTables:SetTableValue("trapwars_static_info", "generic", {
         default_lives     = GameRules.default_lives,
-        tile_size         = GameRules.TileSize,
         build_distance    = GameRules.build_distance,
         max_player_grids  = GameRules.max_player_grids,
         max_player_creeps = GameRules.max_player_creeps
@@ -122,11 +114,9 @@ function GameMode:SetupGameMode()
 
     -- other, changing, net tables each get their own table, so the values can update independantly
     -- these are listed here for reference, even though they are set\updated elsewhere
-    -- "trapwars_team_shared_grid", "team_id", GameRules.team_shared_grid[team]  forget what that is
     -- "trapwars_team_scores", "team_id", {int}
     -- "trapwars_valid_players", "pid", {boolean}
     -- "trapwars_player_colors", "pid", {vector}
-    -- "trapwars_player_grids", "pid", grid tables  --FIXME: implement
 
     ------------------------
     -- Register Listeners --
