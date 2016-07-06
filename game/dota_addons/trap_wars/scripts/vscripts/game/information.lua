@@ -95,7 +95,6 @@ function GameMode:SnapBoxToGrid2D(position, length, width)
     -- make sure we have a useable length and width (any overlap is counted as taking up that whole tile)
     length, width = math.ceil(length) or 1, math.ceil(width) or 1
 
-
     -- align the position of the center to the grid
     if length%2 ~= 0 then
         position.x = position.x-position.x%64+32
@@ -116,7 +115,6 @@ function GameMode:SnapBoxToGrid2D(position, length, width)
             position.y = position.y-position.y%64
         end
     end
-
 
     return position
 end

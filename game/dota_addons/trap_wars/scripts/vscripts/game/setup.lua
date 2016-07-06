@@ -32,13 +32,19 @@ function GameMode:SetupGameMode()
     GameRules.max_player_creeps = 7    -- FIXME: same as ^^
     GameRules.UserIDPlayerID    = {}   -- for associating userid's and playerid's for event handling; in OnPlayerConnectFull()
 
-    GameRules.grid_start  = Vector(GetWorldMinX(), GetWorldMinY())
-    GameRules.grid_length = math.abs(GetWorldMaxX()-GetWorldMinX())/64+1
-    GameRules.grid_width  = math.abs(GetWorldMaxY()-GetWorldMinY())/64+1
+    -- grid stuffs
+    GameRules.grid_start  = Vector(0, 0)
+    GameRules.grid_length = 0
+    GameRules.grid_width  = 0
+    GameRules.GroundGrid  = {}
+    GameRules.AirGrid     = {}  -- starts empty, filled dynamically based on the ground grid
 
-    GameRules.GroundGrid = {}
-    GameRules.AirGrid    = {}  -- starts empty
-    Timers:CreateTimer(1/30, function() GameRules.GroundGrid = GameMode:GetGridArray() end)
+    Timers:CreateTimer(1/30, function()
+        GameRules.grid_start  = Vector(GetWorldMinX(), GetWorldMinY())
+        GameRules.grid_length = math.abs(GetWorldMaxX()-GetWorldMinX())/64+1
+        GameRules.grid_width  = math.abs(GetWorldMaxY()-GetWorldMinY())/64+1
+        GameRules.GroundGrid  = GameMode:GetGridArray()
+    end)
 
     ---------------------------------------------
     -- Player Specific Values | key = playerid --
