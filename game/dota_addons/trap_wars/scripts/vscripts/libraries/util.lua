@@ -70,7 +70,7 @@ function Util:DeepCopy(orig)
     return copy
 end
 
-function Util:TableCount( t )
+function Util:TableCount(t)
     local n = 0
     for _ in pairs( t ) do
         n = n + 1
@@ -78,7 +78,7 @@ function Util:TableCount( t )
     return n
 end
 
-function Util:ShallowTableCompareStrict( t1, t2 )
+function Util:ShallowTableCompareStrict(t1, t2)
     if type(t1) ~= "table" or type(t2) ~= "table" then return false end
 
     -- if length is not the same, false
@@ -93,7 +93,7 @@ function Util:ShallowTableCompareStrict( t1, t2 )
     return true
 end
 
-function Util:ShallowTableCompareLoose( t1, t2 )
+function Util:ShallowTableCompareLoose(t1, t2)
     if type(t1) ~= "table" or type(t2) ~= "table" then return false end
 
     -- if the length is not the same, false
@@ -118,7 +118,7 @@ function Util:ShallowTableCompareLoose( t1, t2 )
 end
 
 -- distance between two points in 2d or 3d, wants a Vector() -or- table with x,y,z values
-function Util:Distance( point1, point2 )
+function Util:Distance(point1, point2)
     local inside = (point2.x-point1.x)^2 + (point2.y-point1.y)^2
     if type(point1.z) == "number" and type(point2.z) == "number" then
         inside = inside + (point2.z-point1.z)^2
@@ -131,21 +131,45 @@ end
 
 -- valve forgot a few math lib functions: http://lua-users.org/wiki/InfAndNanComparisons
 -- Gives 1 if value is +inf, -1 for -inf, and false otherwise (even for NaN)
-function math.isinf( value )
+function math.isinf(value)
     if type(value) ~= "number" then return false end
     if value == math.huge then return 1 end
     if value == -math.huge then return -1 end
     return false
 end
+
 -- Gives true if value is NaN and false otherwise
-function math.isnan( value )
+function math.isnan(value)
     if type(value) ~= "number" then return true end
     if value ~= value then return true end
     return false
 end
--- Gives true if value is NaN and not +/-inf and false otherwise
-function math.finite( value )
+
+-- Gives true if value is not NaN and not +/-inf and false otherwise
+function math.finite(value)
     if type(value) ~= "number" then return false end
     if -math.huge < value and value < math.huge then return true end
     return false
 end
+
+-- this one isn't in lua's math lib, however it is present in javascript's
+-- returns -1, 0, 1, NaN for negative numbers, 0, positive numbers, non-numbers
+function math.sign(value)
+    if type(value) ~= "number" then return 0/0 end
+    if value < 0 then return -1 end
+    if value > 0 then return  1 end
+
+    return 0
+end
+
+-- this implementation of lua seems to use an incorrect implementation of the % (modulo) operator
+-- http://lua-users.org/lists/lua-l/2007-10/msg00079.html
+-- http://www.lua.org/manual/5.1/manual.html#2.5.1   <- this is wrong if you take 'a' as a negative number (math.floor(2.1)=2  math.floor(-2.1)=3)
+-- this method keeps the same sign as the dividend (a)
+--[[function math.mod(a, b)
+    local sign = math.sign(a)
+    a, b = math.abs(a), math.abs(b)
+
+    return (a - math.floor(a/b)*b) * sign
+end]]
+-- math.fmod(a, b) works correctly, and is already included
