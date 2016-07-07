@@ -101,12 +101,13 @@ function GameMode:OnGameInProgress()
             for pid, hero in pairs(players) do
                 local position = hero:GetAbsOrigin()
                 if position ~= nil then
-                    -- draw some chmansy debug lines
-                    DebugDrawBox(GameMode:SnapToGrid2D(position), Vector(-32, -32, 0), Vector(32, 32, 0), 0, 128, 0, 0.75, 1/10)
-                    -- if in one of this player's grids, draw a schmansy sphere
-
                     local length = 2
                     local width  = 2
+
+                    DebugDrawSphere(position, Vector(255, 0, 0), 1.0, 10, true, 1/10) 
+                    DebugDrawBox(GameMode:SnapToGrid2D(position), Vector(-32, -32, 0), Vector(32, 32, 0), 0, 128, 0, 0.75, 1/10)
+                    DebugDrawBox(GameMode:SnapBoxToGrid2D(position, length, width), Vector(-32, -32, 0), Vector(32, 32, 0), 255, 0, 0, 0.75, 1/10)
+
                     if GameMode:CanTrapGoHere(position, length, width) then
                         DebugDrawBox(GameMode:SnapBoxToGrid2D(position, length, width), Vector(-length*32, -width*32, 0), Vector(length*32, width*32, 0), 0, 255, 0, 0.75, 1/10)
                     else

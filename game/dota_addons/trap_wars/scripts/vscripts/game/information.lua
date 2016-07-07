@@ -74,9 +74,20 @@ end
 --------------------
 -- Grid Functions --
 --------------------
+function GameMode:SnapTo32(number)
+    return math.floor((number+32)/64)*64
+end
+
+function GameMode:SnapTo64(number)
+    if number < 0 then
+        return math.ceil(number/64)*64 - 32
+    end
+
+    return math.floor(number/64)*64 + 32
+end
+
 function GameMode:SnapToGrid2D(position)
-    --return Vector(math.floor(position.x/64)*64+32, math.floor(position.y/64)*64+32, position.z)
-    return Vector(position.x-(position.x%64)+32, position.y-(position.y%64)+32, position.z)
+    return Vector(GameMode:SnapTo64(position.x), GameMode:SnapTo64(position.y), position.z)
 end
 
 function GameMode:SnapToGround(position)
@@ -96,24 +107,16 @@ function GameMode:SnapBoxToGrid2D(position, length, width)
     length, width = math.ceil(length) or 1, math.ceil(width) or 1
 
     -- align the position of the center to the grid
-    if length%2 ~= 0 then
-        position.x = position.x-position.x%64+32
-    else
-        if position.x%64 > 32 then
-            position.x = position.x-position.x%64+64
-        else
-            position.x = position.x-position.x%64
-        end
+    if math.fmod(length, 2) == 0 then  -- even
+        position.x = GameMode:SnapTo32(position.x)
+    else                               -- odd
+        position.x = GameMode:SnapTo64(position.x)
     end
 
-    if width%2 ~= 0 then
-        position.y = position.y-position.y%64+32
-    else
-        if position.y%64 > 32 then
-            position.y = position.y-position.y%64+64
-        else
-            position.y = position.y-position.y%64
-        end
+    if math.fmod(width, 2) == 0 then  -- even
+        position.y = GameMode:SnapTo32(position.y)
+    else                              -- odd
+        position.y = GameMode:SnapTo64(position.y)
     end
 
     return position
