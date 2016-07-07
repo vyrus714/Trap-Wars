@@ -25,24 +25,25 @@ function OnBuyGhost(keys) {
     // set the draw conditional to true
     Config.BuildingGhost.draw_ghost = true;
 
+    // get the length and width of this trap
+    var trap = CustomNetTables.GetTableValue("trapwars_npc_traps", keys.name);
+    Config.BuildingGhost.length = trap.Length || 1;
+    Config.BuildingGhost.width  = trap.Width  || 1;
 
-    // create the particle(s)  FIXME: prepped for multiple particles here, not handled yet though
-    //Config.BuildingGhost.particles = [
-    //    Particles.CreateParticle("particles/building_ghost/ghost.vpcf", ParticleAttachment_t.PATTACH_CUSTOMORIGIN, -1)
-    //];
+    // create the particle(s)
     Config.BuildingGhost.particles = [];
-    for(i=0; i<9; i++) {
-        if(i == 4) {
-            // building ghost
-            Config.BuildingGhost.particles[i] = Particles.CreateParticle("particles/building_ghost/ghost.vpcf", ParticleAttachment_t.PATTACH_CUSTOMORIGIN, -1);
-        } else {
-            // tile ghost
-            Config.BuildingGhost.particles[i] = Particles.CreateParticle("particles/building_ghost/square.vpcf", ParticleAttachment_t.PATTACH_CUSTOMORIGIN, -1);
-        }
 
-        // set alpha and color
-        Particles.SetParticleControl(Config.BuildingGhost.particles[i], 1, [0.2, 0, 0]);
-        Particles.SetParticleControl(Config.BuildingGhost.particles[i], 2, [0, 216, 0]);
+    // ghost
+    Config.BuildingGhost.particles.ghost = Particles.CreateParticle("particles/building_ghost/ghost.vpcf", ParticleAttachment_t.PATTACH_CUSTOMORIGIN, -1);
+    Particles.SetParticleControl(Config.BuildingGhost.particles.ghost, 4, [Config.BuildingGhost.length, Config.BuildingGhost.width, 1]);
+
+    // tile outline
+    var length = Config.BuildingGhost.length+2, width = Config.BuildingGhost.width+2;
+    for(i=0; i<length*width; i++) {
+        if(i%length == 0 || (i+1)%length == 0 || Math.floor(i/width) == 0 || Math.floor(i/width) == width-1) {
+            Config.BuildingGhost.particles[i] = Particles.CreateParticle("particles/building_ghost/square.vpcf", ParticleAttachment_t.PATTACH_CUSTOMORIGIN, -1);
+            Particles.SetParticleControl(Config.BuildingGhost.particles[i], 1, [0.2, 0, 0]);
+        }
     }
 
     // if there's an entity passed, set it as the particle control entity for the ghost particle   FIXME
@@ -58,24 +59,28 @@ function OnBuyGhost(keys) {
 function UpdateGhost() {
     // if the particles still exist
     if(Config.BuildingGhost.draw_ghost) {
-        // move the particle to the grid position of the cursor
-        var tile_size = CustomNetTables.GetTableValue("trapwars_static_info", "generic") ? CustomNetTables.GetTableValue("trapwars_static_info", "generic").tile_size : 128;
+        // update the box particle position
+        //offset_position = [offset_position[0]-64, offset_position[1]-64, offset_position[2]];
+        var offset_position = SnapBoxToGrid2D(MouseWorldPos(), Config.BuildingGhost.length, Config.BuildingGhost.width);
+        if(offset_position) {
+            Particles.SetParticleControl(Config.BuildingGhost.particles.ghost, 0, offset_position);
 
-        var offset_position = MousePosToTilePos();
-        offset_position = [offset_position[0]-tile_size, offset_position[1]-tile_size, offset_position[2]];
+            // update the outline tile positions & all particle colors
+            offset_position = [offset_position[0]-Config.BuildingGhost.length*32-32, offset_position[1]-Config.BuildingGhost.width*32-32, offset_position[2]];
+            for(var i in Config.BuildingGhost.particles) {
+                if(!isNaN(i)) {
+                    var pos = [offset_position[0] + 64*(i%(Config.BuildingGhost.length+2)), offset_position[1] + 64*Math.floor(i/(Config.BuildingGhost.width+2)), offset_position[2]];
+                    Particles.SetParticleControl(Config.BuildingGhost.particles[i], 0, pos);
+                }
 
-        for(i=0; i<9; i++) {
-            var pos = [offset_position[0] + tile_size*(i%3), offset_position[1] + tile_size*Math.floor(i/3), offset_position[2]];
-            Particles.SetParticleControl(Config.BuildingGhost.particles[i], 0, pos);
-
-            var traps = FindTrapsInRadius(pos, tile_size/2)
-            if(traps.length > 0) {
-                Particles.SetParticleControl(Config.BuildingGhost.particles[i], 2, [216, 0, 0]);
-            } else {
-                Particles.SetParticleControl(Config.BuildingGhost.particles[i], 2, [0, 216, 0]);
+                var traps = FindTrapsInRadius(pos, 32)  // FIXME: needs more sophistication now
+                if(traps.length > 0) {
+                    Particles.SetParticleControl(Config.BuildingGhost.particles[i], 2, [216, 0, 0]);
+                } else {
+                    Particles.SetParticleControl(Config.BuildingGhost.particles[i], 2, [0, 216, 0]);
+                }
             }
         }
-        //Particles.SetParticleControl(Config.BuildingGhost.particles[0], 0, MousePosToTilePos());
 
         // do it all again in 1/60 seconds
         $.Schedule(1/60, UpdateGhost);
@@ -131,6 +136,10 @@ function OnHideGhost() {
         // clear the item name
         Config.BuildingGhost.current_item_name = null;
 
+        // clear the length and width
+        Config.BuildingGhost.length = null;
+        Config.BuildingGhost.width  = null;
+
 
         // remove the particles
         for(var i in Config.BuildingGhost.particles) {
@@ -143,7 +152,7 @@ function OnHideGhost() {
 
 
 // ************************ //
-// *     OnMouserEvent    * //
+// *     OnMouseEvent     * //
 // ************************ //
 function OnMouseEvent(type, key_id) {
     if(type == "pressed" && Config.BuildingGhost.draw_ghost) {
@@ -171,7 +180,7 @@ function OnMouseEvent(type, key_id) {
     }
 }
 
-function DragSell() {
+function DragSell() {  // FIXME: put these two into one function
     if(!GameUI.IsMouseDown(0)) {
         if(!GameUI.IsShiftDown()) {
             GameUI.CustomUIConfig().Events.FireEvent("hide_ghost", {});
@@ -200,16 +209,13 @@ function DragBuy(last_tile_position) {
         return;
     }
 
-    // when called with no params (expected behavior), we don't want a starting position
-    last_tile_position = last_tile_position || [null, null, null];
-
-    // current tile the mouse is hovering over
-    var current_tile_position = MousePosToTilePos();
-
+    // mouse positions
+    last_tile_position = last_tile_position || [];  //[null, null, null];
+    var current_tile_position = SnapToGrid2D(MouseWorldPos());
 
     // if last_position and our current mouse world position are in different tiles, send a new buy event
     if(last_tile_position[0] != current_tile_position[0] || last_tile_position[1] != current_tile_position[1]) {
-        BuyTrap(Config.BuildingGhost.current_item_name, current_tile_position);
+        BuyTrap(Config.BuildingGhost.current_item_name, MouseWorldPos());
     }
 
     // keep on chugging
@@ -218,19 +224,52 @@ function DragBuy(last_tile_position) {
 
 
 // ************************ //
-// *    Other Functions   * //
+// *    Grid Functions    * //
 // ************************ //
-function GetTileCenter(position) {
-    var tile_size = CustomNetTables.GetTableValue("trapwars_static_info", "generic") ? CustomNetTables.GetTableValue("trapwars_static_info", "generic").tile_size : 128;
-    return [
-        Math.floor((position[0]+tile_size/2)/tile_size)*tile_size,
-        Math.floor((position[1]+tile_size/2)/tile_size)*tile_size,
-        Math.floor(position[2]/tile_size)              *tile_size
-    ];
+
+function SnapTo32(number) {
+    return Math.floor((number+32)/64)*64;
 }
 
-function MousePosToTilePos() {
-    return GetTileCenter(GameUI.GetScreenWorldPosition(GameUI.GetCursorPosition()));
+function SnapTo64(number) {
+    if(number < 0)
+        return Math.ceil(number/64)*64 - 32;
+
+    return Math.floor(number/64)*64 + 32;
+}
+
+function SnapToGrid2D(position) {
+    return [SnapTo64(position[0]), SnapTo64(position[1]), position[2]];
+}
+
+// SnapToGround(position)    no ground height detection in javascript api
+// SnapToAir(position)
+
+function SnapBoxToGrid2D(position, length, width) {
+    // make sure we have a useable length and width (any overlap is counted as taking up that whole tile)
+    length = Math.ceil(length) || 1, width = Math.ceil(width) || 1;
+
+    // align the position of the center to the grid
+    if(length%2 == 0)  // even
+        position[0] = SnapTo32(position[0]);
+    else               // odd
+        position[0] = SnapTo64(position[0]);
+
+    if(width%2 == 0)  // even
+        position[1] = SnapTo32(position[1]);
+    else              // odd
+        position[1] = SnapTo64(position[1]);
+
+    return position;
+}
+
+
+// ************************ //
+// *    Other Functions   * //
+// ************************ //
+
+function MouseWorldPos() {
+    return GameUI.GetScreenWorldPosition(GameUI.GetCursorPosition());
 }
 
 function BuyTrap(trap_name, position) {
@@ -241,8 +280,8 @@ function BuyTrap(trap_name, position) {
     });
 }
 
-function SellTrap(entity_index) {  // FIXME: change this to entity index rather than position - much gooder!
-    GameEvents.SendCustomGameEventToServer("trapwars_sell_trap", {   // FIXME: implement the lua for this
+function SellTrap(entity_index) {
+    GameEvents.SendCustomGameEventToServer("trapwars_sell_trap", {
         playerid : Players.GetLocalPlayer(),
         entindex : entity_index
     });
@@ -287,6 +326,7 @@ function FindTrapsInRadius(position, radius) {
 }
 
 
+// update2: vv that didn't work - stole all focus from everything, back go square 1
 // update: apparently if a panel has focus, and you hit esc, it triggers an 'oncancel' event, so lets see if we can use that
 /*  FIXME: none of this seems to work at all
 $.RegisterKeyBind($.GetContextPanel(),"key_escape", OnEscape);
