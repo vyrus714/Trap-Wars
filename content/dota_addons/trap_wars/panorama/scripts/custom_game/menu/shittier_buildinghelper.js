@@ -26,7 +26,7 @@ function OnBuyGhost(keys) {
     Config.BuildingGhost.draw_ghost = true;
 
     // get the length and width of this trap
-    var trap = CustomNetTables.GetTableValue("trapwars_npc_traps", keys.name);
+    var trap = CustomNetTables.GetTableValue("npc_traps", keys.name);
     Config.BuildingGhost.length = trap.Length || 1;
     Config.BuildingGhost.width  = trap.Width  || 1;
 
@@ -316,8 +316,8 @@ function FindTrapsInRadius(position, radius) {
     //var creatures = FindCreaturesInRadius(position, radius);
     var creatures = Entities.GetAllEntitiesByClassname("npc_dota_creature");
     for(var i in creatures) {
-        //if(CustomNetTables.GetTableValue("trapwars_npc_traps", Entities.GetUnitName(creatures[i]))) {
-        if(CustomNetTables.GetTableValue("trapwars_npc_traps", Entities.GetUnitName(creatures[i])) && Distance2DSquared(Entities.GetAbsOrigin(creatures[i]), position) < (radius*radius)) {
+        //if(CustomNetTables.GetTableValue("npc_traps", Entities.GetUnitName(creatures[i]))) {
+        if(CustomNetTables.GetTableValue("npc_traps", Entities.GetUnitName(creatures[i])) && Distance2DSquared(Entities.GetAbsOrigin(creatures[i]), position) < (radius*radius)) {
             traps.push(creatures[i]);
         }
     }

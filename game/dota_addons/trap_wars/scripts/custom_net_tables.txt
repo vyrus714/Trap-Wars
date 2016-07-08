@@ -2,14 +2,14 @@
 {
   	custom_net_tables =
   	[
-        "trapwars_static_info",
-        "trapwars_npc_herocreeps",
-        "trapwars_npc_traps",
-        "trapwars_team_shared_grid",
-        "trapwars_team_scores",
-        "trapwars_valid_players",
-        "trapwars_player_colors",
-        "trapwars_player_grids",
-        "trapwars_player_creeps"
+        "static_info",
+        "npc_herocreeps",
+        "npc_traps",
+
+        "team_scores",
+        "valid_players",
+
+        "player_colors",
+        "player_creeps"
   	]
 }

@@ -292,7 +292,7 @@ function GameMode:OnBuyCreep(keys)
     GameRules.player_creeps[keys.PlayerID][keys.slot] = keys.item
 
     -- update the nettable
-    CustomNetTables:SetTableValue("trapwars_player_creeps", ""..pid, GameRules.player_creeps[pid])
+    CustomNetTables:SetTableValue("player_creeps", ""..pid, GameRules.player_creeps[pid])
     ]]
 end
 

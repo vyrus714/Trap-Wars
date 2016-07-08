@@ -3,8 +3,8 @@ var Config = GameUI.CustomUIConfig();
 
 (function() {
     // generate panels for each trap
-    for(var k in Config.GetAllNetTableValues("trapwars_npc_traps")) {
-        var trap = CustomNetTables.GetTableValue("trapwars_npc_traps", k);
+    for(var k in Config.GetAllNetTableValues("npc_traps")) {
+        var trap = CustomNetTables.GetTableValue("npc_traps", k);
         if(!trap) {continue;}
 
 

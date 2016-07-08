@@ -3,8 +3,8 @@ var Config = GameUI.CustomUIConfig();
 
 (function() {
     // generate panels for each creep
-    for(var k in Config.GetAllNetTableValues("trapwars_npc_herocreeps")) {
-        var creep = CustomNetTables.GetTableValue("trapwars_npc_herocreeps", k);
+    for(var k in Config.GetAllNetTableValues("npc_herocreeps")) {
+        var creep = CustomNetTables.GetTableValue("npc_herocreeps", k);
         if(!creep) {continue;}
 
 
@@ -121,7 +121,7 @@ var Config = GameUI.CustomUIConfig();
     // generate panels for the creep slots
     var upgrade_panel = $("#upgrades");
 
-    for(var i=0; i<(CustomNetTables.GetTableValue("trapwars_static_info", "generic").max_player_creeps || 6); i++) {
+    for(var i=0; i<(CustomNetTables.GetTableValue("static_info", "generic").max_player_creeps || 6); i++) {
         // create the slot
         var slot = $.CreatePanel("RadioButton", $("#slot_container"), "slot_"+(i+1));
         slot.BLoadLayoutFromString("<root><Panel class='creep_slot' group='creeps' /></root>", false, false);
@@ -163,7 +163,7 @@ var Config = GameUI.CustomUIConfig();
 /**********************/
 function OnPlayerCreepChange() {
     // update our local copy of this player's creeps
-    player_creeps = CustomNetTables.GetTableValue("trapwars_player_creeps", ""+Players.GetLocalPlayer());
+    player_creeps = CustomNetTables.GetTableValue("player_creeps", ""+Players.GetLocalPlayer());
 
     // re-set all of the information based on player creeps
     for(var i=0; i<Object.keys(player_creeps).length; i++) {

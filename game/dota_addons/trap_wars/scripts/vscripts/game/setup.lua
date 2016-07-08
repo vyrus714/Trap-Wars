@@ -69,7 +69,7 @@ function GameMode:SetupGameMode()
         Timers:CreateTimer(1, function() GameRules.team_portals[team] = GameMode:GetPortals(team) end) -- doesn't like making particles so early FIXME
 
         -- set net-table initial values
-        CustomNetTables:SetTableValue("trapwars_team_scores", ""..team, {GameRules.team_lives[team]})
+        CustomNetTables:SetTableValue("team_scores", ""..team, {GameRules.team_lives[team]})
     end
 
     ----------------
@@ -106,23 +106,23 @@ function GameMode:SetupGameMode()
     ---------------------------
     -- Initialize Net Tables --
     ---------------------------
-    -- tables set on a one-time-only basis at the start of the game
-    CustomNetTables:SetTableValue("trapwars_static_info", "valid_teams", GameRules.valid_teams)
-    CustomNetTables:SetTableValue("trapwars_static_info", "generic", {
+    -- tables set on a one-time-only basis (ish) at the start of the game
+    CustomNetTables:SetTableValue("static_info", "valid_teams", GameRules.valid_teams)
+    CustomNetTables:SetTableValue("static_info", "generic", {
         default_lives     = GameRules.default_lives,
         build_distance    = GameRules.build_distance,
         max_player_grids  = GameRules.max_player_grids,
         max_player_creeps = GameRules.max_player_creeps
     })
 
-    for unit_name, info in pairs(GameRules.npc_herocreeps) do CustomNetTables:SetTableValue("trapwars_npc_herocreeps", unit_name, info) end
-    for unit_name, info in pairs(GameRules.npc_traps) do CustomNetTables:SetTableValue("trapwars_npc_traps", unit_name, info) end
+    for unit_name, info in pairs(GameRules.npc_herocreeps) do CustomNetTables:SetTableValue("npc_herocreeps", unit_name, info) end
+    for unit_name, info in pairs(GameRules.npc_traps) do CustomNetTables:SetTableValue("npc_traps", unit_name, info) end
 
     -- other, changing, net tables each get their own table, so the values can update independantly
     -- these are listed here for reference, even though they are set\updated elsewhere
-    -- "trapwars_team_scores", "team_id", {int}
-    -- "trapwars_valid_players", "pid", {boolean}
-    -- "trapwars_player_colors", "pid", {vector}
+    -- "team_scores", "team_id", {int}
+    -- "valid_players", "pid", {boolean}
+    -- "player_colors", "pid", {vector}
 
     ------------------------
     -- Register Listeners --
@@ -181,8 +181,8 @@ function GameMode:OnPlayerConnectFull(keys)
             -- set the player's color and add it to GameRules.player_colors to keep track of it
             PlayerResource:SetCustomPlayerColor(pid, red, green, blue)
             GameRules.player_colors[pid] = Vector(red, green, blue)
-            -- add the value to the net table "trapwars_player_colors", "pid", {vector}
-            CustomNetTables:SetTableValue("trapwars_player_colors", ""..pid, {Vector(red, green, blue)})
+            -- add the value to the net table "player_colors", "pid", {vector}
+            CustomNetTables:SetTableValue("player_colors", ""..pid, {Vector(red, green, blue)})
 
 
             -- add the player to GameRules.player_creeps, and give them GameRules.max_player_creeps empty creep slots
@@ -190,8 +190,8 @@ function GameMode:OnPlayerConnectFull(keys)
             for i=1, GameRules.max_player_creeps do GameRules.player_creeps[pid][i]=0 end
             GameRules.player_creeps[pid][3] = "npc_trapwars_potato"  -- FIXME: debug line
             GameRules.player_creeps[pid][4] = "npc_trapwars_tomato"  -- FIXME: debug line
-            -- push this data to the net table trapwars_player_creeps
-            CustomNetTables:SetTableValue("trapwars_player_creeps", ""..pid, GameRules.player_creeps[pid])
+            -- push this data to the net table player_creeps
+            CustomNetTables:SetTableValue("player_creeps", ""..pid, GameRules.player_creeps[pid])
         end
     end)
 end
@@ -204,10 +204,10 @@ function GameMode:OnPlayerTeam(keys)
     -- if the team is a playing-team (not spectators etc) then add to GameRules.valid_players
     if keys.team >= DOTA_TEAM_FIRST and keys.team <= DOTA_TEAM_CUSTOM_MAX and keys.team ~= DOTA_TEAM_NEUTRALS and keys.team ~= DOTA_TEAM_NOTEAM then
             GameRules.valid_players[pid] = true
-            CustomNetTables:SetTableValue("trapwars_valid_players", ""..pid, {true})
-    elseif CustomNetTables:GetTableValue("trapwars_valid_players", ""..pid)[1] == true then
+            CustomNetTables:SetTableValue("valid_players", ""..pid, {true})
+    elseif CustomNetTables:GetTableValue("valid_players", ""..pid)[1] == true then
         GameRules.valid_players[pid] = nil  -- make sure they are removed if they exit a valid team
-        CustomNetTables:SetTableValue("trapwars_valid_players", ""..pid, nil)
+        CustomNetTables:SetTableValue("valid_players", ""..pid, nil)
     end
 end
 

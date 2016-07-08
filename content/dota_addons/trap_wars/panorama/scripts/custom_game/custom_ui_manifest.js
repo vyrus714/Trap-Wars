@@ -27,13 +27,13 @@ var Config = GameUI.CustomUIConfig();
 // local scope
 /*(function(){  <-- Opting out of using this, going to pull values from the nettable on use
     // initialize local variables for our net table values
-    Config.game_values = CustomNetTables.GetTableValue("trapwars_static_info", "generic") || {};
-    Config.npc_creeps  = GetAllNetTableValues("trapwars_npc_herocreeps") || {};
-    Config.npc_traps   = GetAllNetTableValues("trapwars_npc_traps") || {};
-    Config.player_creeps = CustomNetTables.GetTableValue("trapwars_player_creeps", ""+Players.GetLocalPlayer()) || {};
+    Config.game_values = CustomNetTables.GetTableValue("static_info", "generic") || {};
+    Config.npc_creeps  = GetAllNetTableValues("npc_herocreeps") || {};
+    Config.npc_traps   = GetAllNetTableValues("npc_traps") || {};
+    Config.player_creeps = CustomNetTables.GetTableValue("player_creeps", ""+Players.GetLocalPlayer()) || {};
 
     // register callbacks for values that need updating
-    CustomNetTables.SubscribeNetTableListener("trapwars_player_creeps", OnPlayerCreepChange);
+    CustomNetTables.SubscribeNetTableListener("player_creeps", OnPlayerCreepChange);
 })();*/
 
 
