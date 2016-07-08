@@ -34,16 +34,26 @@ function GameMode:SetupGameMode()
 
     -- grid stuffs
     GameRules.grid_start  = Vector(0, 0)
-    GameRules.grid_length = 0
     GameRules.grid_width  = 0
+    GameRules.grid_length = 0
     GameRules.GroundGrid  = {}
     GameRules.AirGrid     = {}  -- starts empty, filled dynamically based on the ground grid
 
     Timers:CreateTimer(1/30, function()
         GameRules.grid_start  = Vector(GetWorldMinX(), GetWorldMinY())
-        GameRules.grid_length = math.abs(GetWorldMaxX()-GetWorldMinX())/64+1
-        GameRules.grid_width  = math.abs(GetWorldMaxY()-GetWorldMinY())/64+1
+        GameRules.grid_width  = math.abs(GetWorldMaxX()-GetWorldMinX())/64+1
+        GameRules.grid_length = math.abs(GetWorldMaxY()-GetWorldMinY())/64+1
         GameRules.GroundGrid  = GameMode:GetGridArray()
+
+        -- set net-table initial values
+        CustomNetTables:SetTableValue("static_info", "grid", {
+            start  = {GameRules.grid_start.x, GameRules.grid_start.y, GameRules.grid_start.z},
+            width  = GameRules.grid_width,
+            length = GameRules.grid_length
+        })
+
+        for index, info in pairs(GameRules.GroundGrid) do CustomNetTables:SetTableValue("ground_grid", ""..index, info) end
+        for index, info in pairs(GameRules.AirGrid) do CustomNetTables:SetTableValue("air_grid", ""..index, info) end
     end)
 
     ---------------------------------------------

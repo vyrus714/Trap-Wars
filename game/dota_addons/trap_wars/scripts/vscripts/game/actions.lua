@@ -109,24 +109,30 @@ end
 ----------------------------------------------
 --                   Grid                   --
 ----------------------------------------------
-function GameMode:AddTrapToGrid(position, length, width, entity_index)
+function GameMode:AddTrapToGrid(position, length, width, entity_index)  -- FIXME: air grid support
     length, width = math.ceil(length), math.ceil(width)
     position = GameMode:SnapBoxToGrid2D(position, length, width)
     local start_index = GameMode:GetGridIndex(position - Vector(length*32, width*32, 0) + Vector(32, 32, 0))
 
     -- starting at the lower left corner, iterate through the grid tiles in this box
     for i=0, length*width-1 do
-        local index = start_index + i%length + math.floor(i/width)*GameRules.grid_length
+        local index = start_index + i%length + math.floor(i/width)*GameRules.grid_width
         local tile = GameRules.GroundGrid[index]
 
+        -- add the trap to the tile data
         if tile then tile.trap = entity_index end
+
+        -- update the nettable value for this tile
+        CustomNetTables:SetTableValue("ground_grid", ""..index, tile)
     end
 end
 
 function GameMode:RemoveTrapFromGrid(entity_index)
-    for _, info in pairs(GameRules.GroundGrid) do
-        --if IsNumber(index) and info.trap == entity_index then info.trap = nil end
-        if info.trap == entity_index then info.trap = nil end
+    for index, info in pairs(GameRules.GroundGrid) do
+        if info.trap == entity_index then
+            info.trap = nil
+            CustomNetTables:SetTableValue("ground_grid", ""..index, info)
+        end
     end
 end
 
@@ -138,7 +144,7 @@ function GameMode:UnstickUnitsInBox(position, length, width)
 
     -- starting at the lower left corner, find clear space for any units in each tile of the box
     for i=0, length*width-1 do
-        local tile_pos = GameMode:GetGridPosition(start_index + i%length + math.floor(i/width)*GameRules.grid_length)
+        local tile_pos = GameMode:GetGridPosition(start_index + i%length + math.floor(i/width)*GameRules.grid_width)
 
         local ents = Entities:FindAllInSphere(tile_pos, 45.3)  -- 45.3 being the diagonal of a 64x64 sized tile
         for _, ent in pairs(ents) do

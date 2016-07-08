@@ -40,6 +40,7 @@ function GameMode:InitGameMode()
                                     -- claim the grid plot
                                     if not GameRules.player_plots[playerid] then GameRules.player_plots[playerid] = {} end
                                     table.insert(GameRules.player_plots[playerid], info.plot)
+                                    CustomNetTables:SetTableValue("player_plots", ""..playerid, GameRules.player_plots[playerid])
 
                                     break;
                                 end

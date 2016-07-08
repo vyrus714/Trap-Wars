@@ -60,25 +60,21 @@ function UpdateGhost() {
     // if the particles still exist
     if(Config.BuildingGhost.draw_ghost) {
         // update the box particle position
-        //offset_position = [offset_position[0]-64, offset_position[1]-64, offset_position[2]];
-        var offset_position = SnapBoxToGrid2D(MouseWorldPos(), Config.BuildingGhost.length, Config.BuildingGhost.width);
-        if(offset_position) {
-            Particles.SetParticleControl(Config.BuildingGhost.particles.ghost, 0, offset_position);
-
+        var center = SnapBoxToGrid2D(MouseWorldPos(), Config.BuildingGhost.length, Config.BuildingGhost.width);
+        if(center) {
             // update the outline tile positions & all particle colors
-            offset_position = [offset_position[0]-Config.BuildingGhost.length*32-32, offset_position[1]-Config.BuildingGhost.width*32-32, offset_position[2]];
+            var offset_position = [center[0]-Config.BuildingGhost.length*32-32, center[1]-Config.BuildingGhost.width*32-32, center[2]];
             for(var i in Config.BuildingGhost.particles) {
-                if(!isNaN(i)) {
-                    var pos = [offset_position[0] + 64*(i%(Config.BuildingGhost.length+2)), offset_position[1] + 64*Math.floor(i/(Config.BuildingGhost.width+2)), offset_position[2]];
-                    Particles.SetParticleControl(Config.BuildingGhost.particles[i], 0, pos);
-                }
+                var pos = isNaN(i) ? center : [offset_position[0]+64*(i%(Config.BuildingGhost.length+2)), offset_position[1]+64*Math.floor(i/(Config.BuildingGhost.width+2)), offset_position[2]];
 
-                var traps = FindTrapsInRadius(pos, 32)  // FIXME: needs more sophistication now
-                if(traps.length > 0) {
-                    Particles.SetParticleControl(Config.BuildingGhost.particles[i], 2, [216, 0, 0]);
-                } else {
-                    Particles.SetParticleControl(Config.BuildingGhost.particles[i], 2, [0, 216, 0]);
-                }
+                // update position
+                Particles.SetParticleControl(Config.BuildingGhost.particles[i], 0, pos);
+
+                // update color
+                var color = CanIBuildHere(pos) ? [0, 216, 0] : [216, 0, 0];
+                if(isNaN(i))
+                    color = CanIBuildHere(pos, Config.BuildingGhost.length, Config.BuildingGhost.width) ? [0, 216, 0] : [216, 0, 0];
+                Particles.SetParticleControl(Config.BuildingGhost.particles[i], 2, color);
             }
         }
 
@@ -213,7 +209,7 @@ function DragBuy(last_tile_position) {
     last_tile_position = last_tile_position || [];  //[null, null, null];
     var current_tile_position = SnapToGrid2D(MouseWorldPos());
 
-    // if last_position and our current mouse world position are in different tiles, send a new buy event
+    // if last_position and our current mouse world position are in different tiles, send a new buy event      FIXME: update for variable length/width traps
     if(last_tile_position[0] != current_tile_position[0] || last_tile_position[1] != current_tile_position[1]) {
         BuyTrap(Config.BuildingGhost.current_item_name, MouseWorldPos());
     }
@@ -245,7 +241,8 @@ function SnapToGrid2D(position) {
 // SnapToGround(position)    no ground height detection in javascript api
 // SnapToAir(position)
 
-function SnapBoxToGrid2D(position, length, width) {
+function SnapBoxToGrid2D(position_ref, length, width) {
+    var position = [position_ref[0], position_ref[1], position_ref[2]];
     // make sure we have a useable length and width (any overlap is counted as taking up that whole tile)
     length = Math.ceil(length) || 1, width = Math.ceil(width) || 1;
 
@@ -287,16 +284,18 @@ function SellTrap(entity_index) {
     });
 }
 
-function Distance2D(pos1, pos2) {
+/*
+function Distance2D(pos1, pos2) {  // FIXME: remove
     return Math.sqrt(Math.pow(pos1[0]-pos2[0], 2) + Math.pow(pos1[1]-pos2[1], 2));
 }
 
 // apparently this is more cpu friendly
-function Distance2DSquared(pos1, pos2) {
+function Distance2DSquared(pos1, pos2) {  // FIXME: remove
     return Math.pow(pos1[0]-pos2[0], 2) + Math.pow(pos1[1]-pos2[1], 2);
 }
 
-function FindCreaturesInRadius(position, radius) {
+function FindCreaturesInRadius(position_ref, radius) {  // FIXME: remove
+    var position = [position_ref[0], position_ref[1], position_ref[2]];
     var found_creatures = [];
 
     var creatures = Entities.GetAllEntitiesByClassname("npc_dota_creature");
@@ -310,7 +309,8 @@ function FindCreaturesInRadius(position, radius) {
     return found_creatures;
 }
 
-function FindTrapsInRadius(position, radius) {
+function FindTrapsInRadius(position_ref, radius) {  // FIXME: remove
+    var position = [position_ref[0], position_ref[1], position_ref[2]];
     var traps = [];
 
     //var creatures = FindCreaturesInRadius(position, radius);
@@ -323,6 +323,59 @@ function FindTrapsInRadius(position, radius) {
     }
 
     return traps;
+} */
+
+
+// build/grid functions
+
+function GetGridIndex(position_ref) {
+    var position = [position_ref[0], position_ref[1], position_ref[2]];
+    var grid = CustomNetTables.GetTableValue("static_info", "grid");
+    grid.start = [grid.start[1], grid.start[2], grid.start[3]];
+    var delta = [position[0]-(grid.start[0]-32), position[1]-(grid.start[1]-32)];
+
+    // if the passed position is below our min position, or above our max position (it's outside the map)
+    if(delta[0] < 0 || delta[1] < 0 || delta[0]/64 > grid.width || delta[1]/64 > grid.length) {return null;}
+
+    return Math.floor(delta[0]/64) + Math.floor(delta[1]/64)*grid.width;
+}
+
+function DoesPlayerHavePlot(playerid, plot_number) {
+    var plots = CustomNetTables.GetTableValue("player_plots", ""+playerid);
+    if(!plots) {return false;}
+
+    for(var i in plots) {
+        if(plot_number == plots[i]) {return true;}
+    }
+
+    return false;
+}
+
+function CanPlayerBuildHere(playerid, position_ref, length, width) {
+    var position = [position_ref[0], position_ref[1], position_ref[2]];
+    length = Math.ceil(length), width = Math.ceil(width);
+    position = SnapBoxToGrid2D(position, length, width);
+    var team = Players.GetTeam(playerid);
+    var start_index = GetGridIndex([position[0]-length*32+32, position[1]-width*32+32, position[2]]);
+
+    // starting at the lower left corner, iterate through the grid tiles in this box
+    for(i=0; i<length*width; i++) {
+        var index = start_index + i%length + Math.floor(i/width)*CustomNetTables.GetTableValue("static_info", "grid").width;
+        var tile = CustomNetTables.GetTableValue("ground_grid", ""+index);
+
+        // if we don't have a tile here, OR the tile's team doesn't match our player's, OR we have a plot # that isn't claimed by our player, then return
+        if(!tile || tile.team != team || (tile.plot && !DoesPlayerHavePlot(playerid, tile.plot)))
+            return false;
+    }
+
+    return true;
+}
+
+function CanIBuildHere(position_ref, length, width) {
+    return CanPlayerBuildHere(Game.GetLocalPlayerID(), [position_ref[0], position_ref[1], position_ref[2]], length || 1, width || 1);
+
+    // FIXME: add trap detection here? or in CanPlayerBuildHere above
+    // this can probably be removed, and folded into ^
 }
 
 

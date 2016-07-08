@@ -97,9 +97,7 @@ function GameMode:SnapToGround(position)
 end
 
 function GameMode:SnapToAir(position)
-    position = GameMode:SnapToGrid2D(position)
-    position.z = GetGroundHeight(position, nil) + 128
-    return position
+    return GameMode:SnapToGround(position) + Vector(0, 0, 128)
 end
 
 function GameMode:SnapBoxToGrid2D(position, length, width)
@@ -126,8 +124,8 @@ function GameMode:GetGridArray()
     local gridnav = {}
 
     -- find all the pathable gridnav tiles (counting trees as unpathable\non-viable tiles)
-    for i=0, GameRules.grid_length*GameRules.grid_width-1 do
-        local pos = GameRules.grid_start + Vector(64*(i%GameRules.grid_length), 64*math.floor(i/GameRules.grid_width))
+    for i=0, GameRules.grid_width*GameRules.grid_length-1 do
+        local pos = GameRules.grid_start + Vector(64*(i%GameRules.grid_width), 64*math.floor(i/GameRules.grid_length))
         pos = Vector(pos.x, pos.y, GetGroundHeight(pos, nil))
 
         if GridNav:IsTraversable(pos) and not GridNav:IsNearbyTree(pos, 1, true) then
@@ -157,7 +155,7 @@ function GameMode:GetGridArray()
 end
 
 function GameMode:GetGridPosition(index)
-    local pos = GameRules.grid_start + Vector(64*(index%GameRules.grid_length), 64*math.floor(index/GameRules.grid_width))
+    local pos = GameRules.grid_start + Vector(64*(index%GameRules.grid_width), 64*math.floor(index/GameRules.grid_length))
     return Vector(pos.x, pos.y, GetGroundHeight(pos, nil))
 end
 
@@ -165,9 +163,9 @@ function GameMode:GetGridIndex(position)
     local delta = Vector(position.x-(GameRules.grid_start.x-32), position.y-(GameRules.grid_start.y-32))
 
     -- if the passed position is below our min position, or above our max position (it's outside the map)
-    if delta.x < 0 or delta.y < 0 or delta.x/64 > GameRules.grid_length or delta.y/64 > GameRules.grid_width then return nil end
+    if delta.x < 0 or delta.y < 0 or delta.x/64 > GameRules.grid_width or delta.y/64 > GameRules.grid_length then return nil end
 
-    return math.floor(delta.x/64) + math.floor(delta.y/64)*GameRules.grid_length
+    return math.floor(delta.x/64) + math.floor(delta.y/64)*GameRules.grid_width
 end
 
 function GameMode:CanTrapGoHere(position, length, width)
@@ -177,7 +175,7 @@ function GameMode:CanTrapGoHere(position, length, width)
 
     -- starting at the lower left corner, iterate through the grid tiles in this box
     for i=0, length*width-1 do
-        local index = start_index + i%length + math.floor(i/width)*GameRules.grid_length
+        local index = start_index + i%length + math.floor(i/width)*GameRules.grid_width
         local tile = GameRules.GroundGrid[index]
 
         -- make sure there's no other trap here
@@ -206,7 +204,7 @@ function GameMode:CanPlayerBuildHere(playerid, position, length, width)
 
     -- starting at the lower left corner, iterate through the grid tiles in this box
     for i=0, length*width-1 do
-        local index = start_index + i%length + math.floor(i/width)*GameRules.grid_length
+        local index = start_index + i%length + math.floor(i/width)*GameRules.grid_width
         local tile = GameRules.GroundGrid[index]
 
         -- if we don't have a tile here, OR the tile's team doesn't match our player's, OR we have a plot # that isn't claimed by our player, then return

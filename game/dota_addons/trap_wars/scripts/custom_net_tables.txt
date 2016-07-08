@@ -8,7 +8,10 @@
 
         "team_scores",
         "valid_players",
+        "ground_grid",
+        "air_grid",
 
+        "player_plots",
         "player_colors",
         "player_creeps"
   	]
