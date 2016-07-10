@@ -109,7 +109,7 @@ function GameMode:OnGameInProgress()
                     DebugDrawBox(GameMode:SnapToGrid2D(position), Vector(-32, -32, 0), Vector(32, 32, 0), 0, 128, 0, 0.75, 1/10)
                     DebugDrawBox(GameMode:SnapBoxToGrid2D(position, length, width), Vector(-32, -32, 0), Vector(32, 32, 0), 255, 0, 0, 0.75, 1/10)
 
-                    if GameMode:CanTrapGoHere(position, length, width) then
+                    if GameMode:CanPlayerBuildHere(pid, position, length, width) then
                         DebugDrawBox(GameMode:SnapBoxToGrid2D(position, length, width), Vector(-length*32, -width*32, 0), Vector(length*32, width*32, 0), 0, 255, 0, 0.75, 1/10)
                     else
                         DebugDrawBox(GameMode:SnapBoxToGrid2D(position, length, width), Vector(-length*32, -width*32, 0), Vector(length*32, width*32, 0), 255, 0, 0, 0.75, 1/10)

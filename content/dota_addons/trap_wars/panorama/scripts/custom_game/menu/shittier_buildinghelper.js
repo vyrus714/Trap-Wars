@@ -363,8 +363,9 @@ function CanPlayerBuildHere(playerid, position_ref, length, width) {
         var index = start_index + i%length + Math.floor(i/width)*CustomNetTables.GetTableValue("static_info", "grid").width;
         var tile = CustomNetTables.GetTableValue("ground_grid", ""+index);
 
-        // if we don't have a tile here, OR the tile's team doesn't match our player's, OR we have a plot # that isn't claimed by our player, then return
-        if(!tile || tile.team != team || (tile.plot && !DoesPlayerHavePlot(playerid, tile.plot)))
+        // if we don't have a tile here, OR the tile's team doesn't match our player's,
+        // OR we have a plot # that isn't claimed by our player, OR there's a trap here already, THEN return false
+        if(!tile || tile.team != team || (tile.plot && !DoesPlayerHavePlot(playerid, tile.plot)) || (tile.trap && Entities.IsValidEntity(tile.trap)))
             return false;
     }
 

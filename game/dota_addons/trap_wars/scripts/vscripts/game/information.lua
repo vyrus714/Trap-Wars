@@ -168,23 +168,6 @@ function GameMode:GetGridIndex(position)
     return math.floor(delta.x/64) + math.floor(delta.y/64)*GameRules.grid_width
 end
 
-function GameMode:CanTrapGoHere(position, length, width)
-    length, width = math.ceil(length), math.ceil(width)
-    position = GameMode:SnapBoxToGrid2D(position, length, width)
-    local start_index = GameMode:GetGridIndex(position - Vector(length*32, width*32, 0) + Vector(32, 32, 0))
-
-    -- starting at the lower left corner, iterate through the grid tiles in this box
-    for i=0, length*width-1 do
-        local index = start_index + i%length + math.floor(i/width)*GameRules.grid_width
-        local tile = GameRules.GroundGrid[index]
-
-        -- make sure there's no other trap here
-        if not tile or (tile.trap and IsValidEntity(EntIndexToHScript(tile.trap))) then return false end  
-    end
-
-    return true
-end
-
 -- not really that accurate, since different teams can all have a plot of the same #, however i'm checking for teams separately anyway
 function GameMode:DoesPlayerHavePlot(playerid, plot_number)
     if not GameRules.player_plots[playerid] then return false end
@@ -208,7 +191,7 @@ function GameMode:CanPlayerBuildHere(playerid, position, length, width)
         local tile = GameRules.GroundGrid[index]
 
         -- if we don't have a tile here, OR the tile's team doesn't match our player's, OR we have a plot # that isn't claimed by our player, then return
-        if not tile or tile.team ~= team or (tile.plot and not GameMode:DoesPlayerHavePlot(playerid, tile.plot)) then
+        if not tile or tile.team ~= team or (tile.plot and not GameMode:DoesPlayerHavePlot(playerid, tile.plot)) or (tile.trap and IsValidEntity(EntIndexToHScript(tile.trap))) then
             return false
         end
     end

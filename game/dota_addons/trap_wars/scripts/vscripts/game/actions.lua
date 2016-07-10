@@ -1,6 +1,9 @@
 local GameMode = GameRules.GameMode
 
 function GameMode:SpawnTrap(name, position, team, owner)
+    -- make sure this is a valid trap
+    if not GameRules.npc_traps[name] then return nil end
+
     -- get the length and width
     local length = GameRules.npc_traps[name].Length or 1
     local width  = GameRules.npc_traps[name].Width  or 1
@@ -9,18 +12,8 @@ function GameMode:SpawnTrap(name, position, team, owner)
     position = GameMode:SnapBoxToGrid2D(position, length, width)
 
 
-    -- make sure this is a valid trap
-    if not GameRules.npc_traps[name] then return nil end
-
-    -- make sure a trap can go here
-    if not GameMode:CanTrapGoHere(position, length, width) then return nil end
-
-    -- make sure it's a valid team
-    if team < DOTA_TEAM_FIRST or DOTA_TEAM_CUSTOM_MAX < team then return nil end
-
-
     -- plonk trap
-    local trap = CreateUnitByName(name, position, false, nil, owner, team)
+    local trap = CreateUnitByName(name, position, false, nil, owner, team or DOTA_TEAM_NOTEAM)
 
     if trap then
         -- add this trap's entity index to the grid
@@ -29,7 +22,7 @@ function GameMode:SpawnTrap(name, position, team, owner)
         -- add modifiers to the trap (if it has them)
         if GameRules.npc_traps[name].modifiers then
             for _, modifier in pairs(GameRules.npc_traps[name].modifiers) do
-                trap:AddNewModifier(nil, nil, modifier, {}) 
+                trap:AddNewModifier(nil, nil, modifier, {})
             end
         end
 
