@@ -101,7 +101,8 @@ function OnSellGhost() {
 
     // create the particle(s)
     Config.BuildingGhost.particles = [
-        Particles.CreateParticle("particles/overhead_flame.vpcf", ParticleAttachment_t.PATTACH_CUSTOMORIGIN, -1)
+        //Particles.CreateParticle("particles/overhead_flame.vpcf", ParticleAttachment_t.PATTACH_CUSTOMORIGIN, -1)
+        Particles.CreateParticle("particles/building_ghost/sell_indicator.vpcf", ParticleAttachment_t.PATTACH_CUSTOMORIGIN, -1)
     ];
 
     // update the particle(s)
@@ -112,8 +113,17 @@ function UpdateSellGhost() {
     // if the particles still exist
     if(Config.BuildingGhost.draw_ghost) {
         // move the particle to the cursor position
-        Particles.SetParticleControl(Config.BuildingGhost.particles[0], 0, GameUI.GetScreenWorldPosition(GameUI.GetCursorPosition()));
-        //Particles.SetParticleControl(Config.BuildingGhost.particles[0], 0, GameUI.GetCursorPosition());
+        var pos = MouseWorldPos();
+
+        // if there's a trap belonging to this player under the cursor, use it's origin as the position instead of the mouse world position
+        var ent_array = GameUI.FindScreenEntities(GameUI.GetCursorPosition());
+        var ent_index = (ent_array[0] && ent_array[0].entityIndex) ? ent_array[0].entityIndex : null;
+        if(ent_index && CustomNetTables.GetTableValue("npc_traps", Entities.GetUnitName(ent_index)) && !Entities.IsEnemy(ent_index)) {
+            pos = Entities.GetAbsOrigin(ent_index);
+        }
+
+        // update the position
+        Particles.SetParticleControl(Config.BuildingGhost.particles[0], 0, pos);
 
         // do it all again in 1/60 seconds
         $.Schedule(1/60, UpdateSellGhost);
@@ -188,8 +198,8 @@ function DragSell() {  // FIXME: put these two into one function
     var ent_array = GameUI.FindScreenEntities(GameUI.GetCursorPosition());
     var ent_index = (ent_array[0] && ent_array[0].entityIndex) ? ent_array[0].entityIndex : null;
 
-    // if it exists, and isn't owned by someone else, attempt to buy it
-    if(ent_index && Entities.IsCreep(ent_index) && !Entities.IsEnemy(ent_index)) {
+    // if it exists, is a trap, and isn't owned by someone else, attempt to sell it
+    if(ent_index && CustomNetTables.GetTableValue("npc_traps", Entities.GetUnitName(ent_index)) && !Entities.IsEnemy(ent_index)) {
         SellTrap(ent_index);
     }
 
