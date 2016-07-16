@@ -4,20 +4,19 @@
 	m_Children = 
 	[
 		{
-			m_ChildRef = resource:"particles/building_ghost/sell_indicator_b.vpcf"
-			m_bDisableChild = true
+			m_ChildRef = resource:"particles/building_ghost/sell_indicator_coins.vpcf"
 		},
 		{
-			m_ChildRef = resource:"particles/building_ghost/sell_indicator_c.vpcf"
+			m_ChildRef = resource:"particles/building_ghost/sell_indicator_spiral_ribbon.vpcf"
 		},
 		{
-			m_ChildRef = resource:"particles/building_ghost/fountain_regen_ribbon_lvl3_a.vpcf"
+			m_ChildRef = resource:"particles/building_ghost/sell_indicator_spiral_glow.vpcf"
 		},
 		{
-			m_ChildRef = resource:"particles/building_ghost/sell_indicator_d.vpcf"
+			m_ChildRef = resource:"particles/building_ghost/sell_indicator_dollarsign.vpcf"
 		},
 		{
-			m_ChildRef = resource:"particles/building_ghost/sell_indicator_a.vpcf"
+			m_ChildRef = resource:"particles/building_ghost/sell_indicator_godrays.vpcf"
 		},
 	]
 	m_flDepthSortBias = 1.0
