@@ -1,7 +1,7 @@
 # Cache crap that Valve autogenerates
 *.bin
 
-# Compiled formats
+# valve compiled formats  (excluding meshes\models and some others)
 *.vpcf_c
 *.vtex_c
 *.vsndevts_c
@@ -11,18 +11,23 @@
 *.vxml_c
 *.vcss_c
 
-# Commit panorama compiled textures
+# panorama compiled textures
 !game/dota_addons/dotacraft/panorama/images/*.vtex_c
 !game/dota_addons/dotacraft/panorama/images/custom_game/*.vtex_c
 
-# Map files
+# map files
 *.vpk
 
-# Map overviews
+# map overviews
 content/dota_addons/dotacraft/materials/overviews/*
 game/dota_addons/dotacraft/materials/overviews/*
 game/dota_addons/dotacraft/resource/overviews/*
 
-#Github dump
+# github dump
 *.stackdump
+
+# individual cases / added by sourcetree
 game/dota_addons/trap_wars/panorama_debugger.cfg
+game/dota_addons/trap_wars/models/misc/dollar_sign_lowpoly.vmdl_c
+game/dota_addons/trap_wars/models/misc/dollar_sign_lowpoly.vmesh_c
+game/dota_addons/trap_wars/models/misc/dollar_sign_lowpoly_6fc1e360.vmesh_c
