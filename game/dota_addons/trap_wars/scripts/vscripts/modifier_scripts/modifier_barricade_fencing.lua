@@ -1,117 +1,37 @@
 LinkLuaModifier("modifier_barricade_fencing", "modifier_scripts/modifier_barricade_fencing.lua", LUA_MODIFIER_MOTION_NONE)
 modifier_barricade_fencing = class({})
 
+-- right now hardcoded for 2x2 grid square traps (128x128 units)
 -- the valid unit names, and the fencing model for each
 local fencing_models = {
     npc_trapwars_wood_fence = "models/traps/wood_fence/fencing.vmdl",
     npc_trapwars_stone_wall = ""
 }
 
+
+-----------------------------------------
+--       Base Modifier Functions       --
+-----------------------------------------
 function modifier_barricade_fencing:OnCreated()
     if not IsServer() then return end
 
     local barricade = self:GetParent()
-    if not barricade then return end
+    if not barricade then return end  
 
     -- make sure this is being run on one of the valid units
     if not fencing_models[barricade:GetUnitName()] then return end
 
-    local tilesize = GameRules.TileSize or 128
-
     -- give things a frame or so to settle
     Timers:CreateTimer(1/30, function()
-        local caster_pos = GameRules.GameMode:Get2DGridCenter(barricade:GetAbsOrigin())
-
-        -- add the gridnav blocker
-        local blocker = SpawnEntityFromTableSynchronous("point_simple_obstruction", {origin=caster_pos})
-        barricade.blocker = blocker:GetEntityIndex()
-        -- reset the entity's position after the blocker is placed
-        barricade:SetAbsOrigin(caster_pos)
-
         -- set the post's yaw to one of four directions 0->2pi
         local angle = RandomInt(0,3) * math.pi/2
         barricade:SetForwardVector(Vector(math.cos(angle), math.sin(angle), 0))
 
-        -- do a precursory removal of any diagonal fencing around this tile (would have preferred a simple radius check, however it was glitchy as hell)
-        local diagonal_spots = {
-            caster_pos + Vector(tilesize/2, tilesize/2, 0),
-            caster_pos + Vector(tilesize/2, -tilesize/2, 0),
-            caster_pos + Vector(-tilesize/2, tilesize/2, 0),
-            caster_pos + Vector(-tilesize/2, -tilesize/2, 0)
-        }
-        for _, pos in pairs(diagonal_spots) do
-            for _, ent in pairs(Entities:FindAllByClassnameWithin("prop_dynamic", pos, tilesize/4)) do
-                for _, model in pairs(fencing_models) do
-                    if not ent:IsNull() and ent:GetModelName() == model then ent:Kill() end
-                end
-            end
-        end
+        -- remove any fencing in this section
+        self:ClearFencing(barricade)
 
-        -- ordered list of positions to check around this entity
-        local check_positions = {
-            caster_pos + Vector(         0,   tilesize+1, 0),
-            caster_pos + Vector(tilesize+1,   tilesize+1, 0),
-            caster_pos + Vector(tilesize+1,            0, 0),
-            caster_pos + Vector(tilesize+1,  -tilesize-1, 0),
-            caster_pos + Vector(          0, -tilesize-1, 0),
-            caster_pos + Vector(-tilesize-1, -tilesize-1, 0),
-            caster_pos + Vector(-tilesize-1,           0, 0),
-            caster_pos + Vector(-tilesize-1,  tilesize+1, 0)
-        }
-
-        -- find other barricades around this one at said positions, but only if they're the same unit type as this one
-        local found_entities = {}
-        for i, pos in pairs(check_positions) do
-            for _, ent in pairs(Entities:FindAllByClassnameWithin("npc_dota_creature", pos, tilesize/2)) do
-                if ent:GetUnitName() == barricade:GetUnitName() and ent:IsAlive() then
-                    found_entities[i] = ent
-                    break;
-                else
-                    for unit_name, _ in pairs(fencing_models) do
-                        if ent:GetUnitName() == unit_name and ent:IsAlive() then
-                            found_entities[i] = true;
-                        end
-                    end
-                end
-            end
-        end
-
-        -- add the fencing between them (odd=horizontal\vertical, even=diagonal)
-        found_entities[0] = found_entities[8]
-        found_entities[9] = found_entities[1]
-        for i=1, 8 do
-            if found_entities[i] then
-                local add_fencing = false
-
-                -- if it's an odd tile (horizontal\vertical), always add, otherwise add only if it has no adjacent tiles
-                if (i+1)%2 == 0 then
-                    add_fencing = true
-                elseif not found_entities[i-1] and not found_entities[i+1] then
-                    add_fencing = true
-                end
-
-                -- finally, if it's not the same unit type when we searched above, ignore these checks and don't add (still used for checks on surrounding like-types though)
-                if type(found_entities[i]) == "boolean" then add_fencing=false end
-
-
-                if add_fencing then
-                    -- new entity position
-                    local ent_pos = found_entities[i]:GetAbsOrigin()
-
-                    -- add in the fencing between them
-                    local fencing = Entities:CreateByClassname("prop_dynamic")
-                    fencing:SetAbsOrigin(caster_pos - (caster_pos-ent_pos)/2)
-
-                    -- set the fencing model
-                    fencing:SetModel(fencing_models[barricade:GetUnitName()])
-
-                    -- align the fencing a random direction to spice things up a bit
-                    local rand = 1
-                    if RandomInt(0, 1) > 0 then rand = -1 end
-                    fencing:SetForwardVector(rand*(caster_pos-ent_pos))
-                end
-            end
-        end
+        -- build the fencing
+        self:BuildFencing(barricade)
     end)
 end
 
@@ -124,81 +44,12 @@ function modifier_barricade_fencing:OnDestroy()
     -- make sure this is being run on one of the valid units
     if not fencing_models[barricade:GetUnitName()] then return end
 
-    local tilesize = GameRules.TileSize or 128
-
-
-    -- remove the gridnav blocker
-    local blocker = EntIndexToHScript(barricade.blocker or -1)
-    if blocker then blocker:RemoveSelf() end
 
     -- find and remove all of the fencing around this fence post
-    for _, ent in pairs(Entities:FindAllByClassnameWithin("prop_dynamic", barricade:GetAbsOrigin(), math.sqrt(2*(tilesize*tilesize))/2+1)) do
-        if ent:GetModelName() == "models/props_debris/wood_fence002.vmdl" then ent:Kill() end
-        for _, model in pairs(fencing_models) do
-            if ent:GetModelName() == model then
-                ent:Kill()
-                break;
-            end
-        end
-    end
-
-
-    -- re-add any diagonal fencing between surrounding posts that are still alive
-    local caster_pos = GameRules.GameMode:Get2DGridCenter(barricade:GetAbsOrigin())
-    local caster_unit_name = barricade:GetUnitName()
-    Timers:CreateTimer(1/30, function()
-        -- ordered list of positions to check around this entity
-        local check_positions = {
-            caster_pos + Vector(         0,   tilesize+1, 0),
-            caster_pos + Vector(tilesize+1,   tilesize+1, 0),
-            caster_pos + Vector(tilesize+1,            0, 0),
-            caster_pos + Vector(tilesize+1,  -tilesize-1, 0),
-            caster_pos + Vector(          0, -tilesize-1, 0),
-            caster_pos + Vector(-tilesize-1, -tilesize-1, 0),
-            caster_pos + Vector(-tilesize-1,           0, 0),
-            caster_pos + Vector(-tilesize-1,  tilesize+1, 0)
-        }
-
-        -- find other barricades around this one at said positions
-        local found_entities = {}
-        for i, pos in pairs(check_positions) do
-            for _, ent in pairs(Entities:FindAllByClassnameWithin("npc_dota_creature", pos, tilesize/2)) do
-                for unit_name, _ in pairs(fencing_models) do
-                    if ent:GetUnitName() == unit_name and ent:IsAlive() then
-                        found_entities[i] = ent;
-                        break;
-                    end
-                end
-            end
-        end
-
-        -- add the fencing between if they're connected diagonally and are the same type
-        found_entities[9] = found_entities[1]
-        for i=1, 7, 2 do
-            if found_entities[i] and found_entities[i+2] then
-                -- positions
-                local ent1_pos = found_entities[i]:GetAbsOrigin()
-                local ent2_pos = found_entities[i+2]:GetAbsOrigin()
-
-                if ent1_pos and ent2_pos and not found_entities[i+1] then
-                    -- add in the fencing between them
-                    local fencing = Entities:CreateByClassname("prop_dynamic")
-                    fencing:SetAbsOrigin(ent1_pos - (ent1_pos-ent2_pos)/2)
-
-                    -- set the fencing model
-                    fencing:SetModel(fencing_models[caster_unit_name])
-
-                    -- align the fencing a random direction to spice things up a bit
-                    local rand = 1
-                    if RandomInt(0, 1) > 0 then rand = -1 end
-                    fencing:SetForwardVector(rand*(ent1_pos-ent2_pos))
-                end
-            end
-        end
-    end)
+    self:ClearFencing(barricade)
 
     -- hide the fence post
-    barricade:AddEffects(EF_NODRAW)
+    barricade:AddNoDraw()
 
     -- add destruction particles
     local part = ParticleManager:CreateParticle("particles/traps/barricade/barricade_destroyed.vpcf", PATTACH_ABSORIGIN, barricade)
@@ -211,4 +62,149 @@ end
 
 function modifier_barricade_fencing:IsHidden()
     return true
-end 
+end
+
+
+-----------------------------------------
+--         Additional Functions        --
+-----------------------------------------
+function modifier_barricade_fencing:FindAdjacentBarricades(center, radius, ignore_this)
+    local found_entities = {}
+
+    for _, ent in pairs(Entities:FindAllByClassnameWithin("npc_dota_creature", center, radius)) do
+        if fencing_models[ent:GetUnitName()] and ent ~= ignore_this then
+            table.insert(found_entities, ent)
+        end
+    end
+
+    return found_entities
+end
+
+function modifier_barricade_fencing:FindAdjacentFencing(center, radius, ignore_this)
+    local found_entities = {}
+
+    for _, ent in pairs(Entities:FindAllByClassnameWithin("prop_dynamic", center, radius)) do
+        for _, model in pairs(fencing_models) do
+            if ent:GetModelName() == model and ent ~= ignore_this then
+                table.insert(found_entities, ent)
+                break
+            end
+        end
+    end
+
+    return found_entities
+end
+
+function modifier_barricade_fencing:SortEntitiesByDistance(entity_array, center)
+    local sorted_array, distances = {}, {}
+
+    for _, ent in pairs(entity_array) do
+        local distance = (center - ent:GetAbsOrigin()):Length2D()
+
+        for key=1, #sorted_array+1 do
+            if not distances[key] or distance < distances[key] then
+                table.insert(distances, key, distance)
+                table.insert(sorted_array, key, ent)
+                break
+            end
+        end
+    end
+
+    return sorted_array
+end
+
+function modifier_barricade_fencing:SortEntitiesByAngle(entity_array, center)  -- fIXME: remove this if it isn't getting used (tbd)
+    local square, diagonal, acute1, acute2, other = {}, {}, {}, {}, {}
+
+    for _, ent in pairs(entity_array) do
+        local angle = math.floor(math.acos(Vector(1, 0, 0):Dot((center-ent:GetAbsOrigin()):Normalized()))*180/math.pi+0.5)
+
+        if angle == 0 or angle == 90 or angle == 180 then
+            table.insert(square, ent)
+        elseif angle == 45 or angle == 135 then
+            table.insert(diagonal, ent)
+        elseif angle == 27 or angle == 63 then
+            table.insert(acute1, ent)
+        elseif angle == 117 or angle == 153 then
+            table.insert(acute2, ent)
+        else
+            table.insert(other, ent)
+        end
+    end
+
+    local sorted_array = {}
+    for _, ent in pairs(square)   do table.insert(sorted_array, ent) end
+    for _, ent in pairs(diagonal) do table.insert(sorted_array, ent) end
+    for _, ent in pairs(acute1)   do table.insert(sorted_array, ent) end
+    for _, ent in pairs(acute2)   do table.insert(sorted_array, ent) end
+    for _, ent in pairs(other)    do table.insert(sorted_array, ent) end
+    return sorted_array
+end
+
+function modifier_barricade_fencing:ClearFencing(barricade)
+    if not barricade then return end
+    local center = GameRules.GameMode:SnapBoxToGrid2D(barricade:GetAbsOrigin(), 2, 2)
+
+    for _, ent in pairs(Entities:FindAllByClassnameWithin("prop_dynamic", center, 91)) do
+        for _, model in pairs(fencing_models) do
+            if ent:GetModelName() == model then
+                ent:Kill()
+                break
+            end
+        end
+    end
+end
+
+function modifier_barricade_fencing:BuildFencing(barricade)
+    if not barricade then return end
+    local unit_name = barricade:GetUnitName()
+    local center = GameRules.GameMode:SnapBoxToGrid2D(barricade:GetAbsOrigin(), 2, 2)
+
+    --for _, ent in pairs(self:SortEntitiesByAngle(self:FindAdjacentBarricades(center, 182, barricade), center)) do
+    for _, ent in pairs(self:SortEntitiesByDistance(self:FindAdjacentBarricades(center, 182, barricade), center)) do
+        local ent_pos = ent:GetAbsOrigin()
+        local fence_pos = center - (center-ent_pos)/2
+        local build = true
+
+        -- if it's not the same type of barricade, don't build fencing to it
+        if unit_name ~= ent:GetUnitName() then build = false end
+
+
+        local angle = math.floor(math.acos(Vector(1, 0, 0):Dot((center-ent_pos):Normalized()))*180/math.pi+0.5)
+        -- 0 27 45 63 90 117 135 153 180 153 135 117 90 63 45 27 0
+
+        if angle == 45 or angle == 135 then
+            local adjacent_fences = self:FindAdjacentFencing(fence_pos, 64)
+            if #adjacent_fences > 1 then build = false end
+        end
+        --[[  FIXME: these didn't work; come up with some better way of dealing with the odd angles
+        if angle == 117 then
+            local adjacent_fences = self:FindAdjacentFencing(fence_pos+Vector(64, 0, 0), 10)
+            for _, ent in pairs(self:FindAdjacentFencing(fence_pos+Vector(-64, 0, 0), 10)) do table.insert(adjacent_fences, ent) end
+            if #adjacent_fences > 1 then build = false end
+        end
+
+        if angle == 153 then
+            local adjacent_fences = self:FindAdjacentFencing(fence_pos+Vector(0, 64, 0), 10)
+            for _, ent in pairs(self:FindAdjacentFencing(fence_pos+Vector(0, -64, 0), 10)) do table.insert(adjacent_fences, ent) end
+            if #adjacent_fences > 1 then build = false end
+        end
+
+        if angle == 117 or angle == 153 then
+            local adjacent_cades = self:FindAdjacentBarricades(center, 182, barricade)
+            if #adjacent_cades > 2 then build = false end
+        end
+        ]]
+
+
+        if build then
+            local fencing = Entities:CreateByClassname("prop_dynamic")
+            fencing:SetAbsOrigin(center - (center-ent_pos)/2)
+            fencing:SetModel(fencing_models[unit_name])
+
+            local rand = 1
+            if RandomInt(0, 1) then rand = -1 end
+            fencing:SetForwardVector(rand*(center-ent_pos))
+        end
+    end
+end

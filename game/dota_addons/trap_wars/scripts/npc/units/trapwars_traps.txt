@@ -266,8 +266,9 @@
         "Width"                     "2"
         "modifiers"
         {
-            "1"                     "modifier_barricade_fencing"
-            "2"                     "modifier_hide_healthbar_when_damaged"
+            "1"                     "modifier_point_simple_obstruction"
+            "2"                     "modifier_barricade_fencing"
+            "3"                     "modifier_hide_healthbar_when_damaged"
         }
     }
 
