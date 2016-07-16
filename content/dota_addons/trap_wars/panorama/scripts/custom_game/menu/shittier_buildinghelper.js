@@ -60,7 +60,7 @@ function UpdateGhost() {
     // if the particles still exist
     if(Config.BuildingGhost.draw_ghost) {
         // update the box particle position
-        var center = SnapBoxToGrid2D(MouseWorldPos(), Config.BuildingGhost.length, Config.BuildingGhost.width);
+        var center = SnapBoxToGrid2D(MouseWorldPos() || [1000000, 1000000, 1000000], Config.BuildingGhost.length, Config.BuildingGhost.width);
         if(center) {
             // update the outline tile positions & all particle colors
             var offset_position = [center[0]-Config.BuildingGhost.length*32-32, center[1]-Config.BuildingGhost.width*32-32, center[2]];
@@ -217,7 +217,7 @@ function DragBuy(last_tile_position) {
 
     // mouse positions
     last_tile_position = last_tile_position || [];  //[null, null, null];
-    var current_tile_position = SnapToGrid2D(MouseWorldPos());
+    var current_tile_position = SnapToGrid2D(MouseWorldPos() || [1000000, 1000000, 1000000]);  // we'll just assume that a billion is outside of the bounds of the map ...
 
     // if last_position and our current mouse world position are in different tiles, send a new buy event      FIXME: update for variable length/width traps
     if(last_tile_position[0] != current_tile_position[0] || last_tile_position[1] != current_tile_position[1]) {
