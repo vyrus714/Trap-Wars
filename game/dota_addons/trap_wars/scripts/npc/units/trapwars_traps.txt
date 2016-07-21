@@ -223,6 +223,11 @@
         "Model"                     "models/traps/wood_fence/post.vmdl"
         "ModelScale"                "1.0"
         "Level"                     "1"
+        "precache"
+        {
+            "model"                 "models/traps/wood_fence/fencing.vmdl"
+            "particle"              "particles/traps/barricade/barricade_destroyed.vpcf"
+        }
 
         // Armor
         //----------------------------------------------------------------

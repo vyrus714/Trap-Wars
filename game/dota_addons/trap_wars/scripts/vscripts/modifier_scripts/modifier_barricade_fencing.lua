@@ -2,12 +2,15 @@ LinkLuaModifier("modifier_barricade_fencing", "modifier_scripts/modifier_barrica
 modifier_barricade_fencing = class({})
 
 -- right now hardcoded for 2x2 grid square traps (128x128 units)
--- the valid unit names, and the fencing model for each
+-- the valid unit names, and the fencing model for each (precached in the unit)
 local fencing_models = {
     npc_trapwars_wood_fence = "models/traps/wood_fence/fencing.vmdl",
     npc_trapwars_stone_wall = ""
 }
-
+local destruction_particles = {
+    npc_trapwars_wood_fence = "particles/traps/barricade/barricade_destroyed.vpcf",
+    npc_trapwars_stone_wall = ""
+}
 
 -----------------------------------------
 --       Base Modifier Functions       --
@@ -52,12 +55,16 @@ function modifier_barricade_fencing:OnDestroy()
     barricade:AddNoDraw()
 
     -- add destruction particles
-    local part = ParticleManager:CreateParticle("particles/traps/barricade/barricade_destroyed.vpcf", PATTACH_ABSORIGIN, barricade)
-    ParticleManager:SetParticleControlEnt(part, 0, barricade, PATTACH_ABSORIGIN, "attach_origin", barricade:GetAbsOrigin(), true)
-    Timers:CreateTimer(2, function()
-        ParticleManager:DestroyParticle(part, false)
-        ParticleManager:ReleaseParticleIndex(part)
-    end)
+    if destruction_particles[barricade:GetUnitName()] then
+        local part = ParticleManager:CreateParticle(destruction_particles[barricade:GetUnitName()], PATTACH_CUSTOMORIGIN, nil)
+        ParticleManager:SetParticleControl(part, 0, barricade:GetAbsOrigin())
+        ParticleManager:SetParticleControlOrientation(part, 0, barricade:GetForwardVector(), barricade:GetRightVector(), barricade:GetUpVector())
+        
+        Timers:CreateTimer(2, function()
+            ParticleManager:DestroyParticle(part, false)
+            ParticleManager:ReleaseParticleIndex(part)
+        end)
+    end
 end
 
 function modifier_barricade_fencing:IsHidden()
@@ -198,13 +205,8 @@ function modifier_barricade_fencing:BuildFencing(barricade)
 
 
         if build then
-            local fencing = Entities:CreateByClassname("prop_dynamic")
-            fencing:SetAbsOrigin(center - (center-ent_pos)/2)
-            fencing:SetModel(fencing_models[unit_name])
-
-            local rand = 1
-            if RandomInt(0, 1) then rand = -1 end
-            fencing:SetForwardVector(rand*(center-ent_pos))
+            local fencing = SpawnEntityFromTableSynchronous("prop_dynamic", {model=fencing_models[unit_name], origin=center-(center-ent_pos)/2})
+            fencing:SetForwardVector((1+RandomInt(0, 1)*-2)*(center-ent_pos))
         end
     end
 end
