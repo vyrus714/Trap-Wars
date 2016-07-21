@@ -1,61 +1,69 @@
 <!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
 {
 	_class = "CParticleSystemDefinition"
-	m_Children =
+	m_Children = 
 	[
 		{
 			m_ChildRef = resource:"particles/traps/barricade/barricade_destroyed_a.vpcf"
 		},
+		{
+			m_ChildRef = resource:"particles/traps/barricade/barricade_destroyed_b.vpcf"
+		},
 	]
-	m_Operators =
+	m_Operators = 
 	[
 		{
 			_class = "C_OP_FadeAndKill"
-			m_flEndFadeInTime = 0.000000
-			m_flStartFadeOutTime = 0.100000
+			m_flEndFadeInTime = 0.0
+			m_flStartFadeOutTime = 0.1
 		},
 		{
 			_class = "C_OP_InterpolateRadius"
-			m_flEndScale = 1.500000
+			m_flEndScale = 1.6
 		},
 		{
 			_class = "C_OP_BasicMovement"
-			m_Gravity =
-			[
-				0.000000,
-				0.000000,
-				-300.000000,
-			]
+			m_Gravity = [ 0.0, 0.0, -200.0 ]
 		},
 	]
-	m_Renderers =
+	m_Renderers = 
 	[
 		{
 			_class = "C_OP_RenderModels"
-			m_ModelList =
+			m_ModelList = 
 			[
 				{
-					m_model = resource:"models/props_debris/wood_fence001g.vmdl"
+					m_model = resource:"models/traps/wood_fence/post.vmdl"
 				},
 			]
 			m_bOrientZ = true
 		},
 	]
-	m_Initializers =
+	m_Initializers = 
 	[
 		{
 			_class = "C_INIT_RingWave"
 		},
 		{
 			_class = "C_INIT_RandomLifeTime"
-			m_fLifetimeMin = 0.800000
-			m_fLifetimeMax = 0.800000
+			m_fLifetimeMin = 1.2
+			m_fLifetimeMax = 1.2
 		},
 		{
-			_class = "C_INIT_RadiusFromCPObject"
+			_class = "C_INIT_RandomRadius"
+		},
+		{
+			_class = "C_INIT_RemapInitialCPDirectionToRotation"
+			m_nFieldOutput = 12
+			m_flOffsetRot = 90.0
+		},
+		{
+			_class = "C_INIT_InitialVelocityNoise"
+			m_vecOutputMin = [ 0.0, 0.0, 80.0 ]
+			m_vecOutputMax = [ 0.0, 0.0, 80.0 ]
 		},
 	]
-	m_Emitters =
+	m_Emitters = 
 	[
 		{
 			_class = "C_OP_InstantaneousEmitter"
