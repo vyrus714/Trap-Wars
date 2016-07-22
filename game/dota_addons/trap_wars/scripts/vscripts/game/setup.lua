@@ -192,7 +192,7 @@ function GameMode:OnPlayerConnectFull(keys)
             PlayerResource:SetCustomPlayerColor(pid, red, green, blue)
             GameRules.player_colors[pid] = Vector(red, green, blue)
             -- add the value to the net table "player_colors", "pid", {vector}
-            CustomNetTables:SetTableValue("player_colors", ""..pid, {Vector(red, green, blue)})
+            CustomNetTables:SetTableValue("player_colors", ""..pid, {x=red, y=green, z=blue, [0]=red, [1]=green, [2]=blue})
 
 
             -- add the player to GameRules.player_creeps, and give them GameRules.max_player_creeps empty creep slots
