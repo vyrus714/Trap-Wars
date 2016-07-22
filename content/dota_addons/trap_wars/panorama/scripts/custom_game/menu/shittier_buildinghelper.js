@@ -53,6 +53,7 @@ function OnBuyGhost(keys) {
     }
 
     // lock this particle to the mouse position
+    ShowGrids();
     UpdateGhost();
 }
 
@@ -153,6 +154,8 @@ function OnHideGhost() {
             Particles.ReleaseParticleIndex(Config.BuildingGhost.particles[i]);
         }
         Config.BuildingGhost.particles = [];
+
+        HideGrids();
     }
 }
 
@@ -337,6 +340,12 @@ function FindTrapsInRadius(position_ref, radius) {  // FIXME: remove
 
 
 // build/grid functions
+function GetGridPosition(index) {
+    var grid = CustomNetTables.GetTableValue("static_info", "grid");
+    var position = [grid.start[1] + 64*(index%grid.width), grid.start[2] + 64*Math.floor(index/grid.length)];
+    return [position[0], position[1], 0];  // FIXME: right now there's no way to get the ground height in javascript
+    //return [position[0], position[1], FIXME_GROUND_HEIGHT(position)];
+}
 
 function GetGridIndex(position_ref) {
     var position = [position_ref[0], position_ref[1], position_ref[2]];
@@ -351,13 +360,9 @@ function GetGridIndex(position_ref) {
 }
 
 function DoesPlayerHavePlot(playerid, plot_number) {
-    var plots = CustomNetTables.GetTableValue("player_plots", ""+playerid);
-    if(!plots) {return false;}
+    var plot = CustomNetTables.GetTableValue("plots", ""+plot_number);
 
-    for(var i in plots) {
-        if(plot_number == plots[i]) {return true;}
-    }
-
+    if(plot && typeof plot.pid == "number" && plot.pid == playerid) {return true;}
     return false;
 }
 
@@ -403,3 +408,38 @@ $.RegisterKeyBind($.GetContextPanel(),"key_n", function() {
     $.Msg("this didn't work either");
 });
 */
+
+
+function ShowGrids() {  // FIXME: add air grid support
+    var grid = CustomNetTables.GetTableValue("static_info", "grid");
+
+    Config.BuildingGhost.grid_particles = [];
+    for(i=0; i<grid.width*grid.length; i++) {
+        var tile = CustomNetTables.GetTableValue("ground_grid", ""+i);
+        if(tile && tile.team) {
+            // create the particle
+            var part = Particles.CreateParticle("particles/building_ghost/tile_outline.vpcf", ParticleAttachment_t.PATTACH_CUSTOMORIGIN, -1);
+            Particles.SetParticleControl(part, 0, GetGridPosition(i));
+
+            // set the color
+            var color = (tile.team == Players.GetTeam(Game.GetLocalPlayerID())) ? [255, 255, 255] : [255, 0, 0];
+            if(tile.plot) {
+                var plot = CustomNetTables.GetTableValue("plots", ""+tile.plot);     
+                color = (plot && typeof plot.pid == "number") ? CustomNetTables.GetTableValue("player_colors", ""+plot.pid) : color;
+            }
+            Particles.SetParticleControl(part, 2, color);
+
+            // store the particle
+            Config.BuildingGhost.grid_particles.push(part);
+        }
+    }
+}
+
+function HideGrids() {
+        // remove the particles
+        for(var part of Config.BuildingGhost.grid_particles) {
+            Particles.DestroyParticleEffect(part, true);
+            Particles.ReleaseParticleIndex(part);
+        }
+        Config.BuildingGhost.grid_particles = [];
+}

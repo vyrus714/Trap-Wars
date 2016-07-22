@@ -38,6 +38,7 @@ function GameMode:SetupGameMode()
     GameRules.grid_length = 0
     GameRules.GroundGrid  = {}
     GameRules.AirGrid     = {}  -- starts empty, filled dynamically based on the ground grid
+    GameRules.Plots       = {}
 
     Timers:CreateTimer(1/30, function()
         GameRules.grid_start  = Vector(GetWorldMinX(), GetWorldMinY())
@@ -62,7 +63,6 @@ function GameMode:SetupGameMode()
     GameRules.valid_players = {}  -- filled when players join teams in OnPlayerTeam()
     GameRules.player_colors = {}  -- filled when players first connect in OnPlayerConnectFull()
     GameRules.player_creeps = {}  -- store creeps per-player, rather than a jumbled mess per team  FIXME
-    GameRules.player_plots  = {}
 
     ----------------------------------------------
     -- Team Specific Values | key = team number --

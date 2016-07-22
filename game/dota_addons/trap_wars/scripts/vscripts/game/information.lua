@@ -168,14 +168,8 @@ function GameMode:GetGridIndex(position)
     return math.floor(delta.x/64) + math.floor(delta.y/64)*GameRules.grid_width
 end
 
--- not really that accurate, since different teams can all have a plot of the same #, however i'm checking for teams separately anyway
 function GameMode:DoesPlayerHavePlot(playerid, plot_number)
-    if not GameRules.player_plots[playerid] then return false end
-
-    for _, plot in pairs(GameRules.player_plots[playerid]) do
-        if plot_number == plot then return true end
-    end
-
+    if GameRules.Plots[plot_number] == playerid then return true end
     return false
 end
 

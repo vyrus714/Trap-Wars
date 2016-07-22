@@ -15,72 +15,39 @@ function GameMode:InitGameMode()
                 
     -- new grid claims
     Timers:CreateTimer(2/30, function()
+        -- get player info once so we don't do this for every index
+        local player_info = {}
+        for pid, _ in pairs(GameRules.valid_players) do
+            local hero = PlayerResource:GetSelectedHeroEntity(pid)
+
+            if hero then
+                player_info[pid] = {
+                    team = PlayerResource:GetTeam(pid),
+                    pos  = hero:GetAbsOrigin()
+                }
+            end
+        end
+
+        -- go through every grid square and check if it's a claimable plot
         for index, info in pairs(GameRules.GroundGrid) do
-            if type(index) == "number" and info.plot then
-                -- check to see if someone's already claimed this grid plot  FIXME: turn this into an info function
-                local claimed = nil
-                for playerid, claims in pairs(GameRules.player_plots) do
-                    -- make sure the player is on the right team
-                    if PlayerResource:GetTeam(playerid) == info.team then
-                        for _, claim in pairs(claims) do
-                            if claim == info.plot then claimed = playerid end  -- FIXME: just use bool, this was for debug
-                        end
-                    end
-                end
+            -- if this plot is claimable, and isn't claimed already
+            if info.plot and not GameRules.Plots[info.plot] then
+                local grid_pos = GameMode:GetGridPosition(index)
 
-                if claimed == nil then
-                    local grid_pos = GameMode:GetGridPosition(index)
-                    for playerid, _ in pairs(GameRules.valid_players) do
-                        if PlayerResource:GetTeam(playerid) == info.team then
-                            local hero = PlayerResource:GetSelectedHeroEntity(playerid)
-                            if hero then
-                                local player_pos = hero:GetAbsOrigin()
+                -- go through each player and see if they're in this plot
+                for pid, pinfo in pairs(player_info) do
+                    if info.team == pinfo.team and (grid_pos-pinfo.pos):Length2D() < 45 then
+                        -- claim the grid plot
+                        GameRules.Plots[info.plot] = pid
+                        CustomNetTables:SetTableValue("plots", ""..info.plot, {pid=GameRules.Plots[info.plot]})
 
-                                if (grid_pos - player_pos):Length2D() < 45 then
-                                    -- claim the grid plot
-                                    if not GameRules.player_plots[playerid] then GameRules.player_plots[playerid] = {} end
-                                    table.insert(GameRules.player_plots[playerid], info.plot)
-                                    CustomNetTables:SetTableValue("player_plots", ""..playerid, GameRules.player_plots[playerid])
-
-                                    break;
-                                end
-                            end
-                        end
+                        break;
                     end
                 end
             end
         end
 
         return 1/30
-    end)
-
-
-    -- light up the grids  FIXME: update to particles, and move to panorama
-    Timers:CreateTimer(2/30, function()
-        for index, info in pairs(GameRules.GroundGrid) do
-            if type(index) == "number" then
-                -- check to see if someone's already claimed this grid plot  FIXME: turn this into an info function
-                local claimed = nil
-                for playerid, claims in pairs(GameRules.player_plots) do
-                    -- make sure the player is on the right team
-                    if PlayerResource:GetTeam(playerid) == info.team then
-                        for _, claim in pairs(claims) do
-                            if claim == info.plot then claimed = playerid end  -- FIXME: just use bool, this was for debug
-                        end
-                    end
-                end
-                
-                if info.team then
-                    local color
-                    if info.team == DOTA_TEAM_GOODGUYS then color = Vector(0, 255, 0) end
-                    if info.team == DOTA_TEAM_BADGUYS  then color = Vector(255, 0, 0) end
-                    if claimed ~= nil then color = GameRules.player_colors[claimed] end
-                    DebugDrawBoxDirection(GameMode:GetGridPosition(index), Vector(-30, -30, 0), Vector(30, 30, 1), Vector(0, 0, 0), color or Vector(64, 64, 64), 0.4, 4/30)
-                end
-            end
-        end
-
-        return 4/30
     end)
 end
 

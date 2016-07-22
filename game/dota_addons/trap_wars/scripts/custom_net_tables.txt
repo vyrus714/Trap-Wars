@@ -10,8 +10,8 @@
         "valid_players",
         "ground_grid",
         "air_grid",
+        "plots",
 
-        "player_plots",
         "player_colors",
         "player_creeps"
   	]
