@@ -54,27 +54,24 @@ var Config = GameUI.CustomUIConfig();
         // create tooltips and pass them info
         info.reference = panel;
         panel.SetPanelEvent("onmouseover", (function(a, b) {return function() {
-            Config.Events.FireEvent("show_tooltip", {id:a, layout:"file://{resources}/layout/custom_game/tooltips/menu_list_item_tooltip.xml", args:b});
-            Config.Events.FireEvent("show_tooltip", {id:"help_tooltip", layout:"file://{resources}/layout/custom_game/tooltips/item_help_tooltip.xml"});
+            Config.Events.FireEvent("show_tooltip", {id: a, layout: "file://{resources}/layout/custom_game/tooltips/menu_list_item_tooltip.xml", args: b});
+            Config.Events.FireEvent("show_tooltip", {id: "help_tooltip", layout: "file://{resources}/layout/custom_game/tooltips/item_help_tooltip.xml"});
         }})(panel.id+"_tooltip", info));
         panel.SetPanelEvent("onmouseout", (function(a) {return function() {
-            Config.Events.FireEvent("hide_tooltip", {id:a});
-            Config.Events.FireEvent("hide_tooltip", {id:"help_tooltip"});
+            Config.Events.FireEvent("hide_tooltip", {id: a});
+            Config.Events.FireEvent("hide_tooltip", {id: "help_tooltip"});
         }})(panel.id+"_tooltip"));
 
         // set the left-click action
-        panel.SetPanelEvent("onactivate", (function(a){ return function(){
+        panel.SetPanelEvent("onactivate", (function(a) {return function(){
             $("#"+a+"_display").checked = true;
         }}(panel.id)));
 
         // set the right-click action
-        panel.SetPanelEvent("oncontextmenu", (function(b){ return function(){
-            Config.Events.FireEvent("buy_ghost", {
-                //entity: a,
-                name: b
-            });
+        panel.SetPanelEvent("oncontextmenu", (function(a/*, b*/) {return function(){
+            Config.Events.FireEvent("show_ghost", {name: a/*, entity: b*/});
         }}(k)));  // FIXME: buy trap etc etc <-- hmm, i might have done this in ghost.js accidentally, fuck
-
+        
 
         // create the "display" info panel
         var display_item = $.CreatePanel("RadioButton", $("#trap_display"), k+"_display");
@@ -154,9 +151,9 @@ var Config = GameUI.CustomUIConfig();
             Config.Events.FireEvent("hide_tooltip", {id:"help_tooltip"});
         }})(panel.id+"_tooltip"));*/
 
-        // set the left-click action
-        panel.SetPanelEvent("onactivate"   , function() {Config.Events.FireEvent("sell_ghost", {name: "sell"});});
-        panel.SetPanelEvent("oncontextmenu", function() {Config.Events.FireEvent("sell_ghost", {name: "sell"});});
+        // set the left/right click actions
+        panel.SetPanelEvent("onactivate"   , function() {Config.Events.FireEvent("show_ghost", {name: "sell"});});
+        panel.SetPanelEvent("oncontextmenu", function() {Config.Events.FireEvent("show_ghost", {name: "sell"});});
         /*
         panel.SetPanelEvent("onactivate", (function(){ return function(){
             Config.Events.FireEvent("buy_ghost", {

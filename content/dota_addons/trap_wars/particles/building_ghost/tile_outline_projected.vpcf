@@ -1,0 +1,50 @@
+<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+{
+	_class = "CParticleSystemDefinition"
+	m_flConstantRadius = 32.0
+	m_Operators = 
+	[
+		{
+			_class = "C_OP_EndCapDecay"
+		},
+		{
+			_class = "C_OP_PositionLock"
+		},
+	]
+	m_Renderers = 
+	[
+		{
+			_class = "C_OP_RenderProjected"
+			m_bEnableProjectedDepthControls = true
+			m_hProjectedMaterial = resource:"materials/particle/building_ghost/tile_outline.vmat"
+		},
+	]
+	m_Initializers = 
+	[
+		{
+			_class = "C_INIT_RingWave"
+		},
+		{
+			_class = "C_INIT_PositionPlaceOnGround"
+		},
+		{
+			_class = "C_INIT_RemapCPtoVector"
+			m_nCPInput = 2
+			m_nFieldOutput = 6
+			m_vInputMax = [ 255.0, 255.0, 255.0 ]
+			m_vOutputMax = [ 1.0, 1.0, 1.0 ]
+		},
+		{
+			_class = "C_INIT_RandomRadius"
+			m_flRadiusMin = 33.0
+			m_flRadiusMax = 33.0
+		},
+	]
+	m_Emitters = 
+	[
+		{
+			_class = "C_OP_InstantaneousEmitter"
+			m_nParticlesToEmit = 1
+		},
+	]
+}

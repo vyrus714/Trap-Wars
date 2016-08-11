@@ -1,0 +1,12 @@
+// THIS FILE IS AUTO-GENERATED
+
+Layer0
+{
+	shader "projected_dota.vfx"
+
+	//---- Color ----
+	TextureColor "materials/particle/building_ghost/tile_outline_color.png"
+
+	//---- Translucency ----
+	TextureTranslucency "materials/particle/building_ghost/tile_outline_trans.png"
+}
