@@ -14,6 +14,11 @@ function Precache( context )
     -- team portals
     PrecacheResource("particle", "particles/portal/portal.vpcf", context)
     PrecacheResource("particle", "particles/units/unit_greevil/loot_greevil_tgt_end.vpcf", context)
+    -- building preview particles
+    PrecacheResource("particle", "particles/building_ghost/ghost.vpcf", context)
+    PrecacheResource("particle", "particles/building_ghost/sell_indicator.vpcf", context)
+    PrecacheResource("particle", "particles/building_ghost/preview_dot.vpcf", context)
+    PrecacheResource("particle", "particles/building_ghost/tile_outline_sprite.vpcf", context)
 
 
     --// units //--
