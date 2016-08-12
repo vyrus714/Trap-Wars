@@ -26,6 +26,12 @@
 		{
 			_class = "C_OP_RenderSprites"
 			m_nOrientationType = 2
+			m_bDisableOperator = true
+		},
+		{
+			_class = "C_OP_RenderSprites"
+			m_nOrientationType = 2
+			m_hTexture = resource:"materials/particle/particle_modulate_01.vtex"
 		},
 	]
 	m_Initializers = 
@@ -37,6 +43,17 @@
 			_class = "C_INIT_RandomRadius"
 			m_flRadiusMin = 40.0
 			m_flRadiusMax = 40.0
+			m_bDisableOperator = true
+		},
+		{
+			_class = "C_INIT_RandomRadius"
+			m_flRadiusMin = 24.0
+			m_flRadiusMax = 24.0
+		},
+		{
+			_class = "C_INIT_RandomAlpha"
+			m_nAlphaMin = 180
+			m_nAlphaMax = 180
 		},
 	]
 	m_Emitters = 
