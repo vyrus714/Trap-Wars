@@ -1,0 +1,129 @@
+<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+{
+	_class = "CParticleSystemDefinition"
+	m_nMaxParticles = 100000
+	m_Operators = 
+	[
+		{
+			_class = "C_OP_OscillateVector"
+			m_RateMin = [ -0.04, -0.04, -0.04 ]
+			m_RateMax = [ 0.04, 0.04, 0.04 ]
+			m_FrequencyMin = [ 0.0, 0.0, 0.0 ]
+			m_nField = 6
+			m_bDisableOperator = true
+		},
+		{
+			_class = "C_OP_BasicMovement"
+		},
+		{
+			_class = "C_OP_InterpolateRadius"
+			m_flEndScale = 4.0
+		},
+		{
+			_class = "C_OP_FadeAndKill"
+			m_flEndFadeInTime = 0.8
+			m_flStartFadeOutTime = 0.8
+			m_flStartAlpha = 0.0
+		},
+		{
+			_class = "C_OP_ClampScalar"
+			m_nFieldOutput = 7
+			m_flOutputMax = 0.06
+		},
+		{
+			_class = "C_OP_SpinUpdate"
+		},
+		{
+			_class = "C_OP_RampScalarLinear"
+			m_RateMin = -0.1
+			m_RateMax = 0.1
+			m_flEndTime_min = 100.0
+			m_flEndTime_max = 100.0
+			m_nField = 5
+		},
+	]
+	m_Renderers = 
+	[
+		{
+			_class = "C_OP_RenderSprites"
+			m_hTexture = resource:"materials/particle/smoke1/smoke1.vtex"
+		},
+	]
+	m_Initializers = 
+	[
+		{
+			_class = "C_INIT_RandomLifeTime"
+			m_fLifetimeMin = 6.0
+			m_fLifetimeMax = 8.0
+		},
+		{
+			_class = "C_INIT_RingWave"
+			m_flInitialRadius = 100.0
+		},
+		{
+			_class = "C_INIT_PositionOffset"
+			m_OffsetMin = [ 0.0, 0.0, -80.0 ]
+			m_OffsetMax = [ 0.0, 0.0, -80.0 ]
+			m_bDisableOperator = true
+		},
+		{
+			_class = "C_INIT_RandomRadius"
+			m_flRadiusMin = 20.0
+			m_flRadiusMax = 30.0
+		},
+		{
+			_class = "C_INIT_RandomSequence"
+			m_nSequenceMin = 1
+			m_nSequenceMax = 2
+		},
+		{
+			_class = "C_INIT_RandomColor"
+			m_ColorMin = [ 0, 0, 0, 255 ]
+			m_ColorMax = [ 170, 255, 255, 255 ]
+		},
+		{
+			_class = "C_INIT_RandomColor"
+			m_ColorMin = [ 32, 32, 32, 255 ]
+			m_ColorMax = [ 64, 64, 64, 255 ]
+			m_TintMax = [ 128, 128, 128, 255 ]
+		},
+		{
+			_class = "C_INIT_RandomAlpha"
+			m_nAlphaMin = 16
+			m_nAlphaMax = 32
+		},
+		{
+			_class = "C_INIT_RandomRotation"
+		},
+		{
+			_class = "C_INIT_VelocityRadialRandom"
+			m_fSpeedMin = -10.0
+			m_fSpeedMax = -10.0
+		},
+	]
+	m_Emitters = 
+	[
+		{
+			_class = "C_OP_ContinuousEmitter"
+			m_flEmitRate = 25.0
+		},
+	]
+	m_ForceGenerators = 
+	[
+		{
+			_class = "C_OP_AttractToControlPoint"
+			m_fForceAmount = 10.0
+			m_fFalloffPower = 0.0
+			m_bDisableOperator = true
+		},
+		{
+			_class = "C_OP_LocalAccelerationForce"
+			m_vecAccel = [ 0.0, 0.0, 8.0 ]
+		},
+		{
+			_class = "C_OP_TwistAroundAxis"
+			m_fForceAmount = 16.0
+			m_bDisableOperator = true
+		},
+	]
+}

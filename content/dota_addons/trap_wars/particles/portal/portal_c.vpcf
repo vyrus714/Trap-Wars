@@ -1,0 +1,116 @@
+<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+{
+	_class = "CParticleSystemDefinition"
+	m_nMaxParticles = 100000
+	m_Operators = 
+	[
+		{
+			_class = "C_OP_BasicMovement"
+		},
+		{
+			_class = "C_OP_SpinUpdate"
+		},
+		{
+			_class = "C_OP_FadeInSimple"
+			m_flFadeInTime = 0.1
+			m_bDisableOperator = true
+		},
+		{
+			_class = "C_OP_FadeAndKill"
+			m_flEndFadeInTime = 0.0
+			m_flStartFadeOutTime = 0.8
+			m_bDisableOperator = true
+		},
+		{
+			_class = "C_OP_FadeAndKill"
+			m_flEndFadeInTime = 0.2
+			m_flStartFadeOutTime = 0.7
+			m_flStartAlpha = 0.0
+		},
+		{
+			_class = "C_OP_ClampScalar"
+			m_nFieldOutput = 7
+			m_flOutputMax = 0.3
+		},
+		{
+			_class = "C_OP_OscillateVector"
+			m_RateMin = [ -0.03, -0.03, -0.03 ]
+			m_RateMax = [ 0.03, 0.03, 0.03 ]
+			m_FrequencyMin = [ 0.0, 0.0, 0.0 ]
+			m_nField = 6
+		},
+	]
+	m_Renderers = 
+	[
+		{
+			_class = "C_OP_RenderSprites"
+			m_hTexture = resource:"materials/particle/glyphs/glyph4_2.vtex"
+		},
+	]
+	m_Initializers = 
+	[
+		{
+			_class = "C_INIT_RandomLifeTime"
+			m_fLifetimeMin = 24.0
+			m_fLifetimeMax = 42.0
+		},
+		{
+			_class = "C_INIT_RingWave"
+			m_flInitialRadius = 120.0
+			m_flThickness = 10.0
+		},
+		{
+			_class = "C_INIT_PositionOffset"
+			m_OffsetMin = [ 0.0, 0.0, -80.0 ]
+			m_OffsetMax = [ 0.0, 0.0, -80.0 ]
+			m_bDisableOperator = true
+		},
+		{
+			_class = "C_INIT_RandomScalar"
+			m_flMax = 63.0
+			m_nFieldOutput = 9
+		},
+		{
+			_class = "C_INIT_RandomRadius"
+			m_flRadiusMax = 8.0
+			m_flRadiusMin = 4.0
+		},
+		{
+			_class = "C_INIT_RandomRotation"
+		},
+		{
+			_class = "C_INIT_RandomRotationSpeed"
+			m_flDegreesMax = 30.0
+		},
+		{
+			_class = "C_INIT_VelocityRadialRandom"
+			m_fSpeedMax = -3.0
+			m_vecLocalCoordinateSystemSpeedScale = [ 1.0, 1.0, 0.0 ]
+			m_fSpeedMin = -2.0
+		},
+		{
+			_class = "C_INIT_VelocityRadialRandom"
+			m_fSpeedMax = 12.0
+			m_vecLocalCoordinateSystemSpeedScale = [ 0.0, 0.0, 1.0 ]
+			m_bDisableOperator = true
+			m_fSpeedMin = 8.0
+		},
+		{
+			_class = "C_INIT_VelocityRandom"
+			m_LocalCoordinateSystemSpeedMin = [ 0.0, 0.0, 2.0 ]
+			m_LocalCoordinateSystemSpeedMax = [ 0.0, 0.0, 4.0 ]
+		},
+		{
+			_class = "C_INIT_RandomColor"
+			m_ColorMin = [ 170, 255, 255, 255 ]
+			m_ColorMax = [ 85, 255, 255, 255 ]
+		},
+	]
+	m_Emitters = 
+	[
+		{
+			_class = "C_OP_ContinuousEmitter"
+			m_flEmitRate = 3.0
+		},
+	]
+}

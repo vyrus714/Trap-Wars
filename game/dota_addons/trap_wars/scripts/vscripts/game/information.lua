@@ -57,8 +57,7 @@ function GameMode:GetPortals(team)
         portal.entindex = ent:GetEntityIndex()
         -- add the particles for this portal
         portal.particles = {}
-        --local part = ParticleManager:CreateParticle("particles/econ/events/fall_major_2015/teleport_end_fallmjr_2015_lvl2.vpcf", PATTACH_CUSTOMORIGIN, nil)
-        local part = ParticleManager:CreateParticle("particles/portal.vpcf", PATTACH_CUSTOMORIGIN, nil)
+        local part = ParticleManager:CreateParticle("particles/portal/portal.vpcf", PATTACH_CUSTOMORIGIN, nil)
         ParticleManager:SetParticleControl(part, 0, ent:GetAbsOrigin()+Vector(0,0,-80))
         --ParticleManager:SetParticleControl(part, 1, ent:GetAbsOrigin()+Vector(0,0,-100))
         table.insert(portal.particles, part)
