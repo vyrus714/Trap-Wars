@@ -12,7 +12,7 @@ end
 function Precache( context )
     --// particles //--
     -- team portals
-    PrecacheResource("particle", "particles/econ/events/fall_major_2015/teleport_end_fallmjr_2015_lvl2.vpcf", context)
+    PrecacheResource("particle", "particles/portal/portal.vpcf", context)
     PrecacheResource("particle", "particles/units/unit_greevil/loot_greevil_tgt_end.vpcf", context)
 
 
