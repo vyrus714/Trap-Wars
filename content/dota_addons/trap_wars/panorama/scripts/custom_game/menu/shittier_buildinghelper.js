@@ -5,7 +5,8 @@ var Ghost  = {
 	other_parts : [],
 	//name   : null,  // (starts empty)
 	length : 1,
-	width  : 1
+	width  : 1,
+	local_pid: Game.GetLocalPlayerID()
 };
 
 
@@ -49,6 +50,13 @@ function OnShowGhost(keys) {
 	    }
 	}
 
+    // add a range indicator around the hero showing where you can currently build
+    var build_range = CustomNetTables.GetTableValue("static_info", "generic").build_distance;
+    if(build_range) {
+		Ghost.range_indicator = Particles.CreateParticle("particles/building_ghost/range_indicator.vpcf", ParticleAttachment_t.PATTACH_ABSORIGIN_FOLLOW, Players.GetPlayerHeroEntityIndex(Ghost.local_pid));    
+	    Particles.SetParticleControl(Ghost.range_indicator, 1, [build_range, 1, 1]);
+	}
+
 	// calculate and store the positions of each valid grid tile and what their draw color should be
 	Ghost.grid_table = [];
 	for(var i in Config.GetAllNetTableValues("ground_grid")) {
@@ -58,7 +66,7 @@ function OnShowGhost(keys) {
             // set the table variables
 			Ghost.grid_table[index] = [
 				GetGridPosition(index),  // position
-				(tile.team == Players.GetTeam(Game.GetLocalPlayerID())) ? [255, 255, 255] : [255, 0, 0]  // color
+				(tile.team == Players.GetTeam(Ghost.local_pid)) ? [255, 255, 255] : [255, 0, 0]  // color
 			];
 
 			// if this tile is owned by someone, override the color with their player color
@@ -97,9 +105,13 @@ function OnShowGhost(keys) {
                 Particles.SetParticleControl(Ghost.mouse_parts[i], 0, pos);
 
                 // update color
-                var length = isNaN(i) ? Ghost.length : 1;
-                var width  = isNaN(i) ? Ghost.width  : 1;
-                Particles.SetParticleControl(Ghost.mouse_parts[i], 2, (CanPlayerBuildHere(Game.GetLocalPlayerID(), pos, length, width) ? [0, 216, 0] : [216, 0, 0]));
+                var color = CanPlayerBuildHere(Ghost.local_pid, pos, isNaN(i) ? Ghost.length : 1, isNaN(i) ? Ghost.width : 1) ? [0, 216, 0] : [216, 0, 0];
+			    var build_range = CustomNetTables.GetTableValue("static_info", "generic").build_distance;
+			    var hero_pos = Entities.GetAbsOrigin(Players.GetPlayerHeroEntityIndex(Ghost.local_pid) || -1);
+			    if(build_range && hero_pos && Math.pow(build_range, 2) < Math.pow(pos[0]-hero_pos[0], 2)+Math.pow(pos[1]-hero_pos[1], 2))
+			    	color = [color[0]/2, color[1]/2, color[2]/2];  // if this particle is out of the build range, darken it
+
+			   	Particles.SetParticleControl(Ghost.mouse_parts[i], 2, color);
             }
 
 			//** grid particles **//
@@ -141,12 +153,16 @@ function OnHideGhost() {
     Ghost.width  = 1;
 
     // remove the mouse & grid particles
+    RemoveParticles(Ghost.range_indicator);
     RemoveParticles(Ghost.mouse_parts);
     RemoveParticles(Ghost.grid_parts );
+    Ghost.range_indicator = null;
     Ghost.mouse_parts = [];
     Ghost.grid_parts  = [];
 
     function RemoveParticles(part_array) {
+    	if(typeof part_array == "number")
+    		part_array = [part_array];
     	for(var i in part_array) {
     		if(!part_array[i]) {continue;}  // if we already removed this particle
 	        Particles.DestroyParticleEffect(part_array[i], true);
@@ -188,7 +204,7 @@ function OnMouseEvent(type, key_id) {
 	    } else {
 	    	var current_pos = SnapBoxToGrid2D(MouseWorldPos(), Ghost.length, Ghost.width);
 	    	if((!Ghost.last_pos || Math.abs(Ghost.last_pos[0]-current_pos[0]) >= Ghost.length*64 || Math.abs(Ghost.last_pos[1]-current_pos[1]) >= Ghost.width*64) &&
-	    	CanPlayerBuildHere(Game.GetLocalPlayerID(), current_pos, Ghost.length, Ghost.width)) {
+	    	CanPlayerBuildHere(Ghost.local_pid, current_pos, Ghost.length, Ghost.width)) {
 	    		BuyTrap(Ghost.name, current_pos);
 				Ghost.last_pos = current_pos;
 	    	}

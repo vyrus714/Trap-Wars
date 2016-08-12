@@ -18,6 +18,7 @@ function Precache( context )
     PrecacheResource("particle", "particles/building_ghost/ghost.vpcf", context)
     PrecacheResource("particle", "particles/building_ghost/sell_indicator.vpcf", context)
     PrecacheResource("particle", "particles/building_ghost/preview_dot.vpcf", context)
+    PrecacheResource("particle", "particles/ui_mouseactions/range_display.vpcf", context)
     PrecacheResource("particle", "particles/building_ghost/tile_outline_sprite.vpcf", context)
 
 
