@@ -10,30 +10,42 @@ end
 
 -- precache resources
 function Precache( context )
-    -- models
-    PrecacheModel( "models/items/alchemist/alchemeyerflask/alchemeyerflask.vmdl", context)
-  	PrecacheModel( "models/props_structures/good_statue001.vmdl", context)
-  	PrecacheModel( "models/props_structures/radiant_statue001.vmdl", context)
-  	PrecacheModel( "models/props_structures/radiant_statue002.vmdl", context)
-    -- particles
-  	PrecacheResource("particle", "particles/line_stars_continuous.vpcf", context)
-  	--PrecacheResource("particle", "particles/line_stars_burst.vpcf", context)
-  	PrecacheResource("particle", "particles/overhead_indicator_1.vpcf", context)
-    PrecacheResource("particle", "particles/overhead_indicator_1_b.vpcf", context)
-    --PrecacheResource("particle", "particles/overhead_flame.vpcf", context)
-    PrecacheResource("particle", "particles/ui_mouseactions/bounding_area_view_a.vpcf", context)
+    --// particles //--
+    -- team portals
     PrecacheResource("particle", "particles/econ/events/fall_major_2015/teleport_end_fallmjr_2015_lvl2.vpcf", context)
     PrecacheResource("particle", "particles/units/unit_greevil/loot_greevil_tgt_end.vpcf", context)
-    -- units
-    PrecacheUnitByNameSync("npc_trapwars_trap_spike", context)
-    PrecacheUnitByNameSync("npc_trapwars_trap_firevent", context)
-    PrecacheUnitByNameSync("npc_trapwars_creep_kobol_basic", context)
-    PrecacheUnitByNameSync("npc_trapwars_creep_kobol_spear", context)
-    -- sounds
-    PrecacheResource("soundfile", "soundevents/game_sounds_heroes/game_sounds_wisp.vsndevts", context)  -- for portal sounds
-    PrecacheResource("soundfile", "soundevents/game_sounds_ui_imported.vsndevts", context)  -- menu sounds
 
-    --[[ Precache examples from baresbones ... so i can stop looking it up every 2 seconds
+
+    --// units //--
+    -- traps
+    PrecacheUnitByNameSync("npc_trapwars_floor_spikes", context)
+    PrecacheUnitByNameSync("npc_trapwars_fire_vent", context)
+    PrecacheUnitByNameSync("npc_trapwars_wood_fence", context)
+    PrecacheUnitByNameSync("npc_trapwars_stone_wall", context)
+    -- lane creeps
+    PrecacheUnitByNameSync("npc_trapwars_supply_trooper_1", context)
+    PrecacheUnitByNameSync("npc_trapwars_supply_trooper_2", context)
+    PrecacheUnitByNameSync("npc_trapwars_supply_trooper_3", context)
+    PrecacheUnitByNameSync("npc_trapwars_spear_trooper_1", context)
+    PrecacheUnitByNameSync("npc_trapwars_spear_trooper_2", context)
+    PrecacheUnitByNameSync("npc_trapwars_spear_trooper_3", context)
+    PrecacheUnitByNameSync("npc_trapwars_shield_bearer_1", context)
+    PrecacheUnitByNameSync("npc_trapwars_shield_bearer_2", context)
+    PrecacheUnitByNameSync("npc_trapwars_shield_bearer_3", context)
+    PrecacheUnitByNameSync("npc_trapwars_priest_1", context)
+    PrecacheUnitByNameSync("npc_trapwars_priest_2", context)
+    PrecacheUnitByNameSync("npc_trapwars_priest_3", context)
+
+
+    --// sounds //--
+    -- gamemode sounds FIXME: move these to their own sound event file
+    PrecacheResource("soundfile", "soundevents/game_sounds_heroes/game_sounds_wisp.vsndevts", context)  -- for portal
+    PrecacheResource("soundfile", "soundevents/game_sounds_ui_imported.vsndevts", context)              -- for menu
+
+
+    --[[
+    Precache examples from barebones ... so i can stop looking it up every 2 seconds
+
     -- Particles can be precached individually or by folder
     -- It it likely that precaching a single particle system will precache all of its children, but this may not be guaranteed
     PrecacheResource("particle", "particles/econ/generic/generic_aoe_explosion_sphere_1/generic_aoe_explosion_sphere_1.vpcf", context)
