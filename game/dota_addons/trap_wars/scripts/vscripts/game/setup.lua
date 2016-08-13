@@ -26,12 +26,10 @@ function GameMode:SetupGameMode()
     -- for each trap create a prop to use for the building ghosts
     GameRules.ghost_dummies = {}
     for name, info in pairs(GameRules.npc_traps) do
-        print("creating dummy for: ", name)
         -- if the unit has a model, try spawning the dummy and adding it to the list
         if info.Model then
-            print("        ", info.Model)
             local dummy = SpawnEntityFromTableSynchronous("prop_dynamic", {model=info.Model, origin=Vector(0, 0, -10000), scale=tonumber(info.ModelScale or 1), DefaultAnim="idle"})
-            if dummy then GameRules.ghost_dummies[name] = dummy:GetEntityIndex()  print("        success!") end
+            if dummy then GameRules.ghost_dummies[name] = dummy:GetEntityIndex() end
         end
     end
 
