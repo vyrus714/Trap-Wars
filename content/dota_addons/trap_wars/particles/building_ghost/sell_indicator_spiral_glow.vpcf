@@ -63,6 +63,13 @@
 			m_flStartTime_min = 0.5
 			m_bLockRot = true
 		},
+		{
+			_class = "C_OP_RemapCPtoVector"
+			m_nCPInput = 2
+			m_nFieldOutput = 6
+			m_vInputMax = [ 255.0, 255.0, 255.0 ]
+			m_vOutputMax = [ 1.0, 1.0, 1.0 ]
+		},
 	]
 	m_Initializers = 
 	[
@@ -81,6 +88,7 @@
 			_class = "C_INIT_RandomColor"
 			m_ColorMax = [ 255, 170, 127, 255 ]
 			m_ColorMin = [ 255, 199, 67, 255 ]
+			m_bDisableOperator = true
 		},
 		{
 			_class = "C_INIT_RandomRadius"

@@ -112,6 +112,7 @@ function OnShowGhost(keys) {
 
                 // update color
                 var color = CanPlayerBuildHere(Ghost.local_pid, pos, isNaN(i) ? Ghost.length : 1, isNaN(i) ? Ghost.width : 1) ? [0, 182, 0] : [182, 0, 0];
+                if(Ghost.name == "sell") {color = [255, 230, 60];}
 			    var build_range = CustomNetTables.GetTableValue("static_info", "generic").build_distance;
 			    var hero_pos = Entities.GetAbsOrigin(Players.GetPlayerHeroEntityIndex(Ghost.local_pid) || -1);
 			    if(build_range && hero_pos && Math.pow(build_range, 2) < Math.pow(pos[0]-hero_pos[0], 2)+Math.pow(pos[1]-hero_pos[1], 2))

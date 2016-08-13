@@ -14,6 +14,13 @@
 			_class = "C_OP_SpinYaw"
 			m_nSpinRateDegrees = 14
 		},
+		{
+			_class = "C_OP_RemapCPtoVector"
+			m_nCPInput = 2
+			m_nFieldOutput = 6
+			m_vInputMax = [ 255.0, 255.0, 255.0 ]
+			m_vOutputMax = [ 1.0, 1.0, 1.0 ]
+		},
 	]
 	m_Renderers = 
 	[
@@ -56,6 +63,7 @@
 			m_ColorMin = [ 255, 225, 73, 255 ]
 			m_ColorMax = [ 255, 225, 73, 255 ]
 			m_nTintBlendMode = "PARTICLEBLEND_DEFAULT"
+			m_bDisableOperator = true
 		},
 		{
 			_class = "C_INIT_RandomAlpha"
