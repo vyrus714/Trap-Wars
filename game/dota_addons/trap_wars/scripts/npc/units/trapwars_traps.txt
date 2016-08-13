@@ -106,7 +106,7 @@
 
         // LUA AI function
         //----------------------------------------------------------------
-        "vscripts"                  "unit_scripts/npc_trapwars_floor_spikes.lua"
+        "vscripts"                  "unit_scripts/floor_spikes.lua"
     }
 
     // a floor trap that shoots spikes out of the ground when walked over
@@ -211,7 +211,7 @@
 
         // LUA AI function
         //----------------------------------------------------------------
-        "vscripts"                  "unit_scripts/firevent.lua"
+        "vscripts"                  "unit_scripts/fire_vent.lua"
     }
 
     "npc_trapwars_wood_fence"
