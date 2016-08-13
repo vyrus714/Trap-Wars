@@ -52,8 +52,8 @@
 		},
 		{
 			_class = "C_INIT_RandomAlpha"
-			m_nAlphaMin = 180
-			m_nAlphaMax = 180
+			m_nAlphaMin = 150
+			m_nAlphaMax = 150
 		},
 	]
 	m_Emitters = 

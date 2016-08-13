@@ -17,10 +17,22 @@ function GameMode:SetupGameMode()
     GameRules.npc_lanecreeps = LoadKeyValues("scripts/npc/units/trapwars_lane_creeps.txt")
     GameRules.npc_traps      = LoadKeyValues("scripts/npc/units/trapwars_traps.txt")
 
-    -- precache the lane creeps now, the traps and hero creeps can be done on-use since we don't know how many of them will be used
-    for name, creeps in pairs(GameRules.npc_lanecreeps) do
+    -- precache the lane creeps now, the traps and hero creeps can be done on-use since we don't know how many of them will be used  FIXME: this or static precaching?
+    for name, _ in pairs(GameRules.npc_lanecreeps) do
         PrecacheUnitByNameAsync(name, function()end)
         GameRules.npc_lanecreeps[name]._IsPrecached = true
+    end
+
+    -- for each trap create a prop to use for the building ghosts
+    GameRules.ghost_dummies = {}
+    for name, info in pairs(GameRules.npc_traps) do
+        print("creating dummy for: ", name)
+        -- if the unit has a model, try spawning the dummy and adding it to the list
+        if info.Model then
+            print("        ", info.Model)
+            local dummy = SpawnEntityFromTableSynchronous("prop_dynamic", {model=info.Model, origin=Vector(0, 0, -10000), scale=tonumber(info.ModelScale or 1), DefaultAnim="idle"})
+            if dummy then GameRules.ghost_dummies[name] = dummy:GetEntityIndex()  print("        success!") end
+        end
     end
 
     -----------------------
@@ -118,6 +130,7 @@ function GameMode:SetupGameMode()
     ---------------------------
     -- tables set on a one-time-only basis (ish) at the start of the game
     CustomNetTables:SetTableValue("static_info", "valid_teams", GameRules.valid_teams)
+    CustomNetTables:SetTableValue("static_info", "ghost_dummies", GameRules.ghost_dummies)
     CustomNetTables:SetTableValue("static_info", "generic", {
         default_lives     = GameRules.default_lives,
         build_distance    = GameRules.build_distance,

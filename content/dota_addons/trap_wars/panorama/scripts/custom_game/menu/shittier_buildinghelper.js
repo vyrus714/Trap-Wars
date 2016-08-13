@@ -33,9 +33,15 @@ function OnShowGhost(keys) {
 
 
 	// mouse particles
+	var dummy = CustomNetTables.GetTableValue("static_info", "ghost_dummies")[Ghost.name];
     Ghost.mouse_parts.ghost = Particles.CreateParticle((Ghost.name == "sell") ? "particles/building_ghost/sell_indicator.vpcf" : "particles/building_ghost/ghost.vpcf", ParticleAttachment_t.PATTACH_CUSTOMORIGIN, -1);
-    Particles.SetParticleControl(Ghost.mouse_parts.ghost, 4, [Ghost.length, Ghost.width, 1]);
-    // FIXME: Particles.SetParticleControlEnt(Ghost.mouse_parts.ghost, 1, keys.entity, ParticleAttachment_t.PATTACH_ABSORIGIN_FOLLOW, "follow_origin", keys.entity.GetAbsOrigin(), true);
+    Particles.SetParticleControlEnt(Ghost.mouse_parts.ghost, 1, dummy || -1, ParticleAttachment_t.PATTACH_CUSTOMORIGIN, "start_at_customorigin", [0, 0, 0], true);
+    if(dummy) {
+    	var scale = trap.ModelScale || 1;
+	    Particles.SetParticleControl(Ghost.mouse_parts.ghost, 4, [scale, scale, scale]);
+    } else {
+    	Particles.SetParticleControl(Ghost.mouse_parts.ghost, 4, [Ghost.length*1.9, Ghost.width*1.9, 1]);
+    }
 
     // add a grid around the ghost if we're buying
     if(keys.name != "sell") {
@@ -105,7 +111,7 @@ function OnShowGhost(keys) {
                 Particles.SetParticleControl(Ghost.mouse_parts[i], 0, pos);
 
                 // update color
-                var color = CanPlayerBuildHere(Ghost.local_pid, pos, isNaN(i) ? Ghost.length : 1, isNaN(i) ? Ghost.width : 1) ? [0, 216, 0] : [216, 0, 0];
+                var color = CanPlayerBuildHere(Ghost.local_pid, pos, isNaN(i) ? Ghost.length : 1, isNaN(i) ? Ghost.width : 1) ? [0, 182, 0] : [182, 0, 0];
 			    var build_range = CustomNetTables.GetTableValue("static_info", "generic").build_distance;
 			    var hero_pos = Entities.GetAbsOrigin(Players.GetPlayerHeroEntityIndex(Ghost.local_pid) || -1);
 			    if(build_range && hero_pos && Math.pow(build_range, 2) < Math.pow(pos[0]-hero_pos[0], 2)+Math.pow(pos[1]-hero_pos[1], 2))

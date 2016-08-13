@@ -325,57 +325,73 @@
     }
 
     "npc_trapwars_trap_test_01"   {
-        "BaseClass"    "npc_dota_creature"
+        "BaseClass"                 "npc_dota_creature"
         "MenuX"                     "0"
         "MenuY"                     "4"
-        "Image"        "file://{images}/custom_game/test/one.png"
+        "Image"                     "file://{images}/custom_game/test/one.png"
+        "Length"                    "1"
+        "Width"                     "1"
     }
     "npc_trapwars_trap_test_02"   {
-        "BaseClass"    "npc_dota_creature"
+        "BaseClass"                 "npc_dota_creature"
         "MenuX"                     "1"
         "MenuY"                     "4"
-        "Image"        "file://{images}/custom_game/test/two.png"
-        "Class"        "c_damage"
+        "Image"                     "file://{images}/custom_game/test/two.png"
+        "Class"                     "c_damage"
+        "Length"                    "1"
+        "Width"                     "2"
     }
     "npc_trapwars_trap_test_03"   {
-        "BaseClass"    "npc_dota_creature"
+        "BaseClass"                 "npc_dota_creature"
         "MenuX"                     "2"
         "MenuY"                     "4"
-        "Image"        "file://{images}/custom_game/test/three.png"
-        "Class"        "c_heal"
+        "Image"                     "file://{images}/custom_game/test/three.png"
+        "Class"                     "c_heal"
+        "Length"                    "2"
+        "Width"                     "1"
     }
     "npc_trapwars_trap_test_04"   {
-        "BaseClass"    "npc_dota_creature"
+        "BaseClass"                  "npc_dota_creature"
         "MenuX"                     "3"
         "MenuY"                     "4"
-        "Image"        "file://{images}/custom_game/test/four.png"
-        "Class"        "c_stun"
+        "Image"                     "file://{images}/custom_game/test/four.png"
+        "Class"                     "c_stun"
+        "Length"                    "2"
+        "Width"                     "2"
     }
     "npc_trapwars_trap_test_05"   {
-        "BaseClass"    "npc_dota_creature"
+        "BaseClass"                 "npc_dota_creature"
         "MenuX"                     "4"
         "MenuY"                     "4"
-        "Image"        "file://{images}/custom_game/test/five.png"
-        "Class"        "c_slow"
+        "Image"                     "file://{images}/custom_game/test/five.png"
+        "Class"                     "c_slow"
+        "Length"                    "3"
+        "Width"                     "3"
     }
     "npc_trapwars_trap_test_06"   {
-        "BaseClass"    "npc_dota_creature"
+        "BaseClass"                "npc_dota_creature"
         "MenuX"                     "5"
         "MenuY"                     "4"
-        "Image"        "file://{images}/custom_game/test/six.png"
-        "Class"        "c_move"
+        "Image"                     "file://{images}/custom_game/test/six.png"
+        "Class"                     "c_move"
+        "Length"                    "2"
+        "Width"                     "3"
     }
     "npc_trapwars_trap_test_07"   {
-        "BaseClass"    "npc_dota_creature"
+        "BaseClass"                "npc_dota_creature"
         "MenuX"                     "2"
         "MenuY"                     "5"
-        "Image"        "file://{images}/custom_game/test/seven.png"
-        "Class"        "c_heavy"
+        "Image"                     "file://{images}/custom_game/test/seven.png"
+        "Class"                     "c_heavy"
+        "Length"                    "3"
+        "Width"                     "2"
     }
     "npc_trapwars_trap_test_08"   {
-        "BaseClass"    "npc_dota_creature"
-        "Image"        "file://{images}/custom_game/test/eight.png"
-        "Class"        "c_rush"
+        "BaseClass"                 "npc_dota_creature"
+        "Image"                     "file://{images}/custom_game/test/eight.png"
+        "Class"                     "c_rush"
+        "Length"                    "4"
+        "Width"                     "1"
     }
 
 }

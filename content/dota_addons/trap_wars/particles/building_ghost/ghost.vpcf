@@ -8,7 +8,6 @@
 		},
 		{
 			_class = "C_OP_MovementPlaceOnGround"
-			m_flOffset = 33.0
 		},
 		{
 			_class = "C_OP_RemapCPtoVector"
@@ -25,11 +24,14 @@
 			m_ModelList = 
 			[
 				{
-					m_model = resource:"models/editor/cordon_helper.vmdl"
+					m_model = resource:"models/editor/ground_node.vmdl"
 				},
 			]
 			m_nModelScaleCP = 4
 			m_hOverrideMaterial = resource:"materials/dev/reflectivity_40b.vmat"
+			m_bOrientZ = true
+			m_nModelCP = 1
+			m_bDisableShadows = true
 		},
 	]
 	m_Initializers = 
@@ -38,27 +40,16 @@
 			_class = "C_INIT_RingWave"
 		},
 		{
-			_class = "C_INIT_RandomRadius"
-			m_flRadiusMin = 2.0
-			m_flRadiusMax = 2.0
-		},
-		{
 			_class = "C_INIT_RandomRotation"
-			m_flDegreesMin = 90.0
-			m_flDegreesMax = 90.0
-			m_nFieldOutput = 20
+			m_flDegreesMin = -90.0
+			m_flDegreesMax = -90.0
+			m_nFieldOutput = 12
 			m_bRandomlyFlipDirection = false
 		},
 		{
 			_class = "C_INIT_RandomAlpha"
-			m_nAlphaMin = 180
-			m_nAlphaMax = 180
-		},
-		{
-			_class = "C_INIT_RandomColor"
-			m_TintMin = [ 22, 190, 10, 0 ]
-			m_flTintPerc = 1.0
-			m_bDisableOperator = true
+			m_nAlphaMin = 216
+			m_nAlphaMax = 216
 		},
 	]
 	m_Emitters = 
@@ -68,4 +59,6 @@
 			m_nParticlesToEmit = 1
 		},
 	]
+	m_flConstantRadius = 1.0
+	m_flDepthSortBias = -100.0
 }
