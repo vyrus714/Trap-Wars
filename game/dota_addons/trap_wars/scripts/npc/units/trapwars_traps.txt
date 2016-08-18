@@ -214,6 +214,56 @@
         "vscripts"                  "unit_scripts/fire_vent.lua"
     }
 
+    "npc_trapwars_arrow_launcher"
+    {
+        // General
+        //----------------------------------------------------------------
+        "BaseClass"                 "npc_dota_creature"
+        "UnitLabel"                 "npc_trapwars_arrow_launcher"
+        "Model"                     "models/particle/arrow.vmdl"  // FIXME
+        "ModelScale"                "3"
+        "Level"                     "1"
+
+        // Bounds
+        //----------------------------------------------------------------
+        "BoundsHullName"            "DOTA_HULL_SIZE_SMALL"
+        "RingRadius"                "64"
+
+        // Movement
+        //----------------------------------------------------------------
+        "MovementCapabilities"      "DOTA_UNIT_CAP_MOVE_NONE"
+        "MovementSpeed"             "0"         // Speed
+        "MovementTurnRate"          "0"         // Turning rate.
+
+        // Status
+        //----------------------------------------------------------------
+        "StatusHealth"              "100"       // Base health.
+        
+        // Vision
+        //----------------------------------------------------------------
+        "VisionDaytimeRange"        "384"       // Range of vision during day light.
+        "VisionNighttimeRange"      "384"       // Range of vision at night time.
+
+        // Team
+        //----------------------------------------------------------------
+        "CombatClassDefend"         "DOTA_COMBAT_CLASS_DEFEND_STRUCTURE"
+
+        // TrapWars Creep Info
+        //----------------------------------------------------------------
+        "MenuX"                     "0"
+        "MenuY"                     "2"
+        //"Image"                     ""
+        "Class"                     "c_damage"
+        "GoldCost"                  "250"
+        "Length"                    "2"
+        "Width"                     "2"
+        "modifiers"
+        {
+            "1"                     "modifier_point_simple_obstruction"
+            "2"                     "modifier_invulnerable"
+        }
+    }
+
     "npc_trapwars_wood_fence"
     {
         // General
