@@ -11,7 +11,7 @@ function modifier_point_simple_obstruction:OnCreated()
     if not unit then return end
 
 
-    Timers:CreateTimer(1/30, function()
+    Timers:CreateTimer(function()
         -- get the unit's grid position
         local unit_tile_pos = GameRules.GameMode:SnapBoxToGrid2D(unit:GetAbsOrigin(), 2, 2)  -- and this is where we assume 2x2 trap size
 
@@ -26,9 +26,8 @@ function modifier_point_simple_obstruction:OnCreated()
         -- reset the entity's position after the pso is placed, in case it moved
         unit:SetAbsOrigin(unit_tile_pos)
 
-
         -- run a check to make sure this pso isn't stopping pathing, only redirecting it
-        Timers:CreateTimer(1/30, function()
+        Timers:CreateTimer(function()
             local can_path = true
 
             for _, spawners in pairs(GameRules.team_spawners) do
