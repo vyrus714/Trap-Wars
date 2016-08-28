@@ -22,6 +22,10 @@ function GameMode:SpawnTrap(name, position, team, owner)
         -- add this trap's entity index to the grid
         GameMode:AddTrapToGrid(position, length, width, trap:GetEntityIndex())
 
+        -- allow the owner to control the trap  FIXME: keep this? ideally no, still not much choice..
+        local pid = owner:GetPlayerID()
+        if pid then trap:SetControllableByPlayer(pid, true) end
+
         -- add modifiers to the trap (if it has them)
         if GameRules.npc_traps[name].modifiers then
             for _, modifier in pairs(GameRules.npc_traps[name].modifiers) do
@@ -80,6 +84,7 @@ function GameMode:SpawnLaneCreeps(min_level, max_level)
                 local creep = CreateUnitByName(name, spawner:GetAbsOrigin(), true, nil, nil, team)
 
                 -- add attachments  FIXME: perhaps move attachments to the ingame attachments system using custom vmdl containers
+                -- new command FollowEntity?
                 if GameRules.npc_lanecreeps[name].Attachments ~= nil then
                     creep.attachments = {}
                     for attach_point, models in pairs(GameRules.npc_lanecreeps[name].Attachments) do

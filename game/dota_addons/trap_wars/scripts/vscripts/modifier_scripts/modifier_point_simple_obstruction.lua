@@ -30,7 +30,7 @@ function modifier_point_simple_obstruction:OnCreated()
         Timers:CreateTimer(function()
             local can_path = true
 
-            for _, spawners in pairs(GameRules.team_spawners) do
+            for _, spawners in pairs(GameRules.team_spawners) do  -- FIXME: there should be ... a team check here ... or something
                 for _, entid in pairs(spawners) do
                     local spawner = EntIndexToHScript(entid)
                     if spawner then

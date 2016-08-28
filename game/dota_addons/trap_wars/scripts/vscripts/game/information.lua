@@ -87,7 +87,7 @@ end
 
 function GameMode:SnapTo64(number)
     if number < 0 then
-        return math.ceil(number/64)*64 - 32
+        return math.ceil(number/64)*64 - 32  -- FIXME: the below line _should_ work with negatives
     end
 
     return math.floor(number/64)*64 + 32
