@@ -1,5 +1,8 @@
 local GameMode = GameRules.GameMode
 
+----------------------------------------------
+--                Spawning                  --
+----------------------------------------------
 function GameMode:SpawnTrap(name, position, team, owner)
     -- make sure this is a valid trap
     if not GameRules.npc_traps[name] then return nil end
@@ -91,8 +94,9 @@ function GameMode:SpawnLaneCreeps(min_level, max_level)
                 ExecuteOrderFromTable{
                     UnitIndex = creep:entindex(),
                     OrderType = DOTA_UNIT_ORDER_ATTACK_MOVE,
-                    Position  = spawner:GetRootMoveParent():GetAbsOrigin(),
-                    Queue     = true }
+                    Position  = spawner:GetRootMoveParent():GetAbsOrigin(),  -- spawners are all children to the portals they attack
+                    Queue     = true
+                }
             end
         end
     end
@@ -143,6 +147,23 @@ function GameMode:UnstickUnitsInBox(position, length, width)
         for _, ent in pairs(ents) do
             -- make sure it's an npc, and exclude traps
             if ent.IsDeniable ~= nil and not GameRules.npc_traps[ent:GetUnitLabel()] then FindClearSpaceForUnit(ent, ent:GetAbsOrigin(), true) end
+        end
+    end
+end
+
+
+----------------------------------------------
+--                  Misc                    --
+----------------------------------------------
+function GameMode:CreatePortalParticles()
+    for team, portal_ids in pairs(GameRules.team_portals) do
+        for _, portal_id in pairs(portal_ids) do
+            local portal = EntIndexToHScript(portal_id)
+            if portal then
+                local part = ParticleManager:CreateParticle("particles/portal/portal.vpcf", PATTACH_CUSTOMORIGIN, nil)
+                ParticleManager:SetParticleControl(part, 0, portal:GetAbsOrigin())
+                portal.particle = part
+            end
         end
     end
 end

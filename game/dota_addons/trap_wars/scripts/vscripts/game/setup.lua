@@ -77,19 +77,16 @@ function GameMode:SetupGameMode()
     ----------------------------------------------
     -- Team Specific Values | key = team number --
     ----------------------------------------------
-    GameRules.valid_teams      = GameMode:GetValidTeams()
-    GameRules.team_lives       = {}
-    GameRules.team_spawners    = {}
-    GameRules.team_portals     = {}
+    GameRules.valid_teams   = GameMode:GetValidTeams()
+    GameRules.team_lives    = GameMode:GetDefaultLives()
+    GameRules.team_spawners = GameMode:GetSpawners()
+    GameRules.team_portals  = GameMode:GetPortals()
+    Timers:CreateTimer(GameMode.CreatePortalParticles)  -- the game doesn't like spawning particles this early
 
     -- fill up those tables with info
     for team, _ in pairs(GameRules.valid_teams) do
-        GameRules.team_lives      [team] = GameRules.default_lives
-        GameRules.team_spawners   [team] = GameMode:GetSpawners(team)
-        Timers:CreateTimer(1, function() GameRules.team_portals[team] = GameMode:GetPortals(team) end) -- doesn't like making particles so early FIXME
-
         -- set net-table initial values
-        CustomNetTables:SetTableValue("team_scores", ""..team, {GameRules.team_lives[team]})
+        CustomNetTables:SetTableValue("team_scores", ""..team, {GameRules.team_lives[team]})  -- FIXME: besides setting up the scores\lives stuff, clean this up somehow
     end
 
     ----------------

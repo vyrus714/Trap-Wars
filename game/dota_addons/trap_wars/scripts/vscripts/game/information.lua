@@ -37,33 +37,41 @@ function GameMode:GetValidTeams()
     return valid_teams
 end
 
-function GameMode:GetSpawners(team)
+function GameMode:GetDefaultLives()
+    local lives = {}
+
+    for team, _ in pairs(GameRules.valid_teams) do
+        lives[team] = GameRules.default_lives
+    end
+
+    return lives
+end
+
+function GameMode:GetSpawners()
     local spawners = {}
 
-    for _, ent in pairs(Entities:FindAllByName("Spawn_"..team)) do
-        table.insert(spawners, ent:GetEntityIndex())
+    for _, ent in pairs(Entities:FindAllByName("spawn")) do
+        local team = ent:Attribute_GetIntValue("team", -1)
+        if team ~= -1 then
+            spawners[team] = spawners[team] or {}
+            table.insert(spawners[team], ent:GetEntityIndex())
+        end
     end
 
     return spawners
 end
 
-function GameMode:GetPortals(team)
+function GameMode:GetPortals()
     local portals = {}
 
-    for _, ent in pairs(Entities:FindAllByName("Portal_"..team)) do
-        local portal = {}
-
-        -- add the entity id
-        portal.entindex = ent:GetEntityIndex()
-        -- add the particles for this portal
-        portal.particles = {}
-        local part = ParticleManager:CreateParticle("particles/portal/portal.vpcf", PATTACH_CUSTOMORIGIN, nil)
-        ParticleManager:SetParticleControl(part, 0, ent:GetAbsOrigin()+Vector(0,0,-80))
-        --ParticleManager:SetParticleControl(part, 1, ent:GetAbsOrigin()+Vector(0,0,-100))
-        table.insert(portal.particles, part)
-
-        -- add portal to table
-        table.insert(portals, portal)
+    for i=0, 999 do
+        for _, ent in pairs(Entities:FindAllByName("portal"..i)) do
+            local team = ent:Attribute_GetIntValue("team", -1)
+            if team ~= -1 then
+                portals[team] = portals[team] or {}
+                table.insert(portals[team], ent:GetEntityIndex())
+            end
+        end
     end
 
     return portals
