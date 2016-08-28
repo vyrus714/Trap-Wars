@@ -1,68 +1,43 @@
-"trap.floorSpikes.depressed"
+<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
 {
-    "operator_stacks"
+    trap.floorSpikes.depressed =
     {
-        "update_stack"
-        {
-            "reference_operator"
-            {
-                "operator"              "sos_reference_stack"
-                "reference_stack"       "dota_src1_3d"
-                "operator_variables"
-                {
-                    "vsnd_files"
-                    {
-                        "value"
-                        {
-                            "00"        "sounds/physics/footsteps/hero/rattletrap/foley01.vsnd"
-                            "01"        "sounds/physics/footsteps/hero/rattletrap/foley01.vsnd"
-                            "02"        "sounds/physics/footsteps/hero/rattletrap/foley01.vsnd"
-                            "03"        "sounds/physics/footsteps/hero/rattletrap/foley01.vsnd"
-                            "04"        "sounds/physics/footsteps/hero/rattletrap/foley01.vsnd"
-                        }
-                    }
-                    "volume"            {   "value"     "0.90000"   }
-                    "pitch_rand_min"    {   "value"     "-0.05000"  }
-                    "pitch_rand_max"    {   "value"     "0.050000"  }
-                    "pitch"             {   "value"     "1.000000"  }
-                    "soundlevel"        {   "value"     "100.00000" }
-                    "distance_max"      {   "value"     "1200.000"  }
-                    "event_type"        {   "value"     "1.000000"  }
-                }
-            }
-        }
-    }
-}
+        type = "dota_src1_3d"
+        vsnd_files = 
+        [
+            "sounds/physics/footsteps/hero/rattletrap/foley01.vsnd",
+            "sounds/physics/footsteps/hero/rattletrap/foley01.vsnd",
+            "sounds/physics/footsteps/hero/rattletrap/foley01.vsnd",
+            "sounds/physics/footsteps/hero/rattletrap/foley01.vsnd",
+            "sounds/physics/footsteps/hero/rattletrap/foley01.vsnd",
+        ]
+        pitch          = 1.0
+        pitch_rand_min = -0.05
+        pitch_rand_max = 0.05
 
-"trap.floorSpikes.spikes"
-{
-    "operator_stacks"
+        volume         = 0.9
+        soundlevel     = 100.0
+        distance_max   = 1200.0
+
+        event_type     = 1.0
+    }
+
+    trap.floorSpikes.spikes =
     {
-        "update_stack"
-        {
-            "reference_operator"
-            {
-                "operator"              "sos_reference_stack"
-                "reference_stack"       "dota_src1_3d"
-                "operator_variables"
-                {
-                    "vsnd_files"
-                    {
-                        "value"
-                        {
-                            "00"        "sounds/weapons/hero/magnataur/attack01.vsnd"
-                            "01"        "sounds/weapons/hero/magnataur/attack02.vsnd"
-                        }
-                    }
-                    "volume"            {   "value"     "0.80000"   }
-                    "pitch_rand_min"    {   "value"     "-0.05000"  }
-                    "pitch_rand_max"    {   "value"     "0.050000"  }
-                    "pitch"             {   "value"     "1.000000"  }
-                    "soundlevel"        {   "value"     "100.00000" }
-                    "distance_max"      {   "value"     "1200.000"  }
-                    "event_type"        {   "value"     "1.000000"  }
-                }
-            }
-        }
+        type = "dota_src1_3d"
+        vsnd_files = 
+        [
+            "sounds/weapons/hero/magnataur/attack01.vsnd",
+            "sounds/weapons/hero/magnataur/attack02.vsnd",
+        ]
+        pitch          = 1.0
+        pitch_rand_min = -0.05
+        pitch_rand_max = 0.05
+
+        volume         = 0.8
+        soundlevel     = 100.0
+        distance_max   = 1200.0
+
+        event_type     = 1.0
     }
 }
