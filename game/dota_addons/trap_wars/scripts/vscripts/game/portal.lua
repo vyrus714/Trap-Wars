@@ -1,4 +1,5 @@
-function OnPortal(keys)  --  keys.activator (activating entity), keys.caller (portal\trigger)
+-- keys.activator (activating entity), keys.caller (portal\trigger)
+function OnPortal(keys)
     -- if it's not a CDOTA_BaseNPC, or it's a hero, or it's controlled by a hero, then ignore that unit
     if not keys.activator.IsDeniable or keys.activator:IsHero() or keys.activator:IsOwnedByAnyPlayer() then return end
 
