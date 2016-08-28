@@ -27,7 +27,8 @@ function OnPortal(keys)
     keys.activator:AddNoDraw()
     if keys.activator.attachments then
         for _, prop in pairs(keys.activator.attachments) do
-           prop:AddNoDraw()
+           print(prop:GetClassname(), prop)
+           prop:AddEffects(EF_NODRAW)
         end
     end
     keys.activator:Kill(nil, keys.caller)
