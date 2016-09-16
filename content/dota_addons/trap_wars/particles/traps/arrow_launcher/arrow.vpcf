@@ -1,0 +1,86 @@
+<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+{
+	_class = "CParticleSystemDefinition"
+	m_flConstantRadius = 0.8
+	m_Children = 
+	[
+		{
+			m_ChildRef = resource:"particles/traps/arrow_launcher/arrow_trail.vpcf"
+		},
+		{
+			m_ChildRef = resource:"particles/traps/arrow_launcher/arrow_tail.vpcf"
+		},
+		{
+			m_ChildRef = resource:"particles/traps/arrow_launcher/arrow_fade.vpcf"
+			m_bEndCap = true
+			m_bDisableChild = true
+		},
+	]
+	m_Operators = 
+	[
+		{
+			_class = "C_OP_BasicMovement"
+		},
+		{
+			_class = "C_OP_RemapVelocityToVector"
+			m_nFieldOutput = 21
+			m_bNormalize = true
+		},
+		{
+			_class = "C_OP_SetChildControlPoints"
+			m_nNumControlPoints = 2
+			m_bSetOrientation = true
+		},
+		{
+			_class = "C_OP_LerpEndCapScalar"
+			m_flOutput = 0.0
+			m_flLerpTime = 0.2
+		},
+		{
+			_class = "C_OP_EndCapTimedDecay"
+			m_flDecayTime = 1.0
+			m_nOpEndCapState = 1
+		},
+	]
+	m_Renderers = 
+	[
+		{
+			_class = "C_OP_RenderModels"
+			m_ModelList = 
+			[
+				{
+					m_model = resource:"models/particle/legion_arrow.vmdl"
+				},
+			]
+		},
+	]
+	m_Initializers = 
+	[
+		{
+			_class = "C_INIT_RingWave"
+		},
+		{
+			_class = "C_INIT_NormalAlignToCP"
+		},
+		{
+			_class = "C_INIT_RandomLifeTime"
+			m_fLifetimeMin = 0.2
+			m_fLifetimeMax = 0.2
+		},
+		{
+			_class = "C_INIT_RandomRotation"
+		},
+		{
+			_class = "C_INIT_VelocityFromCP"
+			m_nControlPoint = 1
+		},
+	]
+	m_Emitters = 
+	[
+		{
+			_class = "C_OP_InstantaneousEmitter"
+			m_nParticlesToEmit = 1
+		},
+	]
+	m_flConstantLifespan = 10.0
+}

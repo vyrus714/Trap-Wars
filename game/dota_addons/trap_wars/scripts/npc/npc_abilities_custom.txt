@@ -255,5 +255,73 @@
 
     }
 
+    "arrow_launcher_volley"
+    {
+        // Base
+        "BaseClass"                     "ability_lua"
+        "ScriptFile"                    "ability_scripts/arrow_launcher_volley.lua"
+        "AbilityTextureName"            "legion_commander_overwhelming_odds"
+
+        // Assets
+        "precache"
+        {
+            "particle"                  "particles/traps/arrow_launcher/arrow.vpcf"
+            "soundfile"                 "soundevents/traps/arrow_launcher.vsndevts"
+        }
+
+        // Target Behavior
+        //"AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_NO_TARGET"
+        "AbilityBehavior"               "DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_CHANNELLED"
+        "AbilityUnitTargetTeam"         "DOTA_UNIT_TARGET_TEAM_ENEMY"
+        "AbilityUnitTargetType"         "DOTA_UNIT_TARGET_HERO | DOTA_UNIT_TARGET_BASIC"
+        "AbilityUnitTargetFlags"        "DOTA_UNIT_TARGET_FLAG_NOT_ATTACK_IMMUNE | DOTA_UNIT_TARGET_FLAG_MAGIC_IMMUNE_ENEMIES"
+        "AbilityUnitDamageType"         "DAMAGE_TYPE_PHYSICAL"
+        "SpellImmunityType"             "SPELL_IMMUNITY_ENEMIES_YES"
+
+        // Leveling
+        "AbilityType"                   "DOTA_ABILITY_TYPE_BASIC"
+        "MaxLevel"                      "4"
+        "RequiredLevel"                 "1"
+        "LevelsBetweenUpgrades"         "3"
+
+        // Animation
+        "AbilityCastPoint"              "0.0"
+        "AbilityCastAnimation"          "ACT_DOTA_CAST_ABILITY_1"
+        "AnimationPlaybackRate"         "1"
+        "AnimationIgnoresModelScale"    "1"
+
+        // Ability Values
+        "AbilityCooldown"               "15 14 13 12"
+        "AbilityChannelTime"            "1.0"
+        "AbilitySpecial"
+        {
+            "01"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "speed"                 "1400"
+            }
+            "02"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "range"                 "500 650 800 950"
+            }
+            "03"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "count"                 "5 6 7 8"
+            }
+            "04"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "damage"                "20 30 40 50"
+            }
+            "05"
+            {
+                "var_type"              "FIELD_INTEGER"
+                "total_damage"          "100 180 280 400"
+            }
+        }
+    }
+
 
 }

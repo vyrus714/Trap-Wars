@@ -28,6 +28,7 @@ function Precache( context )
     PrecacheUnitByNameSync("npc_trapwars_fire_vent", context)
     PrecacheUnitByNameSync("npc_trapwars_wood_fence", context)
     PrecacheUnitByNameSync("npc_trapwars_stone_wall", context)
+    PrecacheUnitByNameSync("npc_trapwars_arrow_launcher", context)
     -- lane creeps
     PrecacheUnitByNameSync("npc_trapwars_supply_trooper_1", context)
     PrecacheUnitByNameSync("npc_trapwars_supply_trooper_2", context)

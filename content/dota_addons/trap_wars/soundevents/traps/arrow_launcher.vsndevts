@@ -1,0 +1,81 @@
+<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+{
+    trap.arrowLauncher.volleyCharge = 
+    {
+        type = "dota_src1_3d"
+        vsnd_files = 
+        [
+            "sounds/traps/arrow_launcher/arrow_launcher_volley_charge.vsnd",
+        ]
+        pitch          = 0.8
+        pitch_rand_min = -0.05
+        pitch_rand_max = 0.05
+
+        volume         = 1.0
+        soundlevel     = 100.0
+        distance_max   = 2500.0
+        limiter_on     = 0
+
+        event_type     = 1.0
+    }
+
+    trap.arrowLauncher.volleyCharge2 = 
+    {
+        type = "dota_src1_3d"
+        vsnd_files = 
+        [
+            "sounds/weapons/hero/windrunner/windrunner_powershot_pull.vsnd",
+        ]
+        pitch          = 1.0
+        pitch_rand_min = -0.05
+        pitch_rand_max = 0.05
+
+        volume         = 1.0
+        soundlevel     = 100.0
+        distance_max   = 2500.0
+        limiter_on     = 0
+
+        event_type     = 1.0
+    }
+
+    trap.arrowLauncher.volleyLaunch =
+    {
+        type = "dota_src1_3d"
+        vsnd_files = 
+        [
+            "sounds/weapons/hero/windrunner/attack.vsnd",
+        ]
+        pitch          = 0.64
+        pitch_rand_min = -0.05
+        pitch_rand_max = 0.05
+
+        volume         = 2.25
+        soundlevel     = 100.0
+        distance_max   = 2500.0
+        limiter_on     = 0
+
+        event_type     = 1.0
+    }
+
+    trap.arrowLauncher.volleyHit =
+    {
+        type = "dota_src1_3d"
+        vsnd_files = 
+        [
+            "sounds/weapons/hero/windrunner/powershot_damage01.vsnd",
+            "sounds/weapons/hero/windrunner/powershot_damage02.vsnd",
+            "sounds/weapons/hero/windrunner/powershot_damage03.vsnd",
+            "sounds/weapons/hero/windrunner/powershot_damage04.vsnd",
+            "sounds/weapons/hero/windrunner/powershot_damage05.vsnd",
+        ]
+        pitch          = 1.05
+        pitch_rand_min = -0.05
+        pitch_rand_max = 0.05
+
+        volume         = 1.0
+        soundlevel     = 100.0
+        distance_max   = 2500.0
+
+        event_type     = 1.0
+    }
+}
