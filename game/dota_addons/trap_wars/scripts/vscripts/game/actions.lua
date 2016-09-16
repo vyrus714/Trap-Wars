@@ -151,7 +151,7 @@ function GameMode:UnstickUnitsInBox(position, length, width)
         local ents = Entities:FindAllInSphere(tile_pos, 45.3)  -- 45.3 being the diagonal of a 64x64 sized tile
         for _, ent in pairs(ents) do
             -- make sure it's an npc, and exclude traps
-            if ent.IsDeniable ~= nil and not GameRules.npc_traps[ent:GetUnitLabel()] then FindClearSpaceForUnit(ent, ent:GetAbsOrigin(), true) end
+            if ent.IsDeniable ~= nil and not GameRules.npc_traps[ent:GetUnitName()] then FindClearSpaceForUnit(ent, ent:GetAbsOrigin(), true) end
         end
     end
 end
