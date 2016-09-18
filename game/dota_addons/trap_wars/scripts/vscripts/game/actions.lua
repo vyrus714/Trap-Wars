@@ -3,28 +3,54 @@ local GameMode = GameRules.GameMode
 ----------------------------------------------
 --                Spawning                  --
 ----------------------------------------------
-function GameMode:SpawnTrap(name, position, team, owner)
+function GameMode:SpawnTrap(name, position, args)  -- optional args: {rotation = [0-3], team = DOTATeam_t, owner = CDOTA_BaseNPC}
     -- make sure this is a valid trap
     if not GameRules.npc_traps[name] then return nil end
+
+    -- parse out the args into local variables, so they're easier to work with
+    local rotation = 0
+    local owner    = nil
+    local team     = DOTA_TEAM_NOTEAM
+
+    if args then
+        if args.rotation then rotation = args.rotation end
+        if args.owner    then owner    = args.owner    end
+        if args.team     then team     = args.team     end
+    end
+
 
     -- get the length and width
     local length = GameRules.npc_traps[name].Length or 1
     local width  = GameRules.npc_traps[name].Width  or 1
+
+    -- if we're at 90 or 270 degrees, swap the length and width
+    if rotation == 1 or rotation == 3 then
+        local temp = length
+        length = width
+        width = temp
+    end
+
 
     -- snap the position to the grid, based on our trap's length and width
     position = GameMode:SnapBoxToGrid2D(position, length, width)
 
 
     -- plonk trap
-    local trap = CreateUnitByName(name, position, false, nil, owner, team or DOTA_TEAM_NOTEAM)
+    local trap = CreateUnitByName(name, position, false, nil, owner, team)
 
     if trap then
+        -- if there's a rotation, rotate the trap to that rotation
+        local angles = trap:GetAngles()
+        trap:SetAngles(angles.x, rotation*90, angles.z)
+
         -- add this trap's entity index to the grid
         GameMode:AddTrapToGrid(position, length, width, trap:GetEntityIndex())
 
         -- allow the owner to control the trap  FIXME: keep this? ideally no, still not much choice..
-        local pid = owner:GetPlayerID()
-        if pid then trap:SetControllableByPlayer(pid, true) end
+        if owner then
+            local pid = owner:GetPlayerOwnerID()
+            if pid then trap:SetControllableByPlayer(pid, true) end
+        end
 
         -- add modifiers to the trap (if it has them)
         if GameRules.npc_traps[name].modifiers then
@@ -40,17 +66,18 @@ function GameMode:SpawnTrap(name, position, team, owner)
     return trap
 end
 
-function GameMode:SpawnTrapForPlayer(name, position, playerid)
+function GameMode:SpawnTrapForPlayer(name, position, playerid, rotation)  -- rotation is optional
     -- make sure we were passed a valid player
     if not PlayerResource:IsValidTeamPlayer(playerid) then return nil end
 
     -- make sure the player is allowed to make a trap here
     local length = GameRules.npc_traps[name].Length or 1
     local width  = GameRules.npc_traps[name].Width  or 1
-    if not GameMode:CanPlayerBuildHere(playerid, position, length, width) then return nil end
+
+    if not GameMode:CanPlayerBuildHere(playerid, position, length, width, rotation) then return nil end
 
     -- create the trap
-    return GameMode:SpawnTrap(name, position, PlayerResource:GetTeam(playerid), PlayerResource:GetSelectedHeroEntity(playerid))  -- FIXME: use the hero or player?
+    return GameMode:SpawnTrap(name, position, {team=PlayerResource:GetTeam(playerid), owner=PlayerResource:GetSelectedHeroEntity(playerid), rotation=rotation})
 end
 
 

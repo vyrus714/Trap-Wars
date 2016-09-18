@@ -162,18 +162,20 @@ function GameMode:OnEntityKilled(keys)
 end
 
 function GameMode:OnBuyTrap(keys)
+    if not keys then return end
+
     -- if the position is a JS array, convert to a Vector()
     if type(keys.position) == "table" then keys.position = Vector(keys.position["0"], keys.position["1"], keys.position["2"]) end
+
 
     -- run some tests to make sure we can buy this trap
     local success = true
     local hero = PlayerResource:GetSelectedHeroEntity(keys.playerid)
 
-
     -- only allow trap buying when the player is alive
     if not hero:IsAlive() then success = false end
 
-    -- check if the player is within range of the tile they're trying to sell on
+    -- check if the player is within range of the tile they're trying to build on
     if GameRules.build_distance < (GameMode:SnapToGrid2D(keys.position) - hero:GetAbsOrigin()):Length2D() then success = false end
 
     -- make sure the player can afford this trap
@@ -185,7 +187,7 @@ function GameMode:OnBuyTrap(keys)
     -- if we're allowed to make the trap
     if success then
         -- attempt to spawn the trap
-        local trap = GameMode:SpawnTrapForPlayer(keys.name, keys.position, keys.playerid)
+        local trap = GameMode:SpawnTrapForPlayer(keys.name, keys.position, keys.playerid, keys.rotation)
 
         -- if (and only if) we made the trap, spend the gold and return
         if trap then

@@ -180,8 +180,16 @@ function GameMode:DoesPlayerHavePlot(playerid, plot_number)
     return false
 end
 
-function GameMode:CanPlayerBuildHere(playerid, position, length, width)
+function GameMode:CanPlayerBuildHere(playerid, position, length, width, rotation)  -- rotation [0-3] is optional
     length, width = math.ceil(length), math.ceil(width)
+
+    -- if we're at 90 or 270 degrees, swap the length and width
+    if rotation == 1 or rotation == 3 then
+        local temp = length
+        length = width
+        width = temp
+    end
+
     position = GameMode:SnapBoxToGrid2D(position, length, width)
     local team = PlayerResource:GetTeam(playerid)
     local start_index = GameMode:GetGridIndex(position - Vector(length*32, width*32, 0) + Vector(32, 32, 0))
