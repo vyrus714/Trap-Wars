@@ -3,10 +3,11 @@ var Ghost  = {
 	mouse_parts : [],
 	grid_parts  : [],
 	other_parts : [],
-	//name   : null,  // (starts empty)
-	length : 1,
-	width  : 1,
-	local_pid: Game.GetLocalPlayerID()
+	//name        : null,  // (starts empty)
+	length      : 1,
+	width       : 1,
+	rotation    : 0,  // rotation * 90 = rotation in degrees
+	local_pid   : Game.GetLocalPlayerID()
 };
 
 
@@ -37,6 +38,10 @@ function OnShowGhost(keys) {
     Ghost.mouse_parts.ghost = Particles.CreateParticle((Ghost.name == "sell") ? "particles/building_ghost/sell_indicator.vpcf" : "particles/building_ghost/ghost.vpcf", ParticleAttachment_t.PATTACH_CUSTOMORIGIN, -1);
     Particles.SetParticleControlEnt(Ghost.mouse_parts.ghost, 1, dummy || -1, ParticleAttachment_t.PATTACH_CUSTOMORIGIN, "start_at_customorigin", [0, 0, 0], true);
     if(dummy) {
+    	// override the model
+    	Particles.SetParticleControlEnt(Ghost.mouse_parts.ghost, 1, dummy, ParticleAttachment_t.PATTACH_CUSTOMORIGIN, "start_at_customorigin", [0, 0, 0], true);
+
+    	// set the model scale
     	var scale = trap.ModelScale || 1;
 	    Particles.SetParticleControl(Ghost.mouse_parts.ghost, 4, [scale, scale, scale]);
     } else {
@@ -110,6 +115,10 @@ function OnShowGhost(keys) {
                 // update position
                 Particles.SetParticleControl(Ghost.mouse_parts[i], 0, pos);
 
+                // update rotation (only on the Ghost.mouse_parts.ghost particle though)   FIXME: use a sine function, you lazy ass
+                if(isNaN(i))
+                	Particles.SetParticleControlForward(Ghost.mouse_parts[i], 0, [(Ghost.rotation%2 == 0) ? ((Ghost.rotation == 0) ? 1 : -1) : 0, (Ghost.rotation%2 == 0) ? 0 : ((Ghost.rotation > 1) ? -1 : 1), 0]);
+
                 // update color
                 var color = CanPlayerBuildHere(Ghost.local_pid, pos, isNaN(i) ? Ghost.length : 1, isNaN(i) ? Ghost.width : 1) ? [0, 182, 0] : [182, 0, 0];
                 if(Ghost.name == "sell") {color = [255, 230, 60];}
@@ -179,18 +188,36 @@ function OnHideGhost() {
 }
 
 function OnMouseEvent(type, key_id) {
-    if(type == "pressed" && Ghost.name && (key_id == 0 || key_id == 1)) {
-        // left click: buy\sell
-        if(key_id == 0)
-            Drag();
+	if(Ghost.name) {
+	    if(type == "pressed" && (key_id == 0 || key_id == 1)) {
+	        // left click: buy\sell
+	        if(key_id == 0)
+	            Drag();
 
-        // right click: cancel   FIXME: remove when(if) i get the 'oncancel' event working
-        if(key_id == 1)
-            Config.Events.FireEvent("hide_ghost", {});
+	        // right click: cancel   FIXME: remove when(if) i get the 'oncancel' event working
+	        if(key_id == 1)
+	            Config.Events.FireEvent("hide_ghost", {});
 
-        // consume the mouse event
-        return true;
-    }
+	        // consume the mouse event
+	        return true;
+	    }
+
+	    if(type == "wheeled") {      // FIXME: i can't override zooming in\out with scroll, so maybe some backup keys for this function?
+	    	// wheel up - rotate counterclockwise
+	    	if(key_id > 0) {
+	    		Ghost.rotation += 1;
+	    		Ghost.rotation = (Ghost.rotation > 3) ? 0 : Ghost.rotation;
+	    	}
+	    	// wheel down - rotate clockwise
+	    	else if(key_id < 0) {
+	    		Ghost.rotation -= 1;
+	    		Ghost.rotation = (Ghost.rotation < 0) ? 3 : Ghost.rotation;
+	    	}
+
+	        // consume the mouse event
+	        return true;
+	    }
+	}
 
     function Drag() {
 	    if(!GameUI.IsMouseDown(0) || !Ghost.name) {
@@ -212,7 +239,7 @@ function OnMouseEvent(type, key_id) {
 	    	var current_pos = SnapBoxToGrid2D(MouseWorldPos(), Ghost.length, Ghost.width);
 	    	if((!Ghost.last_pos || Math.abs(Ghost.last_pos[0]-current_pos[0]) >= Ghost.length*64 || Math.abs(Ghost.last_pos[1]-current_pos[1]) >= Ghost.width*64) &&
 	    	CanPlayerBuildHere(Ghost.local_pid, current_pos, Ghost.length, Ghost.width)) {
-	    		BuyTrap(Ghost.name, current_pos);
+	    		BuyTrap(Ghost.name, current_pos, Ghost.rotation);
 				Ghost.last_pos = current_pos;
 	    	}
 	    }
@@ -243,11 +270,12 @@ function IsOnScreen(position_ref) {
     return true;
 }
 
-function BuyTrap(trap_name, position) {
+function BuyTrap(trap_name, position, rotation) {
     GameEvents.SendCustomGameEventToServer("trapwars_buy_trap", {
         name     : trap_name,
         playerid : Players.GetLocalPlayer(),
-        position : position
+        position : position,
+        rotation : rotation
     });
 }
 

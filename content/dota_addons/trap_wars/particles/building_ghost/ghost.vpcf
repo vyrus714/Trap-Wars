@@ -16,6 +16,11 @@
 			m_vInputMax = [ 255.0, 255.0, 255.0 ]
 			m_vOutputMax = [ 1.0, 1.0, 1.0 ]
 		},
+		{
+			_class = "C_OP_RemapCPOrientationToYaw"
+			m_nCP = 0
+			m_flRotOffset = 90.0
+		},
 	]
 	m_Renderers = 
 	[
@@ -45,6 +50,7 @@
 			m_flDegreesMax = -90.0
 			m_nFieldOutput = 12
 			m_bRandomlyFlipDirection = false
+			m_bDisableOperator = true
 		},
 		{
 			_class = "C_INIT_RandomAlpha"
