@@ -47,14 +47,10 @@
 	position: 10px 48px 0px;
 }
 
-#tab_container {   // blocks of 68px^2
+#tab_container {   // blocks of 68px^2,     gaps of 10 and 8
 	width: 380px;  // 380px   5x    width  = 68x + 10(x-1)
 	height: 448px; // 448px   6x    height = 68x +  8(x-1)
 	position: 10px 57px 0px;
-}
-
-#tab_1 {
-	background-color: orange;
 }
 
 #tab_2 {

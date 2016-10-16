@@ -1,0 +1,27 @@
+.trap_panel {
+	width: 55px;  // total = 380px,  spacing = 10px        380 = 6W + 10(5)
+	height: 58px; // total = 448px,  spacing =  7px        448 = 7W + 7(6)
+	position: -100px -100px 0px;  // these are code-generated, so the default spot is hidden
+
+    border-radius: 4px;
+    border: 1px solid #00000088;
+    box-shadow: inset #00000088 1px 1px 6px 0px;
+
+	background-image: url("file://{images}/custom_game/empty_slot_avatar.png");
+    background-size: 100%;
+}
+
+.trap_panel:hover {
+    border-color: #ffffff88;
+    box-shadow: white 0px 0px 6px 0px;
+}
+
+.trap_panel:selected {
+    border-color: #008080dd;
+    box-shadow: teal 0px 0px 6px 0px;
+}
+
+.trap_panel:selected:hover {
+	border-color: #80C0C0aa;
+	box-shadow: #80C0C0 0px 0px 6px 0px;
+}
