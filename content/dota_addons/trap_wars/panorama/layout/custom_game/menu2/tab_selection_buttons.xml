@@ -1,0 +1,14 @@
+<root>
+    <styles><include src="file://{resources}/styles/custom_game/menu2/tab_selection_buttons.css" /></styles>
+    <scripts><include src="file://{resources}/scripts/custom_game/menu2/tab_selection_buttons.js" /></scripts>
+
+    <Panel>
+        <RadioButton id="tab_button_1" class="tab_button" group="tab_buttons" onactivate="SwitchToTab('tab_1');" onload="OnTabButton1Loaded();">
+            <Label class="tab_button_label" text="#tab_button_1" />
+        </RadioButton>
+
+        <RadioButton id="tab_button_2" class="tab_button" group="tab_buttons" onactivate="SwitchToTab('tab_2');">
+            <Label class="tab_button_label" text="#tab_button_2" />
+        </RadioButton>
+    </Panel>
+</root>

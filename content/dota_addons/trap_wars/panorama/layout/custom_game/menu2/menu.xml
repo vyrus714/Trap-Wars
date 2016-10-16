@@ -1,0 +1,21 @@
+<root>
+    <styles><include src="file://{resources}/styles/custom_game/menu2/menu.css" /></styles>
+    <scripts>
+        <!--<include src="file://{resources}/scripts/custom_game/menu/shittier_buildinghelper.js" />-->
+        <include src="file://{resources}/scripts/custom_game/menu2/menu.js" />
+    </scripts>
+
+
+    <Panel class="menu" hittest="false">
+        <Panel id="tab_buttons" onload="OnLoadTabButtons();" />
+        <Panel id="spacer_1" class="spacer" />
+
+        <Panel id="tab_container">
+            <RadioButton id="tab_1" class="tabs" group="tabs" onload="OnLoadTab1();" />
+            <RadioButton id="tab_2" class="tabs" group="tabs" onload="OnLoadTab2();" />
+        </Panel>
+
+        <Panel id="spacer_2" class="spacer" />
+        <Panel id="info_panel" onload="OnLoadInfoPanel();" />
+    </Panel>
+</root>

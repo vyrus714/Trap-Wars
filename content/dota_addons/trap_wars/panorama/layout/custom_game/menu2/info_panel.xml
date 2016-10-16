@@ -1,0 +1,33 @@
+<root>
+    <styles><include src="file://{resources}/styles/custom_game/menu2/info_panel.css" /></styles>
+
+    <Panel>
+        <Panel id="title_container">
+            <Label id="title" text="#unknown_item" />
+            <Panel id="title_sub_info">
+                <Label id="title_gold"  text="0"             />
+                <Panel id="title_gold_icon"                  />
+                <Label id="title_class" text="#unknown_item" />
+            </Panel>
+        </Panel>
+
+        <Panel id="bar_container">
+            <Panel id="bar_health_bar" class="dim_panel"><Label id="bar_health" class="bar_text" /></Panel>
+            <Panel id="bar_mana_bar"   class="dim_panel"><Label id="bar_mana"   class="bar_text" /></Panel>
+        </Panel>
+
+        <Panel id="info_container">
+            <Panel id="stats_container" class="stats_item">
+                <Panel id="damage_image" class="dim_panel"><Label id="stat_damage" class="stats_text" text="-" /></Panel>
+                <Panel id="armor_image"  class="dim_panel"><Label id="stat_armor"  class="stats_text" text="-" /></Panel>
+                <Panel id="speed_image"  class="dim_panel"><Label id="stat_speed"  class="stats_text" text="-" /></Panel>
+            </Panel>
+
+            <DOTAAbilityImage  id="skill_1" class="stats_item stats_item_skill" abilityname="transparent_ability_icon" />
+            <DOTAAbilityImage  id="skill_2" class="stats_item stats_item_skill" abilityname="transparent_ability_icon" />
+            <DOTAAbilityImage  id="skill_3" class="stats_item stats_item_skill" abilityname="transparent_ability_icon" />
+            <DOTAAbilityImage  id="skill_4" class="stats_item stats_item_skill" abilityname="transparent_ability_icon" />
+        </Panel>
+    </Panel>
+
+</root>

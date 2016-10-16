@@ -68,6 +68,15 @@ Config.SetChildStyleTraverse = function(panel, child_name, style_name, value) {
     return true;
 }
 
+// set the abilityname property of a DOTAAbilityImage panel
+Config.SetChildAbilitynameTraverse = function(panel, child_name, image_name) {
+    var child = panel.FindChildTraverse(child_name);
+    if(!child) {return false;}
+
+    child.abilityname = image_name;
+    return true;
+}
+
 // if a panel's text meets certain criteria, remove the dimming from it and its parent
 Config.RemoveDimming = function(panel) {
     if(panel.text && 0 < panel.text && panel.text != "" && panel.text != "-") {

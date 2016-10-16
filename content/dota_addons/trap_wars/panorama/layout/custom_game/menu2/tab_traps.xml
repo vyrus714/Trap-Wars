@@ -1,0 +1,6 @@
+<root>
+    <styles><include src="file://{resources}/styles/custom_game/menu2/tab_traps.css" /></styles>
+
+    <Panel>
+    </Panel>
+</root>

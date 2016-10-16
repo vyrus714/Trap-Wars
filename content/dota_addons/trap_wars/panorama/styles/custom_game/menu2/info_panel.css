@@ -1,0 +1,181 @@
+// TITLE
+#title_container {
+    width: 100%;
+    height: 22px;
+    position: 0px 0px 0px;
+
+    padding-left: 2px;
+}
+
+#title {
+    padding-top: 1px;
+
+    color: white;
+    font-size: 20;
+    text-shadow: 1px 1px 3px 1.5 black;
+}
+
+#title_sub_info {
+    width: fit-children;
+    height: 100%;
+    horizontal-align: right;
+    vertical-align: bottom;
+    padding-bottom: 1px;
+
+    font-size: 16;
+
+    flow-children: left;
+}
+
+#title_gold {
+    vertical-align: bottom;
+    padding-left: 4px;
+
+    color: gold;
+    text-align: left;
+    text-shadow: 1px 1px 3px 1.0 black;
+}
+
+#title_gold_icon {
+    width: height-percentage(100%);
+    height: 100%;
+    vertical-align: bottom;
+
+    background-image: url("s2r://panorama/images/hud/icon_gold.psd");
+    background-size: 100%;
+    background-position: 0px 2px;
+}
+
+#title_class {
+    vertical-align: bottom;
+    margin-right: 5px;
+    padding-top: 4px;
+    padding-right: 2px;
+
+    color: gray;
+    text-align: right;
+    font-style: italic;
+    font-size: 17;
+    text-shadow: 1px 1px 3px 1.0 black;
+}
+
+
+// STATUS BARS
+#bar_container {
+    width: 100%;
+    height: 35px;
+    position: 0px 22px 0px;
+}
+
+#bar_health_bar {
+    width: 100%;
+    height: 20px;
+    position: 0px 0px 0px;
+
+    background-color: gradient(linear, 0% 100%, 0% 0%, from(#112211), color-stop(0.3, #117711), color-stop(0.70, #118811), color-stop(0.92, #55bb55), to(#ffffff));
+    border-radius: 6px;
+
+    font-size: 14;
+}
+
+#bar_mana_bar {
+    width: 100%;
+    height: 15px;
+    position: 0px 19px 0px;
+
+    background-color: gradient(linear, 0% 100%, 0% 0%, from(#111188), color-stop(0.3, #104070), color-stop(0.7, #1050cc), color-stop(0.90, #7070ff), to(#000000));
+    border-radius: 4px;
+
+    font-size: 12;
+}
+
+.bar_text {
+    horizontal-align: center;
+    vertical-align: center;
+
+    color: white;
+    text-shadow: 0px 1px 2px 1.6 black;
+}
+
+.dim_panel {
+    opacity:    0.8;
+    brightness: 0.2;
+    saturation: 0.0;
+}
+
+
+// Stats & Skills
+#info_container {
+    width: 100%;
+    height: 74px;
+    position: 0px 57px 0px;
+
+    flow-children: right;
+}
+
+.stats_item {
+    width: 68px;
+    height: 68px;
+
+    margin-left: 10px;
+}
+
+
+// Stats Panel
+#stats_container {
+    height: 100%;
+    margin-left: 0px;
+    overflow: clip;
+}
+
+#damage_image {
+    width: 108%;
+    height: 30px;
+    position: 0px 0px 0px;
+
+    background-image: url('s2r://panorama/images/hud/hudv2_icondamage_png.vtex');
+    background-size: 132% 128%;
+    background-position: 20% 55%;
+    background-repeat: no-repeat;
+}
+
+#armor_image {
+    width: 50%;
+    height: 80px;
+    position: 8% 26px 0px;
+
+    background-image: url('s2r://panorama/images/hud/hudv2_iconarmor_png.vtex');
+    background-size: 110% 44%;
+    background-position: 50% -2%;
+    background-repeat: no-repeat;
+}
+
+#speed_image {
+    width: 50%;
+    height: 80px;
+    position: 50% 26px 0px;
+
+    background-image: url('s2r://panorama/images/hud/hudv2_iconspeed.png');
+    background-size: 110% 42%;
+    background-position: -40% 0%;
+    background-repeat: no-repeat;
+}
+
+.stats_text {
+    horizontal-align: center;
+    vertical-align: center;
+
+    color: white;
+    font-size: 13;
+    font-weight: thin;
+    text-align: center;
+}
+
+
+// Skill Icons
+.stats_item_skill {
+    margin-top: 6px;
+
+    border-radius: 4px;
+    box-shadow: inset #000000dd 1px 1px 2px 2px;
+}

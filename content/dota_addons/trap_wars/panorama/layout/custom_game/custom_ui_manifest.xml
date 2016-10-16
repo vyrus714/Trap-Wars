@@ -8,12 +8,12 @@
     <Panel>
         <!-- CustomUIElements go here.-->
         <!--<CustomUIElement type="Hud" layoutfile="file://{resources}/layout/custom_game/generate_vtex.xml" />-->
-        
-        <CustomUIElement type="Hud" layoutfile="file://{resources}/layout/custom_game/menu/menu.xml" />
-        <CustomUIElement type="Hud" layoutfile="file://{resources}/layout/custom_game/tooltips/tooltips.xml" />
-
-        <CustomUIElement type="Hud" layoutfile="file://{resources}/layout/custom_game/test_panel.xml" />
         <CustomUIElement type="Hud" layoutfile="file://{resources}/layout/custom_game/barebones_attachments.xml" />
+        <CustomUIElement type="Hud" layoutfile="file://{resources}/layout/custom_game/test_panel.xml" />
+        
+        <CustomUIElement type="Hud" layoutfile="file://{resources}/layout/custom_game/tooltips/tooltips.xml" />
+        <CustomUIElement type="Hud" layoutfile="file://{resources}/layout/custom_game/menu/menu.xml" />
+        <CustomUIElement type="Hud" layoutfile="file://{resources}/layout/custom_game/menu2/menu.xml" />
 
 
         <!-- From Overthrow.

@@ -1,0 +1,57 @@
+.tab_button {
+	width: 185px;
+	height: 30px;
+
+    border-radius: 4px;
+
+    background-color: gradient( linear, 0% 0%, 0% 100%, from( #5A615Ecc ), to( #879695cc ) );
+    background-image: url("s2r://panorama/images/backgrounds/background_play_button_2x_png.vtex");
+    background-size: 100% 100%;
+
+    font-size: 18;
+
+    transition: box-shadow 0.2s linear 0.0s;
+}
+
+.tab_button:hover {
+    box-shadow: white 0px 1px 6px 0px;
+}
+
+.tab_button:active {
+    width: 177px;
+    height: 28px;
+
+    font-size: 17;
+}
+
+.tab_button:selected {
+    box-shadow: teal 0px 1px 6px 0px;
+}
+
+
+
+#tab_button_1 {
+	position: 0px 0px 0px;
+}
+
+#tab_button_2 {
+	position: 195px 0px 0px;
+}
+
+#tab_button_1:active {
+	position: 4px 1px 0px;
+}
+
+#tab_button_2:active {
+	position: 199px 1px 0px;
+}
+
+
+
+.tab_button_label {
+    horizontal-align: center;
+    vertical-align: center;
+
+    color: white;
+    text-shadow: 2px 2px 8px 1.0 black;
+}
