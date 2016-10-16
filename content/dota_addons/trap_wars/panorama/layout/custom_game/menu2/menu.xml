@@ -11,8 +11,8 @@
         <Panel id="spacer_1" class="spacer" />
 
         <Panel id="tab_container">
-            <RadioButton id="tab_1" class="tabs" group="tabs" onload="OnLoadTab1();" />
-            <RadioButton id="tab_2" class="tabs" group="tabs" onload="OnLoadTab2();" />
+            <RadioButton id="tab_1" class="tabs" group="menu_tabs" onload="OnLoadTab1();" />
+            <RadioButton id="tab_2" class="tabs" group="menu_tabs" onload="OnLoadTab2();" />
         </Panel>
 
         <Panel id="spacer_2" class="spacer" />
