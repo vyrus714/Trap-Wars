@@ -1,5 +1,6 @@
 <root>
     <styles><include src="file://{resources}/styles/custom_game/menu2/info_panel.css" /></styles>
+    <scripts><include src="file://{resources}/scripts/custom_game/menu2/info_panel.js" /></scripts>
 
     <Panel>
         <Panel id="title_container">
@@ -28,6 +29,20 @@
             <DOTAAbilityImage  id="skill_3" class="stats_item stats_item_skill" abilityname="transparent_ability_icon" />
             <DOTAAbilityImage  id="skill_4" class="stats_item stats_item_skill" abilityname="transparent_ability_icon" />
         </Panel>
+
+        <Button id="button_upgrade" class="buttons" onactivate="OnUpgradeButton();">
+            <Panel class="button_wash" />
+            <Label id="button_upgrade_label" class="button_label_text" text="#upgrade_trap" />
+            <Image id="button_upgrade_icon"  class="button_icon"       src="s2r://panorama/images/hud/icon_gold.psd" />
+            <Label id="button_upgrade_text"  class="button_text"       text="2150" />
+        </Button>
+
+        <Button id="button_sell" class="buttons" onactivate="OnSellButton();">
+            <Panel class="button_wash" />
+            <Label id="button_sell_label" class="button_label_text" text="#sell_trap" />
+            <Image id="button_sell_icon"  class="button_icon"       src="s2r://panorama/images/hud/icon_gold.psd" />
+            <Label id="button_sell_text"  class="button_text"       text="2150" />
+        </Button>
     </Panel>
 
 </root>

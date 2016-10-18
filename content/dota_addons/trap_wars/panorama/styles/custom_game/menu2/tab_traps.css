@@ -1,6 +1,6 @@
 .trap_panel {
 	width: 55px;  // total = 380px,  spacing = 10px        380 = 6W + 10(5)
-	height: 58px; // total = 448px,  spacing =  7px        448 = 7W + 7(6)
+	height: 58px; // total = 394px,  spacing =  7px        394 = 6W + 7(5) + 11
 	position: -100px -100px 0px;  // these are code-generated, so the default spot is hidden
 
     border-radius: 4px;
@@ -12,8 +12,8 @@
 }
 
 .trap_panel:hover {
-    border-color: #ffffff88;
-    box-shadow: white 0px 0px 6px 0px;
+    border-color: #ffffff66;
+    box-shadow: #ffffff88 0px 0px 6px 0px;
 }
 
 .trap_panel:selected {

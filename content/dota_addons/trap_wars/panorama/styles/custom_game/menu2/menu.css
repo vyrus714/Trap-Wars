@@ -1,6 +1,7 @@
 .menu {
     width: 400px;
-    height: 657px;
+    //height: 657px;
+    height: 645px;
     position: 1300px 70px 0px;
 
     border-top-right-radius: 8px;
@@ -28,7 +29,7 @@
 	opacity: 0;
 	z-index: 0;
 
-	transition: opacity 0.4s linear 0.0s;
+	//transition: opacity 0.4s linear 0.0s;
 }
 
 .tabs:selected {
@@ -47,9 +48,9 @@
 	position: 10px 48px 0px;
 }
 
-#tab_container {   // blocks of 68px^2,     gaps of 10 and 8
-	width: 380px;  // 380px   5x    width  = 68x + 10(x-1)
-	height: 448px; // 448px   6x    height = 68x +  8(x-1)
+#tab_container {   // blocks of 55x58 px,     gaps of 10w and 7h
+	width: 380px;  // 380px   6x    width  = 55x + 10(x-1)
+	height: 394px; // 383px   6x    height = 58x +  7(x-1)        add 11 for spacing, so 394
 	position: 10px 57px 0px;
 }
 
@@ -58,11 +59,11 @@
 }
 
 #spacer_2 {
-	position: 10px 513px 0px;
+	position: 10px 459px 0px;
 }
 
 #info_panel {
 	width: 380px;
-	height: 131px;
-	position: 10px 516px 0px;
+	height: 171px;
+	position: 10px 462px 0px;
 }

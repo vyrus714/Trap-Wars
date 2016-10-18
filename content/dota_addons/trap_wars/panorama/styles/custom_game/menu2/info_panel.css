@@ -38,7 +38,8 @@
 
 #title_gold_icon {
     width: height-percentage(100%);
-    height: 100%;
+    //height: 100%;
+    height: 26px;
     vertical-align: bottom;
 
     background-image: url("s2r://panorama/images/hud/icon_gold.psd");
@@ -129,9 +130,9 @@
 }
 
 #damage_image {
-    width: 108%;
-    height: 30px;
-    position: 0px 0px 0px;
+    width: 110%;
+    height: 32px;
+    position: 0px -2px 0px;
 
     background-image: url('s2r://panorama/images/hud/hudv2_icondamage_png.vtex');
     background-size: 132% 128%;
@@ -145,6 +146,7 @@
     position: 8% 26px 0px;
 
     background-image: url('s2r://panorama/images/hud/hudv2_iconarmor_png.vtex');
+    //panorama/images/badges/fall_2016_battle_pass_badge_2_png.vtex
     background-size: 110% 44%;
     background-position: 50% -2%;
     background-repeat: no-repeat;
@@ -178,4 +180,111 @@
 
     border-radius: 4px;
     box-shadow: inset #000000dd 1px 1px 2px 2px;
+}
+
+
+// Buttons
+.buttons {
+    width: 185px;
+    height: 30px;
+    position: 0px 141px 0px;
+
+    border-radius: 1px;
+    //background-color: gray;
+    background-image: url("s2r://panorama/images/gray_button_on_png.vtex");
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-position: 50% 50%;
+
+    //panorama/images/gray_button_on_png.vtex
+    //panorama/images/hud/button_thin_secondary_png.vtex
+    //panorama/images/hud/buyback_active_png.vtex
+}
+
+.button_wash {
+    width: 100%;
+    height: 100%;
+    position: 0px 0px 0px;
+    //background-color: #ff000022;
+}
+
+.button_label_text {
+    position: 4px 7px 0px;
+
+    color: white;
+    font-size: 17;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px 1.0 black;
+    text-transform: uppercase;
+    text-align: right;
+    letter-spacing: 1px;
+}
+
+.button_icon {
+    width: 26px;
+    height: 26px;
+    position: 109px 2px 0px;
+
+    //panorama/images/compendium/coin_icon_png.vtex
+    //panorama/images/compendium/compendiumcoins_fallmajor_png.vtex
+    //panorama/images/compendium/compendiumcoins_ti5_png.vtex
+    //panorama/images/control_icons/gear_shadow_png.vtex
+    //panorama/images/control_icons/settings_png.vtex
+}
+
+.button_text {
+    position: 140px 7px 0px;
+
+    color: gold;
+    font-size: 17;
+    font-weight: bold;
+    text-align: left;
+    text-shadow: 1px 1px 2px 1.0 black;
+}
+
+.buttons:hover {
+    box-shadow: #ff000022 0px 0px 4px 0px;
+}
+
+.buttons:hover .button_wash {
+    background-color: #ff000022;
+}
+
+.buttons:active {
+    width: 175px;
+    height: 28px;
+    transform: translate3d(5px, 1px, 0px);
+}
+
+.buttons:active .button_label_text {
+    transform: translate3d(0px, -1px, 0px);
+    font-size: 16;
+}
+
+.buttons:active .button_icon {
+    width: 25px;
+    height: 25px;
+    transform: translate3d(-4px, 0px, 0px);
+}
+
+.buttons:active .button_text {
+    transform: translate3d(-4px, -1px, 0px);
+    font-size: 16;
+}
+
+
+#button_upgrade {
+    x: 0px;
+}
+
+#button_upgrade:hover {
+    box-shadow: #ffd70022 0px 0px 4px 0px;
+}
+
+#button_upgrade:hover .button_wash {
+    background-color: #ffd70022;
+}
+
+#button_sell {
+    x: 195px;
 }

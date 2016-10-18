@@ -10,11 +10,11 @@
 
     font-size: 18;
 
-    transition: box-shadow 0.2s linear 0.0s;
+    //transition: box-shadow 0.2s linear 0.0s;
 }
 
 .tab_button:hover {
-    box-shadow: white 0px 1px 6px 0px;
+    box-shadow: #ffffffaa 0px 1px 6px 0px;
 }
 
 .tab_button:active {
