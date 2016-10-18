@@ -16,7 +16,8 @@
         // ----------------------------------------------------------------------------------------
         "BaseClass"              "ability_datadriven"
         "AbilityTextureName"     "floor_spikes_activate"
-        "AbilityProcsMagicStick"  "0"
+        "SpellImmunityType"      "SPELL_IMMUNITY_ENEMIES_YES"
+        "AbilityProcsMagicStick" "0"
 
         // Leveling  
         // ----------------------------------------------------------------------------------------
