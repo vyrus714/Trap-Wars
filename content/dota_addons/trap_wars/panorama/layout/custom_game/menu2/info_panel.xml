@@ -4,7 +4,7 @@
 
     <Panel>
         <Panel id="title_container">
-            <Label id="title" text="#unknown_item" />
+            <Label id="title" text="#blank_selection" />
             <Panel id="title_sub_info">
                 <Label id="title_gold"  text="0"             />
                 <Panel id="title_gold_icon"                  />

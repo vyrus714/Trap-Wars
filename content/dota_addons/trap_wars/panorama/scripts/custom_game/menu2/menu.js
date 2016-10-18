@@ -27,19 +27,6 @@ function OnMenuToggled(args) {
 	// FIXME: implement this shiz
 }
 
-$.Schedule(4, function() {
-	Config.Events.FireEvent("update_info_panel", {
-		title   : "ZOMG",
-		gold    : "1420",
-		class   : "c_damage",
-		health  : "100",
-		mana    : "",
-		damage  : "40",
-		armor   : "1",
-		speed   : "",
-		skill_1 : "arrow_launcher_volley"
-	});
-});
 function OnInfoPanelUpdated(args) {  // args: title, gold, class, health, mana, damage, armor, speed, skill_[1-4]
 	// get the info panel
 	var panel = $("#info_panel");

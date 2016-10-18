@@ -8,6 +8,7 @@
 }
 
 #title {
+    max-width: 230px;
     padding-top: 1px;
 
     color: white;

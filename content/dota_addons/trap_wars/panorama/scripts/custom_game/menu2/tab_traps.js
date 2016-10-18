@@ -78,8 +78,6 @@ function GenerateTraps() {
                     if(typeof ability == "string" && ability.length > 0) {on_activate_info["skill_"+(i+1)] = ability;}
                 }
 
-                Config.PrintObject(on_activate_info);
-
                 // fire off the event
                 Config.Events.FireEvent("update_info_panel", on_activate_info);
             });
