@@ -192,25 +192,12 @@
     width: 100%;
     height: 100%;
     position: 0px 0px 0px;
-    //background-color: #ff000022;
-}
-
-.button_label_text {
-    position: 4px 7px 0px;
-
-    color: white;
-    font-size: 17;
-    font-weight: bold;
-    text-shadow: 1px 1px 2px 1.0 black;
-    text-transform: uppercase;
-    text-align: right;
-    letter-spacing: 1px;
 }
 
 .button_icon {
     width: 26px;
     height: 26px;
-    position: 109px 2px 0px;
+    position: 8px 2px 0px;
 
     //panorama/images/compendium/coin_icon_png.vtex
     //panorama/images/compendium/compendiumcoins_fallmajor_png.vtex
@@ -220,12 +207,26 @@
 }
 
 .button_text {
-    position: 140px 7px 0px;
+    position: 37px 7px 0px;
 
     color: gold;
     font-size: 17;
     font-weight: bold;
     text-shadow: 1px 1px 2px 1.0 black;
+}
+
+.button_label_text {
+    position: 0px 7px 0px;
+    horizontal-align: right;
+    margin-right: 8px;
+
+    color: white;
+    font-size: 17;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px 1.0 black;
+    text-transform: uppercase;
+    text-align: right;
+    letter-spacing: 1px;
 }
 
 .buttons:active {

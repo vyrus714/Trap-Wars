@@ -11,7 +11,7 @@
         </Panel>
 
         <Image id="gold_icon" src="s2r://panorama/images/hud/icon_gold.psd" />
-        <Label id="gold" text="0" />
+        <Label id="gold"  text="0" />
         <Label id="class" text="#unknown_item" />
 
         <Panel id="health_bar" class="dim_panel"><Label id="health" class="bar_text" text="" /></Panel>
@@ -28,16 +28,16 @@
 
         <Button id="button_upgrade" class="buttons" onactivate="OnUpgradeButton();">
             <Panel class="button_wash" />
-            <Label id="button_upgrade_label" class="button_label_text" text="#upgrade_trap" />
             <Image id="button_upgrade_icon"  class="button_icon"       src="s2r://panorama/images/hud/icon_gold.psd" />
-            <Label id="button_upgrade_text"  class="button_text"       text="0" />
+            <Label id="button_upgrade_text"  class="button_text"       text="1984" />
+            <Label id="button_upgrade_label" class="button_label_text" text="#upgrade_trap" />
         </Button>
 
         <Button id="button_sell" class="buttons" onactivate="OnSellButton();">
             <Panel class="button_wash" />
-            <Label id="button_sell_label" class="button_label_text" text="#sell_trap" />
             <Image id="button_sell_icon"  class="button_icon"       src="s2r://panorama/images/hud/icon_gold.psd" />
-            <Label id="button_sell_text"  class="button_text"       text="0" />
+            <Label id="button_sell_text"  class="button_text"       text="2030" />
+            <Label id="button_sell_label" class="button_label_text" text="#sell_trap" />
         </Button>
     </Panel>
 
