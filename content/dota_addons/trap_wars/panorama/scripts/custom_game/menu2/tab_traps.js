@@ -48,7 +48,7 @@ function GenerateTraps() {
                         reference: trap_panel,
                         image: trap_info.Image,
                         title: trap_name,
-                        class: trap_info.Class,
+                        class: trap_info.Class || "c_unknown",
                         gold : trap_info.GoldCost,
                         description: trap_name+"_description",
                     },
