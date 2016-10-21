@@ -207,11 +207,14 @@
 }
 
 .button_text {
-    position: 37px 7px 0px;
+    position: 35px 7px 0px;
+    //width: 40px;
+    min-width: 26px;
 
     color: gold;
     font-size: 17;
     font-weight: bold;
+    text-align: center;
     text-shadow: 1px 1px 2px 1.0 black;
 }
 
@@ -274,4 +277,8 @@
 
 #button_sell:hover .button_wash {
     background-color: #ff000022;
+}
+
+#button_sell_text {
+    color: #00ff00;
 }
