@@ -1,96 +1,61 @@
-// TITLE
-#title_container {
-    width: 100%;
-    height: 22px;
-    position: 0px 0px 0px;
-
-    padding-left: 2px;
+// OVERARCHING CLASSES
+.dim_panel {
+    opacity:    0.8;
+    brightness: 0.2;
+    saturation: 0.0;
 }
 
+
+// TITLE
 #title {
-    max-width: 230px;
-    padding-top: 1px;
+    position: 0px 0px 0px;
 
     color: white;
     font-size: 20;
     text-shadow: 1px 1px 3px 1.5 black;
 }
 
-#title_sub_info {
-    width: fit-children;
-    height: 100%;
+#level_container {
+    position: 0px 0px 0px;
     horizontal-align: right;
-    vertical-align: bottom;
-    padding-bottom: 1px;
 
-    font-size: 16;
+    color: white;
+    font-size: 20;
+    text-shadow: 1px 1px 3px 1.5 black;
 
-    flow-children: left;
+    flow-children: right;
 }
 
-#title_gold {
-    vertical-align: bottom;
-    padding-left: 4px;
+#gold_icon {
+    position: 0px 16px 0px;
+    width: 25px;
+    height: 25px;
+}
+
+#gold {
+    position: 29px 21px 0px;
+    //vertical-align: bottom;
+    //margin-bottom: 3px;
 
     color: gold;
-    text-align: left;
-    text-shadow: 1px 1px 3px 1.0 black;
+    font-size: 17;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px 1.0 black;
 }
 
-#title_gold_icon {
-    width: height-percentage(100%);
-    //height: 100%;
-    height: 26px;
-    vertical-align: bottom;
-
-    background-image: url("s2r://panorama/images/hud/icon_gold.psd");
-    background-size: 100%;
-    background-position: 0px 2px;
-}
-
-#title_class {
-    vertical-align: bottom;
-    margin-right: 5px;
-    padding-top: 4px;
-    padding-right: 2px;
+#class {
+    position: 0px 21px 0px;
+    horizontal-align: right;
+    margin-right: 1px;
 
     color: gray;
-    text-align: right;
-    font-style: italic;
     font-size: 17;
+    font-style: italic;
     text-shadow: 1px 1px 3px 1.0 black;
 }
 
 
 // STATUS BARS
-#bar_container {
-    width: 100%;
-    height: 35px;
-    position: 0px 22px 0px;
-}
-
-#bar_health_bar {
-    width: 100%;
-    height: 20px;
-    position: 0px 0px 0px;
-
-    background-color: gradient(linear, 0% 100%, 0% 0%, from(#112211), color-stop(0.3, #117711), color-stop(0.70, #118811), color-stop(0.92, #55bb55), to(#ffffff));
-    border-radius: 6px;
-
-    font-size: 14;
-}
-
-#bar_mana_bar {
-    width: 100%;
-    height: 15px;
-    position: 0px 19px 0px;
-
-    background-color: gradient(linear, 0% 100%, 0% 0%, from(#111188), color-stop(0.3, #104070), color-stop(0.7, #1050cc), color-stop(0.90, #7070ff), to(#000000));
-    border-radius: 4px;
-
-    font-size: 12;
-}
-
 .bar_text {
     horizontal-align: center;
     vertical-align: center;
@@ -99,71 +64,38 @@
     text-shadow: 0px 1px 2px 1.6 black;
 }
 
-.dim_panel {
-    opacity:    0.8;
-    brightness: 0.2;
-    saturation: 0.0;
-}
 
-
-// Stats & Skills
-#info_container {
+#health_bar {  // FIXME: RE-STYLE THIS
     width: 100%;
-    height: 74px;
-    position: 0px 57px 0px;
+    height: 20px;
+    position: 0px 39px 0px;
 
-    flow-children: right;
+    background-color: gradient(linear, 0% 100%, 0% 0%, from(#112211), color-stop(0.30, #117711), color-stop(0.70, #118811), color-stop(0.92, #55bb55), to(#ffffff));
+    //border-radius: 6px;
+    border-radius: 3px;
+
+    font-size: 14;
 }
 
-.stats_item {
-    width: 68px;
-    height: 68px;
+#mana_bar {  // FIXME: RE-STYLE THIS
+    width: 100%;
+    height: 15px;
+    position: 0px 58px 0px;
 
-    margin-left: 10px;
+    // some trial and error was required ...
+    //background-color: gradient(linear, 0% 100%, 0% 0%, from(#111188), color-stop(0.30, #104070), color-stop(0.70, #1050cc), color-stop(0.90, #7070ff), to(#000000));
+    //background-color: gradient(linear, 0% 100%, 0% 0%, from(#001F99), color-stop(0.40, #006699), color-stop(0.70, #005F99), color-stop(0.86, #247CA8), to(#005799));
+    //background-color: gradient(linear, 0% 100%, 0% 0%, from(#111122), color-stop(0.30, #111177), color-stop(0.70, #111188), color-stop(0.92, #5555bb), to(#ffffff));
+
+    background-color: gradient(linear, 0% 100%, 0% 0%, from(#111A22), color-stop(0.30, #114477), color-stop(0.70, #114D88), color-stop(0.92, #5588BB), to(#6699CC));    
+    //border-radius: 4px;
+    border-radius: 3px;
+
+    font-size: 12;
 }
 
 
-// Stats Panel
-#stats_container {
-    height: 100%;
-    margin-left: 0px;
-    overflow: clip;
-}
-
-#damage_image {
-    width: 110%;
-    height: 32px;
-    position: 0px -2px 0px;
-
-    background-image: url('s2r://panorama/images/hud/hudv2_icondamage_png.vtex');
-    background-size: 132% 128%;
-    background-position: 20% 55%;
-    background-repeat: no-repeat;
-}
-
-#armor_image {
-    width: 50%;
-    height: 80px;
-    position: 8% 26px 0px;
-
-    background-image: url('s2r://panorama/images/hud/hudv2_iconarmor_png.vtex');
-    //panorama/images/badges/fall_2016_battle_pass_badge_2_png.vtex
-    background-size: 110% 44%;
-    background-position: 50% -2%;
-    background-repeat: no-repeat;
-}
-
-#speed_image {
-    width: 50%;
-    height: 80px;
-    position: 50% 26px 0px;
-
-    background-image: url('s2r://panorama/images/hud/hudv2_iconspeed.png');
-    background-size: 110% 42%;
-    background-position: -40% 0%;
-    background-repeat: no-repeat;
-}
-
+// STATS
 .stats_text {
     horizontal-align: center;
     vertical-align: center;
@@ -175,20 +107,74 @@
 }
 
 
-// Skill Icons
-.stats_item_skill {
-    margin-top: 6px;
+#damage_image {
+    width: 76px;
+    height: 32px;
+    position: 0px 74px 0px;
+
+    background-image: url('s2r://panorama/images/hud/hudv2_icondamage_png.vtex');
+    background-size: 132% 128%;
+    background-position: 20% 55%;
+    background-repeat: no-repeat;
+}
+
+#armor_image {
+    width: 34px;
+    height: 80px;
+    position: 4px 102px 0px;
+
+    background-image: url('s2r://panorama/images/hud/hudv2_iconarmor_png.vtex');
+    //panorama/images/badges/fall_2016_battle_pass_badge_2_png.vtex
+    background-size: 110% 44%;
+    background-position: 50% -2%;
+    background-repeat: no-repeat;
+}
+
+#speed_image {
+    width: 34px;
+    height: 80px;
+    position: 35px 102px 0px;
+
+    background-image: url('s2r://panorama/images/hud/hudv2_iconspeed.png');
+    background-size: 110% 42%;
+    background-position: -40% 0%;
+    background-repeat: no-repeat;
+}
+
+
+// SKILL ICONS
+.skill_icon {
+    width: 68px;
+    height: 68px;
+    position: 0px 81px 0px;
 
     border-radius: 4px;
     box-shadow: inset #000000dd 1px 1px 2px 2px;
 }
 
+#skill_1 {
+    x: 78px;
+}
 
-// Buttons
+#skill_2 {
+    x: 156px;
+}
+
+#skill_3 {
+    x: 234px;
+}
+
+#skill_4 {
+    x: 312px;
+}
+
+
+
+// BUTTONS
 .buttons {
     width: 185px;
     height: 30px;
-    position: 0px 141px 0px;
+    position: 0px 157px 0px;
 
     border-radius: 1px;
     //background-color: gray;
@@ -239,16 +225,7 @@
     color: gold;
     font-size: 17;
     font-weight: bold;
-    text-align: left;
     text-shadow: 1px 1px 2px 1.0 black;
-}
-
-.buttons:hover {
-    box-shadow: #ff000022 0px 0px 4px 0px;
-}
-
-.buttons:hover .button_wash {
-    background-color: #ff000022;
 }
 
 .buttons:active {
@@ -288,4 +265,12 @@
 
 #button_sell {
     x: 195px;
+}
+
+#button_sell:hover {
+    box-shadow: #ff000022 0px 0px 4px 0px;
+}
+
+#button_sell:hover .button_wash {
+    background-color: #ff000022;
 }

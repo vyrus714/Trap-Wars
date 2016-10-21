@@ -1,7 +1,7 @@
 .menu {
     width: 400px;
-    //height: 657px;
-    height: 645px;
+    //height: 645px;
+    height: 659px;  // padded on the bottom by 1px for aesthetics
     position: 1300px 70px 0px;
 
     border-top-right-radius: 8px;
@@ -64,6 +64,6 @@
 
 #info_panel {
 	width: 380px;
-	height: 171px;
+	height: 186px;
 	position: 10px 462px 0px;
 }

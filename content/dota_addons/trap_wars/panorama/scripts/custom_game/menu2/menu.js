@@ -35,6 +35,7 @@ function OnInfoPanelUpdated(args) {  // args: title, gold, class, health, mana, 
 	// set the default values we expect from the args table
 	var defaults = {
 		title : "unknown_item",
+		level : "1",
 		gold  : "0",
 		class : "c_unknown",
 		bars  : "",
@@ -43,17 +44,19 @@ function OnInfoPanelUpdated(args) {  // args: title, gold, class, health, mana, 
 	};
 
     // fill in the info
-    Config.SetChildTextTraverse (panel, "title",       $.Localize(args.title || defaults.title));
-    Config.SetChildTextTraverse (panel, "title_gold",             args.gold  || defaults.gold  );
-    Config.SetChildTextTraverse (panel, "title_class", $.Localize(args.class || defaults.class));
-    Config.SetChildStyleTraverse(panel, "title_class", "color", $.Localize((args.class || defaults.class)+"_color"));
+    Config.SetChildTextTraverse(panel, "title", $.Localize(args.title || defaults.title));
+    Config.SetChildTextTraverse(panel, "level",			   args.level || defaults.level );
 
-    Config.SetChildTextTraverse(panel, "bar_health", args.health || defaults.bars);
-    Config.SetChildTextTraverse(panel, "bar_mana",   args.mana   || defaults.bars);
+    Config.SetChildTextTraverse(panel, "gold",             args.gold  || defaults.gold  );
+    Config.SetChildTextTraverse(panel, "class", $.Localize(args.class || defaults.class));
+    Config.SetChildStyleTraverse(panel, "class", "color", $.Localize((args.class || defaults.class)+"_color"));
 
-    Config.SetChildTextTraverse(panel, "stat_damage", args.damage || defaults.stats);
-    Config.SetChildTextTraverse(panel, "stat_armor",  args.armor  || defaults.stats);
-    Config.SetChildTextTraverse(panel, "stat_speed",  args.speed  || defaults.stats);
+    Config.SetChildTextTraverse(panel, "health", args.health || defaults.bars);
+    Config.SetChildTextTraverse(panel, "mana",   args.mana   || defaults.bars);
+
+    Config.SetChildTextTraverse(panel, "damage", args.damage || defaults.stats);
+    Config.SetChildTextTraverse(panel, "armor",  args.armor  || defaults.stats);
+    Config.SetChildTextTraverse(panel, "speed",  args.speed  || defaults.stats);
 
     Config.SetChildAbilitynameTraverse(panel, "skill_1", args.skill_1 || defaults.skill);
     Config.SetChildAbilitynameTraverse(panel, "skill_2", args.skill_2 || defaults.skill);
@@ -67,12 +70,12 @@ function OnInfoPanelUpdated(args) {  // args: title, gold, class, health, mana, 
     SetTooltip("skill_4", args.skill_4);
 
 	// set dimming for bars \ stats
-	SetDimmingLevel( "bar_health" );
-	SetDimmingLevel( "bar_mana"   );
+	SetDimmingLevel("health");
+	SetDimmingLevel("mana"  );
 
-	SetDimmingLevel( "stat_damage");
-	SetDimmingLevel( "stat_armor" );
-	SetDimmingLevel( "stat_speed" );
+	SetDimmingLevel("damage");
+	SetDimmingLevel("armor" );
+	SetDimmingLevel("speed" );
 
 
 	// temp funcs

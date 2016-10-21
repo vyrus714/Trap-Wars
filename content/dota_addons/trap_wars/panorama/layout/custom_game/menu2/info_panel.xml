@@ -3,45 +3,41 @@
     <scripts><include src="file://{resources}/scripts/custom_game/menu2/info_panel.js" /></scripts>
 
     <Panel>
-        <Panel id="title_container">
-            <Label id="title" text="#blank_selection" />
-            <Panel id="title_sub_info">
-                <Label id="title_gold"  text="0"             />
-                <Panel id="title_gold_icon"                  />
-                <Label id="title_class" text="#unknown_item" />
-            </Panel>
+        <Label id="title" text="#blank_selection" />
+        <Panel id="level_container">
+            <Label text="#level_label" />
+            <Label text=" " />  <!-- i mean ... really?! *sigh* -->
+            <Label id="level" text="?" />
         </Panel>
 
-        <Panel id="bar_container">
-            <Panel id="bar_health_bar" class="dim_panel"><Label id="bar_health" class="bar_text" /></Panel>
-            <Panel id="bar_mana_bar"   class="dim_panel"><Label id="bar_mana"   class="bar_text" /></Panel>
-        </Panel>
+        <Image id="gold_icon" src="s2r://panorama/images/hud/icon_gold.psd" />
+        <Label id="gold" text="0" />
+        <Label id="class" text="#unknown_item" />
 
-        <Panel id="info_container">
-            <Panel id="stats_container" class="stats_item">
-                <Panel id="damage_image" class="dim_panel"><Label id="stat_damage" class="stats_text" text="-" /></Panel>
-                <Panel id="armor_image"  class="dim_panel"><Label id="stat_armor"  class="stats_text" text="-" /></Panel>
-                <Panel id="speed_image"  class="dim_panel"><Label id="stat_speed"  class="stats_text" text="-" /></Panel>
-            </Panel>
+        <Panel id="health_bar" class="dim_panel"><Label id="health" class="bar_text" text="" /></Panel>
+        <Panel id="mana_bar"   class="dim_panel"><Label id="mana"   class="bar_text" text="" /></Panel>
 
-            <DOTAAbilityImage  id="skill_1" class="stats_item stats_item_skill" abilityname="transparent_ability_icon" />
-            <DOTAAbilityImage  id="skill_2" class="stats_item stats_item_skill" abilityname="transparent_ability_icon" />
-            <DOTAAbilityImage  id="skill_3" class="stats_item stats_item_skill" abilityname="transparent_ability_icon" />
-            <DOTAAbilityImage  id="skill_4" class="stats_item stats_item_skill" abilityname="transparent_ability_icon" />
-        </Panel>
+        <Panel id="damage_image" class="dim_panel"><Label id="damage" class="stats_text" text="-" /></Panel>
+        <Panel id="armor_image"  class="dim_panel"><Label id="armor"  class="stats_text" text="-" /></Panel>
+        <Panel id="speed_image"  class="dim_panel"><Label id="speed"  class="stats_text" text="-" /></Panel>
+
+        <DOTAAbilityImage id="skill_1" class="skill_icon" abilityname="transparent_ability_icon" />
+        <DOTAAbilityImage id="skill_2" class="skill_icon" abilityname="transparent_ability_icon" />
+        <DOTAAbilityImage id="skill_3" class="skill_icon" abilityname="transparent_ability_icon" />
+        <DOTAAbilityImage id="skill_4" class="skill_icon" abilityname="transparent_ability_icon" />
 
         <Button id="button_upgrade" class="buttons" onactivate="OnUpgradeButton();">
             <Panel class="button_wash" />
             <Label id="button_upgrade_label" class="button_label_text" text="#upgrade_trap" />
             <Image id="button_upgrade_icon"  class="button_icon"       src="s2r://panorama/images/hud/icon_gold.psd" />
-            <Label id="button_upgrade_text"  class="button_text"       text="2150" />
+            <Label id="button_upgrade_text"  class="button_text"       text="0" />
         </Button>
 
         <Button id="button_sell" class="buttons" onactivate="OnSellButton();">
             <Panel class="button_wash" />
             <Label id="button_sell_label" class="button_label_text" text="#sell_trap" />
             <Image id="button_sell_icon"  class="button_icon"       src="s2r://panorama/images/hud/icon_gold.psd" />
-            <Label id="button_sell_text"  class="button_text"       text="2150" />
+            <Label id="button_sell_text"  class="button_text"       text="0" />
         </Button>
     </Panel>
 
