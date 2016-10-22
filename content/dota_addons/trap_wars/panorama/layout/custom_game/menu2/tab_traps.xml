@@ -1,5 +1,5 @@
 <root>
-    <styles><include src="file://{resources}/styles/custom_game/menu2/tab_traps.css" /></styles>
+    <styles><include src="file://{resources}/styles/custom_game/menu2/tab.css" /></styles>
     <scripts><include src="file://{resources}/scripts/custom_game/menu2/tab_traps.js" /></scripts>
 
     <Panel />

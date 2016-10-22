@@ -1,4 +1,4 @@
-.trap_panel {
+.grid_item {
 	width: 55px;  // total = 380px,  spacing = 10px        380 = 6W + 10(5)
 	height: 58px; // total = 394px,  spacing =  7px        394 = 6W + 7(5) + 11
 	position: -100px -100px 0px;  // these are code-generated, so the default spot is hidden
@@ -11,17 +11,17 @@
     background-size: 100%;
 }
 
-.trap_panel:hover {
+.grid_item:hover {
     border-color: #ffffff66;
     box-shadow: #ffffff88 0px 0px 6px 0px;
 }
 
-.trap_panel:selected {
+.grid_item:selected {
     border-color: #008080dd;
     box-shadow: teal 0px 0px 6px 0px;
 }
 
-.trap_panel:selected:hover {
+.grid_item:selected:hover {
 	border-color: #80C0C0aa;
 	box-shadow: #80C0C0 0px 0px 6px 0px;
 }

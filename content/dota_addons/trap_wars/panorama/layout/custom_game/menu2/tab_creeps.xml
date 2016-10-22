@@ -1,5 +1,9 @@
 <root>
-    <styles><include src="file://{resources}/styles/custom_game/menu2/tab_creeps.css" /></styles>
+    <styles>
+    	<include src="file://{resources}/styles/custom_game/menu2/tab.css" />
+    	<include src="file://{resources}/styles/custom_game/menu2/tab_creeps.css" />
+    </styles>
+    <scripts><include src="file://{resources}/scripts/custom_game/menu2/tab_creeps.js" /></scripts>
 
     <Panel>
     </Panel>

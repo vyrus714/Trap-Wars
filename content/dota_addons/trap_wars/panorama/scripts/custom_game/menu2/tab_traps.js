@@ -19,7 +19,7 @@ function GenerateTraps() {
 
             // create the panel & assign its class
             var trap_panel = $.CreatePanel("RadioButton", parent, trap_name);
-            trap_panel.AddClass("trap_panel");
+            trap_panel.AddClass("grid_item");
 
 
             // set the panel position
