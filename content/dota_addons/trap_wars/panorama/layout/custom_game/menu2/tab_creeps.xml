@@ -6,5 +6,13 @@
     <scripts><include src="file://{resources}/scripts/custom_game/menu2/tab_creeps.js" /></scripts>
 
     <Panel>
+    	<Panel id="spacer" />
+
+    	<RadioButton id="creep_slot_1" class="grid_item creep_slot" group="slots" ><Panel class="creep_slot_image" /></RadioButton>
+    	<RadioButton id="creep_slot_2" class="grid_item creep_slot" group="slots" ><Panel class="creep_slot_image" /></RadioButton>
+    	<RadioButton id="creep_slot_3" class="grid_item creep_slot" group="slots" ><Panel class="creep_slot_image" /></RadioButton>
+    	<RadioButton id="creep_slot_4" class="grid_item creep_slot" group="slots" ><Panel class="creep_slot_image" /></RadioButton>
+    	<RadioButton id="creep_slot_5" class="grid_item creep_slot" group="slots" ><Panel class="creep_slot_image" /></RadioButton>
+    	<RadioButton id="creep_slot_6" class="grid_item creep_slot" group="slots" ><Panel class="creep_slot_image" /></RadioButton>
     </Panel>
 </root>
