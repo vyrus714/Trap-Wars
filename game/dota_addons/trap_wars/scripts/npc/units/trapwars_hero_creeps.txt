@@ -173,14 +173,14 @@
     "npc_trapwars_herocreep_test_01"   {
         "BaseClass"    "npc_dota_creature"
         "MenuX"                     "0"
-        "MenuY"                     "6"
+        "MenuY"                     "4"
         "Image"        "file://{images}/custom_game/test/one.png"
         "Class"                     "c_damage"
     }
     "npc_trapwars_herocreep_test_02"   {
         "BaseClass"    "npc_dota_creature"
         "MenuX"                     "1"
-        "MenuY"                     "5"
+        "MenuY"                     "4"
         "Image"        "file://{images}/custom_game/test/two.png"
         "Class"                     "c_heal"
     }
