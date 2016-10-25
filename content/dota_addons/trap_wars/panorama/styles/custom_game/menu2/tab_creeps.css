@@ -14,12 +14,25 @@
     width: 100%;
     height: 100%;
 
-    //opacity: 0.5;
-    //brightness: 0.1;
-    //saturation: 0.0;
-    //wash-color: #676767;
+    opacity: 0.4;
+    wash-color: #000000;
     background-image: url("s2r://panorama/images/control_icons/brackets_png.vtex");
     background-size: 100% 100%;
+}
+
+.creep_slot:hover .creep_slot_image {
+    opacity: 1.0;
+    wash-color: #ffffff;
+}
+
+.creep_slot:selected .creep_slot_image {
+    opacity: 0.4;
+    wash-color: #008080;
+}
+
+.creep_slot:selected:hover .creep_slot_image {
+    opacity: 0.8;
+    wash-color: #80C0C0aa;
 }
 
 
