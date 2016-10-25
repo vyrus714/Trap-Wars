@@ -246,9 +246,9 @@
 }
 
 .buttons:active .button_icon {
-    width: 25px;
+    width: 24px;
     height: 25px;
-    transform: translate3d(-4px, 0px, 0px);
+    transform: translate3d(-1px, 0px, 0px);
 }
 
 .buttons:active .button_text {
