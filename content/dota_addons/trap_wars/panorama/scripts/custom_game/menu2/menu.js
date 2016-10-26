@@ -35,7 +35,7 @@ function OnInfoPanelUpdated(args) {  // args: title, gold, class, health, mana, 
 	// set the default values we expect from the args table
 	var defaults = {
 		title : "unknown_item",
-		level : "1",
+		level : "?",
 		gold  : "0",
 		class : "c_unknown",
 		bars  : "",

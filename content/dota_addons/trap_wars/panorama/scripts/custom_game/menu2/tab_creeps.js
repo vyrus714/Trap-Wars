@@ -62,14 +62,15 @@ function GenerateTraps() {
             // left-click action: view the info for the panel down below
             trap_panel.SetPanelEvent("onactivate", function() {
                 var on_activate_info = {
-                    title   : trap_name,
-                    gold    : trap_info.GoldCost,
-                    class   : trap_info.Class,
-                    health  : trap_info.StatusHealth,
-                    mana    : trap_info.StatusMana,
-                    damage  : (trap_info.AttackDamageMin+trap_info.AttackDamageMax)/2,
-                    armor   : trap_info.ArmorPhysical,
-                    speed   : trap_info.MovementSpeed,
+                    title  : trap_name,
+                    level  : trap_info.Level,
+                    gold   : trap_info.GoldCost,
+                    class  : trap_info.Class,
+                    health : trap_info.StatusHealth,
+                    mana   : trap_info.StatusMana,
+                    damage : (trap_info.AttackDamageMin+trap_info.AttackDamageMax)/2,
+                    armor  : trap_info.ArmorPhysical,
+                    speed  : trap_info.MovementSpeed,
                 }
 
                 // add any abilities that we find
